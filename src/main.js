@@ -5,17 +5,19 @@ import App from './App'
 import router from './router'
 import VueCookie from 'vue-cookie'
 import vuetify from './plugins/vuetify'
-
+import store from './store'
 import('../node_modules/vuetify/dist/vuetify.min.css')
-Vue.use(VueCookie)
 
+Vue.use(VueCookie)
 Vue.config.productionTip = false
 
-/* eslint-disable no-new */
+/* eslint-disable */
 new Vue({
   el: '#app',
+  store,
   router,
   vuetify,
-  components: { App },
-  template: '<App/>'
+  components: {App},
+  template: '<App/>',
+
 })
