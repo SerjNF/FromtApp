@@ -1,0 +1,113 @@
+<template>
+  <div>
+    <v-navigation-drawer
+      v-model="drawer"
+      :clipped="$vuetify.breakpoint.lgAndUp"
+      app>
+      <v-list-item>
+        <v-list-item-content>
+          <v-list-item-title class="title">
+            Application
+          </v-list-item-title>
+          <v-list-item-subtitle>
+            subtext
+          </v-list-item-subtitle>
+        </v-list-item-content>
+      </v-list-item>
+
+      <v-divider>
+      </v-divider>
+
+      <v-list
+        dense
+        nav
+      >
+        <v-list-item-group v-model="item" color="primary">
+          <v-list-item
+            v-for="(item, i) in items"
+            :key="i"
+            link
+            :href="item.href"
+          >
+            <v-list-item-icon>
+              <v-icon>{{ item.icon }}</v-icon>
+            </v-list-item-icon>
+
+            <v-list-item-content>
+              <v-list-item-title
+              >{{ item.title }}</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list-item-group>
+      </v-list>
+    </v-navigation-drawer>
+  <v-app-bar
+    :clipped-left="$vuetify.breakpoint.lgAndUp"
+    app
+    color="blue darken-3"
+    dark
+  >
+    <v-toolbar-title
+      style="width: 350px"
+      class="ml-0 pl-4"
+    >
+      <v-btn icon
+             @click.stop="drawer = !drawer">
+        <v-icon>sort</v-icon>
+      </v-btn>
+      <!--        <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>-->
+      <span class="hidden-sm-and-down">Google Contacts</span>
+    </v-toolbar-title>
+    <v-text-field
+      flat
+      solo-inverted
+      hide-details
+      prepend-inner-icon="search"
+      label="Search"
+      class="hidden-sm-and-down"
+    ></v-text-field>
+    <div class="flex-grow-1"></div>
+    <v-btn icon>
+      <v-icon>mdi-apps</v-icon>
+    </v-btn>
+    <v-btn icon>
+      <v-icon>mdi-bell</v-icon>
+    </v-btn>
+    <v-btn
+      icon
+      large
+    >
+      <v-avatar
+        size="46px"
+        item
+      >
+        <v-img
+          src="https://cdn.vuetifyjs.com/images/logos/logo.svg"
+          alt="Vuetify"
+        >
+        </v-img></v-avatar>
+    </v-btn>
+  </v-app-bar>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'navigation',
+    data: ()=> ({
+        item : 0,
+        dialog: false,
+        drawer: null,
+        items: [
+            { title: 'Расписание', icon: 'today', href: '/' },
+            { title: 'Администрирование', icon: 'assignment_ind' },
+            { title: 'Что еще', icon: 'android' },
+        ],
+        right: null,
+})
+}
+</script>
+
+<style scoped>
+
+</style>

@@ -2,9 +2,9 @@ import Vue from 'vue'
 import Router from 'vue-router'
 // import * as Logg from '@/components/Pages/Login'
 
-import HelloWorld from '@/components/HelloWorld'
 // import store from '../store'
 import Login from '@/components/Pages/Login/Login'
+import Schedule from "../components/Pages/Shcedule/Schedule";
 
 Vue.use(Router)
 
@@ -12,8 +12,8 @@ const router = new Router({
   routes: [
     {
       path: '/',
-      name: 'HelloWorld',
-      component: HelloWorld,
+      name: 'Schedule',
+      component: Schedule,
       meta: {
         requiredAuth: true
       }
@@ -26,6 +26,7 @@ const router = new Router({
   ]
 })
 /* eslint-disable */
+
 // router.beforeEach((to, from, next) => {
 //
 //

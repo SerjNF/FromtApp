@@ -1,5 +1,6 @@
 import Axios from 'axios'
 import router from '@/router'
+import store from '@/store/index'
 
 const axInst = Axios.create({
   baseURL: `http://${window.location.hostname}:8080/api/v1`,
@@ -8,6 +9,7 @@ const axInst = Axios.create({
 })
 
 export default {
+
   currentUser: {authenticated: false},
   /* eslint-disable */
   signin(context, credentials, redirect) {
@@ -21,9 +23,11 @@ export default {
       data: credentials,
     }).then((data) => {
       if (data.status === 200) {
-        context.$cookie.set('token', data.data.value, '1D');
+        console.log(store)
+        let token = data.data.value
+        context.$cookie.set('token', token, '1D');
         context.$cookie.set('auth', true, '1D');
-        this.currentUser.authenticated = true;
+        store.dispatch('GET_USER', token)
         if (redirect) router.push(redirect)
       }
     }).catch(() => {

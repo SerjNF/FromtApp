@@ -1,136 +1,152 @@
-<template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <h2>Essential Links</h2>
-    <ul>
-      <li>
-        <a
-          href="https://vuejs.org"
-          target="_blank"
-        >
-          Core Docs
-        </a>
-      </li>
-      <li>
-        <a
-          href="https://forum.vuejs.org"
-          target="_blank"
-        >
-          Forum
-        </a>
-      </li>
-      <li>
-        <a
-          href="https://chat.vuejs.org"
-          target="_blank"
-        >
-          Community Chat
-        </a>
-      </li>
-      <li>
-        <a
-          href="https://twitter.com/vuejs"
-          target="_blank"
-        >
-          Twitter
-        </a>
-      </li>
-      <br>
-      <li>
-        <a
-          href="http://vuejs-templates.github.io/webpack/"
-          target="_blank"
-        >
-          Docs for This Template
-        </a>
-      </li>
-    </ul>
-    <h2>Ecosystem</h2>
-    <ul>
-      <li>
-        <a
-          href="http://router.vuejs.org/"
-          target="_blank"
-        >
-          vue-router
-        </a>
-      </li>
-      <li>
-        <a
-          href="http://vuex.vuejs.org/"
-          target="_blank"
-        >
-          vuex
-        </a>
-      </li>
-      <li>
-        <a
-          href="http://vue-loader.vuejs.org/"
-          target="_blank"
-        >
-          vue-loader
-        </a>
-      </li>
-      <li>
-        <a
-          href="https://github.com/vuejs/awesome-vue"
-          target="_blank"
-        >
-          awesome-vue
-        </a>
-      </li>
-    </ul>
-  </div>
-</template>
+<!--<template>-->
+<!--  <v-app id="inspire">-->
+<!--    <navigation></navigation>-->
 
-<script>
-import Axios from 'axios'
-/* eslint-disable */
-    export default {
-  name: 'HelloWorld',
-  beforeRouteEnter (to, from, next){
-      const axInst = Axios.create({
-          baseURL: `http://${window.location.hostname}:8080/api/v1`,
-          proxyHeaders: false,
-          credentials: false
-      })
-      let token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1")
-      let url = "/checkToken?checkToken=" + token
-      axInst.get(url).then((res) => {
-          console.log(res);
-          if(res.data){
-              next()
-          } else {
-              return next({
-                  path: '/login'
-              })
-          }
-      }).catch(() =>{
-          console.log("Error")
-      })
-  },
-  data () {
-    return {
-      msg: 'Welcome '
-    }
-  }
-}
-</script>
+<!--    <v-content>-->
+<!--      <v-container-->
+<!--        class="fill-height"-->
+<!--        fluid-->
+<!--      >-->
+<!--        <v-row-->
+<!--          align="center"-->
+<!--          justify="center"-->
+<!--        >-->
+<!--          <v-tooltip right>-->
+<!--            <template v-slot:activator="{ on }">-->
+<!--              <v-btn-->
+<!--                :href="source"-->
+<!--                icon-->
+<!--                large-->
+<!--                target="_blank"-->
+<!--                v-on="on"-->
+<!--              >-->
+<!--                <v-icon large>mdi-code-tags</v-icon>-->
+<!--              </v-btn>-->
+<!--            </template>-->
+<!--            <span>Source</span>-->
+<!--          </v-tooltip>-->
+<!--          <v-tooltip right>-->
+<!--            <template v-slot:activator="{ on }">-->
+<!--              <v-btn-->
+<!--                icon-->
+<!--                large-->
+<!--                href="https://codepen.io/johnjleider/pen/MNYLdL"-->
+<!--                target="_blank"-->
+<!--                v-on="on"-->
+<!--              >-->
+<!--                <v-icon large>mdi-codepen</v-icon>-->
+<!--              </v-btn>-->
+<!--            </template>-->
+<!--            <span>Codepen</span>-->
+<!--          </v-tooltip>-->
+<!--        </v-row>-->
+<!--      </v-container>-->
+<!--    </v-content>-->
+<!--    <v-btn-->
+<!--      bottom-->
+<!--      color="pink"-->
+<!--      dark-->
+<!--      fab-->
+<!--      fixed-->
+<!--      right-->
+<!--      @click="dialog = !dialog"-->
+<!--    >-->
+<!--      <v-icon>zoom_in</v-icon>-->
+<!--    </v-btn>-->
+<!--    <v-dialog-->
+<!--      v-model="dialog"-->
+<!--      width="800px"-->
+<!--    >-->
+<!--      <v-card>-->
+<!--        <v-card-title class="grey darken-2">-->
+<!--          Create contact-->
+<!--        </v-card-title>-->
+<!--        <v-container>-->
+<!--          <v-row>-->
+<!--            <v-col-->
+<!--              class="align-center justify-space-between"-->
+<!--              cols="12"-->
+<!--            >-->
+<!--              <v-row align="center">-->
+<!--                <v-avatar-->
+<!--                  size="40px"-->
+<!--                  class="mr-4"-->
+<!--                >-->
+<!--                  <img-->
+<!--                    src="//ssl.gstatic.com/s2/oz/images/sge/grey_silhouette.png"-->
+<!--                    alt=""-->
+<!--                  >-->
+<!--                </v-avatar>-->
+<!--                <v-text-field-->
+<!--                  placeholder="Name"-->
+<!--                ></v-text-field>-->
+<!--              </v-row>-->
+<!--            </v-col>-->
+<!--            <v-col cols="6">-->
+<!--              <v-text-field-->
+<!--                prepend-icon="business"-->
+<!--                placeholder="Company"-->
+<!--              ></v-text-field>-->
+<!--            </v-col>-->
+<!--            <v-col cols="6">-->
+<!--              <v-text-field-->
+<!--                placeholder="Job title"-->
+<!--              ></v-text-field>-->
+<!--            </v-col>-->
+<!--            <v-col cols="12">-->
+<!--              <v-text-field-->
+<!--                prepend-icon="mail"-->
+<!--                placeholder="Email"-->
+<!--              ></v-text-field>-->
+<!--            </v-col>-->
+<!--            <v-col cols="12">-->
+<!--              <v-text-field-->
+<!--                type="tel"-->
+<!--                prepend-icon="phone"-->
+<!--                placeholder="(000) 000 - 0000"-->
+<!--              ></v-text-field>-->
+<!--            </v-col>-->
+<!--            <v-col cols="12">-->
+<!--              <v-text-field-->
+<!--                prepend-icon="notes"-->
+<!--                placeholder="Notes"-->
+<!--              ></v-text-field>-->
+<!--            </v-col>-->
+<!--          </v-row>-->
+<!--        </v-container>-->
+<!--        <v-card-actions>-->
+<!--          <v-btn-->
+<!--            text-->
+<!--            color="primary"-->
+<!--          >More</v-btn>-->
+<!--          <div class="flex-grow-1"></div>-->
+<!--          <v-btn-->
+<!--            text-->
+<!--            color="primary"-->
+<!--            @click="dialog = false"-->
+<!--          >Cancel</v-btn>-->
+<!--          <v-btn-->
+<!--            text-->
+<!--            @click="dialog = false"-->
+<!--          >Save</v-btn>-->
+<!--        </v-card-actions>-->
+<!--      </v-card>-->
+<!--    </v-dialog>-->
+<!--  </v-app>-->
+<!--</template>-->
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-h1, h2 {
-  font-weight: normal;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
-</style>
+<!--<script>-->
+<!--import checkToken from "../plugins/checkToken";-->
+
+<!--    export default {-->
+<!--        props: {-->
+<!--            source: String,-->
+<!--        },-->
+<!--        beforeRouteEnter (to, from, next){-->
+<!--            checkToken.beforeRoute(to, from, next)-->
+<!--        },-->
+<!--        data: () => ({-->
+<!--            dialog: false,-->
+<!--        }),-->
+<!--    }-->
+<!--</script>-->

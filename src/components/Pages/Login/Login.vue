@@ -57,7 +57,6 @@
                       depressed
                     >Вход
                     </v-btn>
-
                   </v-card-actions>
                 </v-card>
               </v-form>
@@ -83,7 +82,7 @@
 </template>
 
 <script>
-/* eslint-disable */
+    /* eslint-disable */
     import Axios from 'axios'
     import Login from '@/components/Pages/Login'
 
@@ -121,11 +120,10 @@
             },
         },
         computed: {
-        isForm :function ()
-         {
-            return this.candidate.password <= 0 || this.candidate.login <= 0
-        }
+            isForm: function () {
+                return this.candidate.password <= 0 || this.candidate.login <= 0
             }
+        }
     }
 </script>
 
