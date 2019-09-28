@@ -7,14 +7,16 @@
       <v-list-item>
         <v-list-item-content>
           <v-list-item-title class="title">
-            Application
+            {{this.$store.getters.getFullName}}
           </v-list-item-title>
           <v-list-item-subtitle>
-            subtext
+            {{this.$store.getters.getRole}}
           </v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
-
+      <v-btn icon>
+        <v-icon>exit_to_app</v-icon>
+      </v-btn>
       <v-divider>
       </v-divider>
 
@@ -48,8 +50,8 @@
     dark
   >
     <v-toolbar-title
-      style="width: 350px"
-      class="ml-0 pl-4"
+      style="width: 20%"
+      class="ml-0"
     >
       <v-btn icon
              @click.stop="drawer = !drawer">

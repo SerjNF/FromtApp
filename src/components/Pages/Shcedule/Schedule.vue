@@ -3,45 +3,38 @@
     <navigation></navigation>
 
     <v-content>
-      <v-container
-        class="fill-height"
-        fluid
-      >
-        {{this.$store.dispatch('getAuch')}}
-        <v-row
-          align="center"
-          justify="center"
+<!--      <v-container-->
+<!--        class="fill-height"-->
+<!--        fluid-->
+<!--      >-->
+
+        <v-tabs
+          v-model="tab"
+          background-color="transparent"
+          color="basil"
+          grow
         >
-          <v-tooltip right>
-            <template v-slot:activator="{ on }">
-              <v-btn
-                :href="source"
-                icon
-                large
-                target="_blank"
-                v-on="on"
-              >
-                <v-icon large>mdi-code-tags</v-icon>
-              </v-btn>
-            </template>
-            <span>Source</span>
-          </v-tooltip>
-          <v-tooltip right>
-            <template v-slot:activator="{ on }">
-              <v-btn
-                icon
-                large
-                href="https://codepen.io/johnjleider/pen/MNYLdL"
-                target="_blank"
-                v-on="on"
-              >
-                <v-icon large>mdi-codepen</v-icon>
-              </v-btn>
-            </template>
-            <span>Codepen</span>
-          </v-tooltip>
-        </v-row>
-      </v-container>
+          <v-tab
+            v-for="item in items"
+            :key="item"
+          >
+            {{ item }}
+          </v-tab>
+        </v-tabs>
+
+        <v-tabs-items v-model="tab">
+          <v-tab-item
+            v-for="item in items"
+            :key="item"
+          >
+            <client-calendar></client-calendar>
+<!--            <v-card flat color="basil">-->
+<!--              <v-card-text>{{ tab }}</v-card-text>-->
+<!--            </v-card>-->
+          </v-tab-item>
+        </v-tabs-items>
+
+<!--      </v-container>-->
     </v-content>
     <v-btn
       bottom
@@ -140,9 +133,8 @@
 </template>
 
 <script>
+    import store from '@/store/index'
     import checkToken from "@/plugins/checkToken";
-    import {mapGetters} from "vuex";
-
     export default {
         props: {
             source: String,
@@ -152,6 +144,12 @@
         },
         data: () => ({
             dialog: false,
+
+            tab: null,
+            items: [
+                'Расписание приёма', 'График персонала'
+            ],
+            text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
         }),
     }
 </script>

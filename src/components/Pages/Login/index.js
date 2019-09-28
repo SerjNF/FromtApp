@@ -26,7 +26,6 @@ export default {
         console.log(store)
         let token = data.data.value
         context.$cookie.set('token', token, '1D');
-        context.$cookie.set('auth', true, '1D');
         store.dispatch('GET_USER', token)
         if (redirect) router.push(redirect)
       }

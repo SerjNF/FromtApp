@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 // import * as Logg from '@/components/Pages/Login'
 
-// import store from '../store'
+import store from '@/store/index'
 import Login from '@/components/Pages/Login/Login'
 import Schedule from "../components/Pages/Shcedule/Schedule";
 
@@ -21,19 +21,23 @@ const router = new Router({
     {
       path: '/login',
       name: 'Login',
-      component: Login
+      component: Login,
+      meta: {
+        requiredAuth: false
+      }
     }
   ]
 })
 /* eslint-disable */
-
+//TODO не работает, надо переделать
 // router.beforeEach((to, from, next) => {
 //
 //
 //   if (to.meta.requiredAuth) {
 //     // eslint-disable-next-line
-//
-//     if (store.getters.getAuth) {
+//         console.log(store)
+//         console.log(store.getters.getAuch)
+//     if (store.getters.getAuch) {
 //       next()
 //     } else {
 //       router.push('/login').then(r => {
