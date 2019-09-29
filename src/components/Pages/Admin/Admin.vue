@@ -3,38 +3,38 @@
     <navigation></navigation>
 
     <v-content>
-      <!--      <v-container-->
-      <!--        class="fill-height"-->
-      <!--        fluid-->
-      <!--      >-->
+<!--      <v-container-->
+<!--        class="fill-height"-->
+<!--        fluid-->
+<!--      >-->
 
-      <v-tabs
-        v-model="tab"
-        background-color="transparent"
-        color="basil"
-        grow
-      >
-        <v-tab
-          v-for="item in items"
-          :key="item"
+        <v-tabs
+          v-model="tab"
+          background-color="transparent"
+          color="basil"
+          grow
         >
-          {{ item }}
-        </v-tab>
-      </v-tabs>
+          <v-tab
+            v-for="item in items"
+            :key="item"
+          >
+            {{ item }}
+          </v-tab>
+        </v-tabs>
 
-      <v-tabs-items v-model="tab">
-        <v-tab-item
-          v-for="item in items"
-          :key="item"
-        >
-          <client-calendar></client-calendar>
-          <!--            <v-card flat color="basil">-->
-          <!--              <v-card-text>{{ tab }}</v-card-text>-->
-          <!--            </v-card>-->
-        </v-tab-item>
-      </v-tabs-items>
+        <v-tabs-items v-model="tab">
+          <v-tab-item
+            v-for="item in items"
+            :key="item"
+          >
 
-      <!--      </v-container>-->
+<!--            <v-card flat color="basil">-->
+<!--              <v-card-text>{{ tab }}</v-card-text>-->
+<!--            </v-card>-->
+          </v-tab-item>
+        </v-tabs-items>
+
+<!--      </v-container>-->
     </v-content>
     <v-btn
       bottom
@@ -135,21 +135,26 @@
 <script>
     import store from '@/store/index'
     import checkToken from "@/plugins/checkToken";
-
     export default {
         props: {
             source: String,
         },
         beforeRouteEnter(to, from, next) {
-                checkToken.beforeRoute(to, from, next, 0)
+            let role = store.getters.getRole
+            console.log(role)
+            if ( role === "ADMIN") {
                 // store.dispatch('pageLink/SET_PAGE', 0)
+                checkToken.beforeRoute(to, from, next, 1)
+            } else {
+                next(false)
+            }
         },
         data: () => ({
             dialog: false,
 
             tab: null,
             items: [
-                'Расписание приёма', 'График персонала'
+                'Основные', 'Список сотрудников', 'Должности'
             ],
             text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
         }),

@@ -7,17 +7,26 @@
       (also, click a date/time to add an event)
     </div>
     <FullCalendar
+      schedulerLicenseKey='CC-Attribution-NonCommercial-NoDerivatives'
       class='demo-app-calendar'
       ref="fullCalendar"
-      defaultView="dayGridMonth"
+      locale="ru"
+      height="auto"
+      :slot-duration="slotDuration"
+      :min-time= "minTime"
+      :max-time= "maxTime"
+      defaultView="resourceTimeGrid"
+      now-indicator="true"
+      nav-links="true"
       :header="{
         left: 'prev,next today',
         center: 'title',
         right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
       }"
       :plugins="calendarPlugins"
+      :selectable="true"
       :weekends="calendarWeekends"
-      :events="calendarEvents"
+      :event-sources="calendarEvents"
       @dateClick="handleDateClick"
     />
   </div>
@@ -28,21 +37,29 @@
     import dayGridPlugin from '@fullcalendar/daygrid'
     import timeGridPlugin from '@fullcalendar/timegrid'
     import interactionPlugin from '@fullcalendar/interaction'
+    import resourceTimeGridPlugin from '@fullcalendar/resource-timegrid'
 
 
     export default {
         components: {
             FullCalendar // make the <FullCalendar> tag available
         },
-        data: function() {
+        data: () => {
             return {
+                minTime: "8:00",
+                maxTime: "23:00",
+                slotDuration: "00:15",
                 calendarPlugins: [ // plugins must be defined in the JS
                     dayGridPlugin,
                     timeGridPlugin,
-                    interactionPlugin // needed for dateClick
+                    interactionPlugin, // needed for dateClick
+                    resourceTimeGridPlugin
                 ],
                 calendarWeekends: true,
-                calendarEvents: [ // initial event data
+                calendarEvents: [
+                    {events(start, end, timezone, callback){
+
+                        }},
                     { title: 'Event Now', start: new Date() }
                 ]
             }

@@ -25,7 +25,8 @@ export default {
       if (data.status === 200) {
         console.log(store)
         let token = data.data.value
-        context.$cookie.set('token', token, '1D');
+        context.$cookie.set('token', token, 1);
+        store.dispatch('SET_TOKEN', token)
         store.dispatch('GET_USER', token)
         if (redirect) router.push(redirect)
       }
