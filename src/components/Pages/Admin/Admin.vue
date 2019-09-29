@@ -140,10 +140,7 @@
             source: String,
         },
         beforeRouteEnter(to, from, next) {
-            let role = store.getters.getRole
-            console.log(role)
-            if ( role === "ADMIN") {
-                // store.dispatch('pageLink/SET_PAGE', 0)
+            if ( store.getters.getRole === "ADMIN") {
                 checkToken.beforeRoute(to, from, next, 1)
             } else {
                 next(false)

@@ -13,7 +13,7 @@ export default {
     //  console.log(token)
     let cookieToken = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1")
     let url = "/checkToken?checkToken=" + token
-    if (token === cookieToken) {
+    if (!!cookieToken && token === cookieToken) {
       store.dispatch('link/SET_PAGE', page)
       next()
     } else {

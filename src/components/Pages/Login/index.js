@@ -23,7 +23,6 @@ export default {
       data: credentials,
     }).then((data) => {
       if (data.status === 200) {
-        console.log(store)
         let token = data.data.value
         context.$cookie.set('token', token, 1);
         store.dispatch('SET_TOKEN', token)
