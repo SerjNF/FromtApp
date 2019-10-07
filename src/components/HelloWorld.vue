@@ -135,18 +135,4 @@
 <!--  </v-app>-->
 <!--</template>-->
 
-<!--<script>-->
-<!--import checkToken from "../plugins/checkToken";-->
 
-<!--    export default {-->
-<!--        props: {-->
-<!--            source: String,-->
-<!--        },-->
-<!--        beforeRouteEnter (to, from, next){-->
-<!--            checkToken.beforeRoute(to, from, next)-->
-<!--        },-->
-<!--        data: () => ({-->
-<!--            dialog: false,-->
-<!--        }),-->
-<!--    }-->
-<!--</script>-->

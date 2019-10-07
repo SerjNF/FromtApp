@@ -7,16 +7,16 @@
       <v-list-item>
         <v-list-item-content>
           <v-list-item-title class="title">
-            {{this.$store.getters.getFullName}}
+            {{this.$store.state.user.User.fullName}}
           </v-list-item-title>
           <v-list-item-subtitle>
-            {{this.$store.getters.getRole}}
+
           </v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
-      <v-btn icon>
-        <v-icon>exit_to_app</v-icon>
-      </v-btn>
+  <!--    <v-btn icon>
+        <v-icon @click='exit'>exit_to_app</v-icon>
+      </v-btn> -->
       <v-divider>
       </v-divider>
 
@@ -42,6 +42,11 @@
           </v-list-item>
         </v-list-item-group>
       </v-list>
+         <template v-slot:append>
+        <div class="pa-2">
+          <v-btn block @click='exit'>Выход</v-btn>
+        </div>
+      </template>
     </v-navigation-drawer>
     <v-app-bar
       :clipped-left="$vuetify.breakpoint.lgAndUp"
@@ -58,7 +63,7 @@
           <v-icon>sort</v-icon>
         </v-btn>
         <!--        <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>-->
-        <span class="hidden-sm-and-down">Google Contacts</span>
+        <span class="hidden-sm-and-down">Какой нить титул , может название страницы</span>
       </v-toolbar-title>
       <v-text-field
         flat
@@ -95,7 +100,16 @@
 </template>
 
 <script>
-  import store from '@/store/index'
+    import Axios from "axios";
+    import store from "@/store/index";
+    import router from '@/router'
+
+    const axInst = Axios.create({
+        baseURL: `http://${window.location.hostname}:8080/api/v1`,
+        proxyHeaders: false,
+        credentials: false
+    })
+
     export default {
         name: 'navigation',
         data: () => ({
@@ -110,10 +124,17 @@
             right: null,
         }),
         methods: {
-            change(i) {
-                console.log(i)
-                this.item = i
-            }
+          exit() {
+
+              // let token = this.cookie.get('token')
+               let token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1")
+               let url = "/exitUser?token=" + token
+               axInst.get(url).then((res) => {
+                
+               })
+               localStorage.clear();
+               router.push('/login')
+          }
         },
     }
 </script>

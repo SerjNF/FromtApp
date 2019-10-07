@@ -57,9 +57,9 @@
                 ],
                 calendarWeekends: true,
                 calendarEvents: [
-                    {events(start, end, timezone, callback){
+                //    {events(start, end, timezone, callback){
 
-                        }},
+                //        }},
                     { title: 'Event Now', start: new Date() }
                 ]
             }

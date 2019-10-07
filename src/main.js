@@ -7,7 +7,6 @@ import VueCookie from 'vue-cookie'
 import vuetify from './plugins/vuetify'
 import Navigation from './components/Modules/Navigation'
 import ClientCalendar from './components/Pages/Shcedule/fullcalendar_client/ClientCalendar'
-import Login from './components/Pages/Login'
 import store from './store'
 import('../node_modules/vuetify/dist/vuetify.min.css')
 

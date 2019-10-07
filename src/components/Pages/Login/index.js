@@ -24,9 +24,12 @@ export default {
     }).then((data) => {
       if (data.status === 200) {
         let token = data.data.value
-        context.$cookie.set('token', token, 1);
-        store.dispatch('SET_TOKEN', token)
-        store.dispatch('GET_USER', token)
+      //  context.$cookie.set('token', token);
+        context.$cookie.set('token', token, { expires: '12h'});
+     //   store.dispatch('link/SET_PAGE', page)
+
+        store.dispatch('user/SET_TOKEN', token)
+        store.dispatch('user/GET_USER', token)
         if (redirect) router.push(redirect)
       }
     }).catch(() => {

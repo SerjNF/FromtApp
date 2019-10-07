@@ -110,7 +110,6 @@
 
         mounted: function () {
             axInst.get(`/general/getLogin`).then((res) => {
-                console.log(res);
                 this.items = res.data;
             })
         },

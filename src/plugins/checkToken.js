@@ -9,32 +9,15 @@ export default {
       proxyHeaders: false,
       credentials: false
     })
-    let token = store.getters.getToken
+    let token = store.state.user.User.token
     //  console.log(token)
     let cookieToken = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1")
-    let url = "/checkToken?checkToken=" + token
-    if (!!cookieToken && token === cookieToken) {
-      store.dispatch('link/SET_PAGE', page)
-      next()
-    } else {
+    let url = '/main/checkToken?token=' + cookieToken
+    axInst(url).then((res) => {
+        store.dispatch('link/SET_PAGE', page)
+        next()
+    }).catch((er) => {
       next({path: '/login'})
-    }
-
-    // axInst.get(url).then((res) => {
-    //   if (res.data) {
-    //     //   store.state.link.page
-    //     store.dispatch('link/SET_PAGE', page).then(r => {
-    //     })
-    //     next()
-    //   } else {
-    //     return next({
-    //       path: '/login'
-    //     })
-    //   }
-    // }).catch(() => {
-    //   console.log("Error")
-    // })
+    })
   }
-  ,
-
 }
