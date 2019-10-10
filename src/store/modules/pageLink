@@ -1,0 +1,20 @@
+export default 
+	  {
+    namespaced: true,
+    state: {
+      page: 1
+    },
+    actions: {
+      SET_PAGE({commit}, page) {
+        commit('SET_PAG', page)
+      }
+    },
+    mutations: {
+      SET_PAG(state, page) {
+        state.page = page
+      }
+    },
+    getters: {
+      GET_PAGE: (state) => state.page
+    }
+  }
