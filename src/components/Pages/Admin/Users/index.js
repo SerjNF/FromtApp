@@ -48,15 +48,14 @@ export default {
   access(context, res) {
     context.badData = true
     context.snacMessage = res.data
-    context.snaccolor = "green"
+    context.snacColor = "green"
     context.initialize()
   },
 
   warning(context, error) {
     context.badData = true
     context.snacMessage = error.response.data
-    context.snaccolor = "#ff5252"
-    console.log(error.response.data)
+    context.snacColor = "#ff5252"
   },
 
   getToken() {

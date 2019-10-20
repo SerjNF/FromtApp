@@ -3,7 +3,6 @@ export default {
     let url = "main/getAllPosition?token=" + this.getToken()
     context.desserts = []
     axInst.get(url).then((res) => {
-      console.log(res);
       context.desserts = res.data
     })
   },
@@ -42,15 +41,14 @@ export default {
   access(context, res) {
     context.badData = true
     context.snacMessage = res.data.msg
-    context.snaccolor = "green"
+    context.snacColor = "green"
     context.initialize()
   },
 
   warning(context, error) {
     context.badData = true
     context.snacMessage = error.response.data
-    context.snaccolor = "#ff5252"
-    console.log(error.response.data)
+    context.snacColor = "#ff5252"
   },
 
   getPositions(context, axInst) {

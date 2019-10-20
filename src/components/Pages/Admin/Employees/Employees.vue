@@ -46,14 +46,7 @@
                         aria-required="true"
                         v-model="editedItem.middleName" label="Отчество"></v-text-field>
                     </v-col>
-                    <v-col cols="12" sm="6" md="4">
-<!--                      <v-chip-->
-<!--                        prepend-icon="how_to_reg"-->
-<!--                      >-->
-<!--                      Цвет-->
-<!--                      </v-chip>-->
-                      <v-sheet :color="editedItem.color">dsgg</v-sheet>
-                    </v-col>
+
                     <v-col cols="12" sm="6" md="4">
                       <v-tooltip top="">
                         <template v-slot:activator="{ on }">
@@ -61,7 +54,7 @@
                             type="tel"
                             prepend-icon="contact_phone"
                             v-on="on"
-                            v-model="editedItem.phone" label="Телефон "></v-text-field>
+                            v-model="editedItem.phone" label="Телефон"></v-text-field>
                         </template>
                         <span>Пример: +71234567890</span>
                       </v-tooltip>
@@ -111,21 +104,14 @@
                         return-value>
                       </v-select>
                     </v-col>
+                  </v-row>
+                  <v-row>
                     <v-col cols="12" sm="6" md="4">
-                      <v-select
-                        v-model="editedItem.color"
-                        :items="color"
-                        item-text="text"
-                        item-value="key"
-                        label="Цветовая схема"
-                        prepend-icon="assignment_ind"
-                        return-value>
-                      </v-select>
+                      <chrome-picker v-model="editedItem.color" @input="updateValue(editedItem.color)"/>
                     </v-col>
                   </v-row>
                 </v-container>
               </v-card-text>
-
               <v-card-actions>
                 <div class="flex-grow-1"></div>
                 <v-btn color="blue darken-1" text @click="close">Закрыть</v-btn>
@@ -143,12 +129,12 @@
         >
           edit
         </v-icon>
-        <v-icon
-          small
-          @click="deleteItem(item)"
-        >
-          delete
-        </v-icon>
+        <!--        <v-icon-->
+        <!--          small-->
+        <!--          @click="deleteItem(item)"-->
+        <!--        >-->
+        <!--          delete-->
+        <!--        </v-icon>-->
       </template>
 
       <template v-slot:no-data>
@@ -199,6 +185,7 @@
     import Axios from "axios";
     import Employee from './index.js'
     import Footer from '../Footer/Footer.vue'
+    import {Chrome} from 'vue-color'
 
     const axInst = Axios.create({
         baseURL: `http://${window.location.hostname}:8080/api/v1`,
@@ -206,11 +193,14 @@
         credentials: false
     })
 
+
     export default {
         components: {
             footerr: Footer,
+            'chrome-picker': Chrome,
         },
         data: () => ({
+
             page: 1,
             itemsPerPage: 10,
             badData: false,
@@ -296,16 +286,21 @@
             },
         },
 
-        created() {
+        mounted() {
             this.initialize()
         },
 
         methods: {
-            changePageNumber(p){
+            updateValue(ob) {
+                console.log(ob)
+                this.editedItem.color = ob.hex
+            },
+
+            changePageNumber(p) {
                 this.page = p
             },
 
-            changeItemPerPag(i){
+            changeItemPerPag(i) {
                 this.itemsPerPage = i
             },
 
@@ -331,7 +326,7 @@
                 } else if (state === 'BANNED') {
                     return {state: 'Заблокирован', color: 'orange'}
                 } else {
-                    return {state: 'Удалён', color: 'red'}
+                    return {state: 'Удалён', color: 'black'}
                 }
             },
 
@@ -341,14 +336,19 @@
             },
 
             initialize() {
-                Employee.initialize(this, axInst)
-                Employee.getPositions(this, axInst)
+                setTimeout(() => {
+                    Employee.initialize(this, axInst)
+                    Employee.getPositions(this, axInst)
+                }, 500)
             },
 
             editItem(item) {
                 this.editedIndex = this.desserts.indexOf(item)
                 this.editedItem = Object.assign({}, item)
-                this.editedItem.password = ''
+                this.editedItem.positions = []
+                item.positions.forEach((pos) => {
+                    this.editedItem.positions.push(pos.id)
+                })
                 this.dialog = true
             },
 
@@ -366,7 +366,7 @@
             },
 
             save() {
-                Employee.saveUser(this, this.editedItem, axInst)
+                Employee.saveEmployee(this, this.editedItem, axInst)
                 this.close()
             },
         },

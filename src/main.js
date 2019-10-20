@@ -15,7 +15,7 @@ Vue.use(VueCookie)
 Vue.config.productionTip = false
 
 Vue.component('Navigation', Navigation)
-Vue.component('ClientCalendar', ClientCalendar)
+//Vue.component('ClientCalendar', ClientCalendar)
 
 /* eslint-disable */
 new Vue({
@@ -25,5 +25,4 @@ new Vue({
   vuetify,
   components: {App},
   template: '<App/>',
-
 })

@@ -138,7 +138,7 @@
       bottom="bottom"
       text
       v-model="badData"
-      :color=snaccolor>
+      :color=snacColor>
       {{ snacMessage }}
       <v-btn
         color="black"
@@ -174,7 +174,7 @@
             itemsPerPage: 10,
             badData: false,
             snacMessage: '',
-            snaccolor: '',
+            snacColor: '',
             dialog: false,
             headers: [
                 {
@@ -253,16 +253,18 @@
             },
         },
 
-        created() {
-            this.initialize()
+        mounted() {
+            setTimeout(() => {
+                this.initialize()
+            }, 500)
         },
 
         methods: {
-            changePageNumber(p){
+            changePageNumber(p) {
                 this.page = p
             },
 
-            changeItemPerPag(i){
+            changeItemPerPag(i) {
                 this.itemsPerPage = i
             },
 
@@ -292,7 +294,7 @@
             initialize() {
                 this.desserts = []
                 User.initialization(this, axInst)
-         //       let token = store.state.user.User.token
+                //       let token = store.state.user.User.token
 
             },
 

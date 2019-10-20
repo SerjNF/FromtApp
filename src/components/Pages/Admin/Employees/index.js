@@ -3,20 +3,20 @@ export default {
     let url = "admin/employee/getAllEmployee?token=" + this.getToken()
     context.desserts = []
     axInst.get(url).then((res) => {
-      console.log(res)
       context.desserts = res.data
     })
   },
 
-  saveUser(context, user, axInst) {
+  saveEmployee(context, employee, axInst) {
+    console.log(employee)
     axInst({
       method: 'POST',
       headers: {
         'Content-Type': 'application/json;charset=UTF-8',
         "Access-Control-Allow-Origin": "*",
       },
-      url: "/admin/saveUser?token=" + this.getToken(),
-      data: user,
+      url: "/admin/employee/saveEmployee?token=" + this.getToken(),
+      data: employee,
     }).then((res) => {
       this.access(context, res)
     }).catch((error) => {
@@ -24,7 +24,7 @@ export default {
     })
   },
 
-  delUser(context, user, axInst) {
+  delEmployee(context, employee, axInst) {
     axInst({
       method: 'POST',
       headers: {
@@ -43,15 +43,14 @@ export default {
   access(context, res) {
     context.badData = true
     context.snacMessage = res.data
-    context.snaccolor = "green"
+    context.snacColor = "green"
     context.initialize()
   },
 
   warning(context, error) {
     context.badData = true
     context.snacMessage = error.response.data
-    context.snaccolor = "#ff5252"
-    console.log(error.response.data)
+    context.snacColor = "#ff5252"
   },
 
   getPositions(context, axInst) {

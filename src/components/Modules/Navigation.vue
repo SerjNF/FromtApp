@@ -48,6 +48,7 @@
         </div>
       </template>
     </v-navigation-drawer>
+
     <v-app-bar
       :clipped-left="$vuetify.breakpoint.lgAndUp"
       app
@@ -129,10 +130,8 @@
               // let token = this.cookie.get('token')
                let token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1")
                let url = "/exitUser?token=" + token
-               axInst.get(url).then((res) => {
-                
-               })
-               localStorage.clear();
+               axInst.get(url).then()
+               localStorage.clear()
                router.push('/login')
           }
         },

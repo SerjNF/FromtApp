@@ -176,7 +176,7 @@
             },
         },
 
-        created() {
+        mounted() {
             this.initialize()
         },
 
@@ -190,7 +190,8 @@
             },
 
             initialize() {
-                Positions.initialize(this, axInst)
+                setTimeout(() => {
+                Positions.initialize(this, axInst)}, 500)
             },
 
 
