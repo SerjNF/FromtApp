@@ -83,14 +83,10 @@
 
 <script>
     /* eslint-disable */
-    import Axios from 'axios'
-    import Login from '@/components/Pages/Login'
 
-    const axInst = Axios.create({
-        baseURL: `http://${window.location.hostname}:8080/api/v1`,
-        proxyHeaders: false,
-        credentials: false
-    })
+    import Login from '@/components/Pages/Login'
+    import {axInst} from '@/plugins/axInst'
+
     export default {
         name: 'Login',
         props: {

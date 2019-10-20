@@ -182,17 +182,9 @@
 </template>
 
 <script>
-    import Axios from "axios";
     import Employee from './index.js'
     import Footer from '../Footer/Footer.vue'
     import {Chrome} from 'vue-color'
-
-    const axInst = Axios.create({
-        baseURL: `http://${window.location.hostname}:8080/api/v1`,
-        proxyHeaders: false,
-        credentials: false
-    })
-
 
     export default {
         components: {
@@ -292,7 +284,6 @@
 
         methods: {
             updateValue(ob) {
-                console.log(ob)
                 this.editedItem.color = ob.hex
             },
 
@@ -337,8 +328,8 @@
 
             initialize() {
                 setTimeout(() => {
-                    Employee.initialize(this, axInst)
-                    Employee.getPositions(this, axInst)
+                    Employee.initialize(this)
+                    Employee.getPositions(this)
                 }, 500)
             },
 
@@ -354,7 +345,7 @@
 
             deleteItem(item) {
                 const index = this.desserts.indexOf(item)
-                confirm('Удалить пользователя, логин: ' + item.login + ' ?') && Employee.delUser(this, item, axInst)
+                confirm('Удалить пользователя, логин: ' + item.login + ' ?') && Employee.delUser(this, item)
             },
 
             close() {
@@ -366,7 +357,7 @@
             },
 
             save() {
-                Employee.saveEmployee(this, this.editedItem, axInst)
+                Employee.saveEmployee(this, this.editedItem)
                 this.close()
             },
         },

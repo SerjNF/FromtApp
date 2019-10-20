@@ -1,12 +1,4 @@
-import createPersistedState from "vuex-persistedstate";
-import Axios from "axios";
-import Users from "../../components/Pages/Admin/Users/Users";
-
-const axInst = Axios.create({
-  baseURL: `http://${window.location.hostname}:8080/api/v1`,
-  proxyHeaders: false,
-  credentials: false
-})
+import {axInst} from '@/plugins/axInst'
 
 export default {
   namespaced: true,

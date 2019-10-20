@@ -116,15 +116,8 @@
 </template>
 
 <script>
-    import axiosImt from "axios";
     import Positions from './index.js'
     import Footer from '../Footer/Footer.vue'
-
-    const axInst = axiosImt.create({
-        baseURL: `http://${window.location.hostname}:8080/api/v1`,
-        proxyHeaders: false,
-        credentials: false
-    })
 
     export default {
         components: {
@@ -191,12 +184,12 @@
 
             initialize() {
                 setTimeout(() => {
-                Positions.initialize(this, axInst)}, 500)
+                Positions.initialize(this)}, 500)
             },
 
 
             deleteItem(item) {
-                confirm('Удалить пользователя, логин: ' + item.login + ' ?') && Positions.delPosition(this, item, axInst)
+                confirm('Удалить пользователя, логин: ' + item.login + ' ?') && Positions.delPosition(this, item)
             },
 
             close() {
@@ -207,7 +200,7 @@
             },
 
             save() {
-                Positions.savePosition(this, this.editedItem, axInst)
+                Positions.savePosition(this, this.editedItem)
                 this.close()
             },
         },

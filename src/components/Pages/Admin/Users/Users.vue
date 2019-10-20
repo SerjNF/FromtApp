@@ -152,17 +152,9 @@
 </template>
 
 <script>
-    import Axios from "axios";
     import store from "@/store/index";
     import User from './index.js'
     import Footer from '../Footer/Footer.vue'
-
-
-    const axInst = Axios.create({
-        baseURL: `http://${window.location.hostname}:8080/api/v1`,
-        proxyHeaders: false,
-        credentials: false
-    })
 
     export default {
         components: {
@@ -293,7 +285,7 @@
 
             initialize() {
                 this.desserts = []
-                User.initialization(this, axInst)
+                User.initialization(this)
                 //       let token = store.state.user.User.token
 
             },
@@ -307,7 +299,7 @@
 
             deleteItem(item) {
                 const index = this.desserts.indexOf(item)
-                confirm('Удалить пользователя, логин: ' + item.login + ' ?') && User.delUser(this, item, axInst)
+                confirm('Удалить пользователя, логин: ' + item.login + ' ?') && User.delUser(this, item)
             },
 
             close() {
@@ -323,7 +315,7 @@
                 //       	User.saveUser(this, this.editedItem, axInst)
                 //  Object.assign(this.desserts[this.editedIndex], this.editedItem)
                 //       } else {
-                User.saveUser(this, this.editedItem, axInst)
+                User.saveUser(this, this.editedItem)
                 //       }
                 this.close()
             },

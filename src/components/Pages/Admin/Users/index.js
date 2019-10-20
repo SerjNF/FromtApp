@@ -1,6 +1,7 @@
-export default {
+import {axInst} from '@/plugins/axInst'
 
-  initialization(context, axInst){
+export default {
+  initialization(context){
 
     let url = "admin/getUsers?token=" + this.getToken()
     axInst.get(url).then((res) => {
@@ -8,7 +9,7 @@ export default {
     })
   },
 
-  saveUser(context, user, axInst) {
+  saveUser(context, user) {
     //  let token = store.state.user.User.token
 
     axInst({
@@ -28,7 +29,7 @@ export default {
     })
   },
 
-  delUser(context, user, axInst) {
+  delUser(context, user) {
     axInst({
       method: 'POST',
       headers: {

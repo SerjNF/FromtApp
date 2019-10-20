@@ -101,15 +101,10 @@
 </template>
 
 <script>
-    import Axios from "axios";
     import store from "@/store/index";
     import router from '@/router'
+    import {axInst} from '@/plugins/axInst'
 
-    const axInst = Axios.create({
-        baseURL: `http://${window.location.hostname}:8080/api/v1`,
-        proxyHeaders: false,
-        credentials: false
-    })
 
     export default {
         name: 'navigation',

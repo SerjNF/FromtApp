@@ -3,7 +3,6 @@
     <navigation></navigation>
 
     <v-content>
-
       <v-tabs
         v-model="tab"
         background-color="transparent"

@@ -1,5 +1,7 @@
+import {axInst} from '@/plugins/axInst'
+
 export default {
-  initialize(context, axInst) {
+  initialize(context) {
     let url = "admin/employee/getAllEmployee?token=" + this.getToken()
     context.desserts = []
     axInst.get(url).then((res) => {
@@ -7,7 +9,7 @@ export default {
     })
   },
 
-  saveEmployee(context, employee, axInst) {
+  saveEmployee(context, employee) {
     console.log(employee)
     axInst({
       method: 'POST',
@@ -24,7 +26,7 @@ export default {
     })
   },
 
-  delEmployee(context, employee, axInst) {
+  delEmployee(context, employee) {
     axInst({
       method: 'POST',
       headers: {
@@ -53,7 +55,7 @@ export default {
     context.snacColor = "#ff5252"
   },
 
-  getPositions(context, axInst) {
+  getPositions(context) {
     let url = "main/getAllPosition?token=" + this.getToken()
     context.desserts = []
     axInst.get(url).then((res) => {

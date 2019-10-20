@@ -1,5 +1,7 @@
+import {axInst} from '@/plugins/axInst'
+
 export default {
-  initialize(context, axInst) {
+  initialize(context) {
     let url = "main/getAllPosition?token=" + this.getToken()
     context.desserts = []
     axInst.get(url).then((res) => {
@@ -7,7 +9,7 @@ export default {
     })
   },
 
-  savePosition(context, position, axInst) {
+  savePosition(context, position) {
     axInst({
       method: 'POST',
       headers: {
@@ -22,7 +24,7 @@ export default {
     })
   },
 
-  delPosition(context, position, axInst) {
+  delPosition(context, position) {
     axInst({
       method: 'POST',
       headers: {
@@ -51,7 +53,7 @@ export default {
     context.snacColor = "#ff5252"
   },
 
-  getPositions(context, axInst) {
+  getPositions(context) {
     let url = "main/getAllPosition?token=" + this.getToken()
     context.desserts = []
     axInst.get(url).then((res) => {
