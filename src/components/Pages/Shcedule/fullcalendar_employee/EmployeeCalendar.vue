@@ -1,8 +1,8 @@
 <template xmlns="http://www.w3.org/1999/html">
   <div class='demo-app'>
-    <v-container>
+
       <v-row>
-        <v-col xl="10" md="10" sm="12">
+        <v-col xl="10" lg="9" md="9" sm="12" >
           <!--    <div class='demo-app-top'>-->
           <!--      <button @click="toggleWeekends">toggle weekends</button>-->
           <!--      <button @click="gotoPast">go to a date in the past</button>-->
@@ -32,7 +32,7 @@
             @dateClick="handleDateClick"
           />
         </v-col>
-        <v-col xl="2" md="2" sm="12">
+        <v-col xl="2" lg="3" md="3" sm="12" class="pl-lg-0 pl-md-0 pa-sm-8 ">
           <v-date-picker v-model="date" :show-current="false" width="auto"></v-date-picker>
           <v-select
             v-model="employeeSelect"
@@ -46,7 +46,7 @@
 
         </v-col>
       </v-row>
-    </v-container>
+
   </div>
 </template>
 
