@@ -6,7 +6,6 @@ export default {
     context.employeesList = []
     axInst.get(url).then((res) => {
       context.employeesList = res.data
-
     })
   },
 
@@ -60,11 +59,17 @@ export default {
     let url = "main/getAllPosition?token=" + this.getToken()
     context.desserts = []
     axInst.get(url).then((res) => {
+
       context.positionsList = res.data
     })
   },
 
   getToken() {
     return document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1")
+  },
+
+  getEvetns(info, successCallback, failureCallback) {
+    console.log(info)
+    return result;
   }
 }
