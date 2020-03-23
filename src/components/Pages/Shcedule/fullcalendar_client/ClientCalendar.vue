@@ -1,34 +1,157 @@
-<template>
+<template xmlns="http://www.w3.org/1999/html">
   <div class='demo-app'>
 
-    <div class='demo-app-top'>
-      <button @click="toggleWeekends">toggle weekends</button>
-      <button @click="gotoPast">go to a date in the past</button>
-      (also, click a date/time to add an event)
-    </div>
-    <FullCalendar
-      schedulerLicenseKey='CC-Attribution-NonCommercial-NoDerivatives'
-      class='demo-app-calendar'
-      ref="fullCalendar"
-      locale="ru"
-      height="auto"
-      :slot-duration="slotDuration"
-      :min-time= "minTime"
-      :max-time= "maxTime"
-      defaultView="resourceTimeGrid"
-      now-indicator="true"
-      nav-links="true"
-      :header="{
-        left: 'prev,next today',
+    <v-row>
+      <v-col xl="10" lg="9" md="9" sm="12">
+
+        <FullCalendar
+          locale="ru"
+          :locales="allLocales"
+          schedulerLicenseKey='CC-Attribution-NonCommercial-NoDerivatives'
+          class='demo-app-calendar'
+          ref="fullCalendar"
+
+          height="auto"
+          :slot-duration="slotDuration"
+          :min-time="minTime"
+          :max-time="maxTime"
+          defaultView="resourceTimeGrid"
+          now-indicator="true"
+          nav-links="true"
+          selectable="true"
+          editable="true"
+          :custom-buttons="buttons"
+          :header="{
+        left: 'prev,next, today, interval',
         center: 'title',
-        right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+        right: 'dayGridMonth,resourceTimeGridWeek,resourceTimeGridDay,listWeek'
       }"
-      :plugins="calendarPlugins"
-      :selectable="true"
-      :weekends="calendarWeekends"
-      :event-sources="calendarEvents"
-      @dateClick="handleDateClick"
-    />
+          :refetch-resources-on-navigate="true"
+          :plugins="calendarPlugins"
+          :resources="resources"
+          :selectable="true"
+          :weekends="calendarWeekends"
+          :events="events"
+          @select="select"
+          @eventClick="eventClick"
+          @eventDrop="eventDrop"
+          @eventResize="eventResize"
+        />
+      </v-col>
+      <v-col xl="2" lg="3" md="3" sm="12" class="pl-lg-0 pl-md-0 pa-sm-8 ">
+        <v-flex xs25>
+          <v-subheader class="pl-0">Интервал рассписания</v-subheader>
+          <p></p>
+          <v-slider
+            v-model="slider"
+            thumb-label="always"
+            thumb-size="24"
+            step="5"
+            :max="60"
+            :min="10"
+          ></v-slider>
+        </v-flex>
+        <date-picker @setCurrentDate="goToDates"></date-picker>
+        <v-select
+          v-model="employeeSelect"
+          :items="employeesList"
+          multiple
+          @change="setResource()"
+          item-text="fullName"
+          label="Сотрудник"
+          prepend-icon="assignment_ind"
+          return-object>
+        </v-select>
+      </v-col>
+    </v-row>
+    <v-dialog v-model="dialog" max-width="1000px">
+
+      <v-card>
+        <v-card-title>
+          <span class="headline">Новая Запись</span>
+        </v-card-title>
+
+        <v-card-text>
+          <v-container>
+            <v-row>
+              <v-col cols="12">
+                <v-text-field
+                  flat
+                  solo-inverted
+                  hide-details
+                  prepend-inner-icon="search"
+                  label="Поиск"
+                ></v-text-field>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="12" sm="6" md="4">
+                <v-text-field
+                  prepend-icon="how_to_reg"
+                  v-model="editedItem.lastName" label="Фамилия"></v-text-field>
+              </v-col>
+              <v-col cols="12" sm="6" md="4">
+                <v-text-field
+                  prepend-icon="how_to_reg"
+                  v-model="editedItem.firstName" label="Имя"></v-text-field>
+              </v-col>
+              <v-col cols="12" sm="6" md="4">
+                <v-text-field
+                  prepend-icon="how_to_reg"
+                  aria-required="true"
+                  v-model="editedItem.middleName" label="Отчество"></v-text-field>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="12" sm="6" md="4">
+                <v-tooltip top="">
+                  <template v-slot:activator="{ on }">
+                    <v-text-field
+                      type="tel"
+                      prepend-icon="contact_phone"
+                      v-on="on"
+                      v-model="editedItem.clientPhone" label="Телефон "></v-text-field>
+                  </template>
+                  <span>Пример: +71234567890</span>
+                </v-tooltip>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="12" sm="6">
+<!--                <vue-timepicker-->
+<!--                  disabled-->
+<!--                  v-model="startTimePicker"-->
+<!--                  auto-scroll-->
+<!--                ></vue-timepicker>-->
+              </v-col>
+              <v-col cols="12" sm="6">
+<!--                <vue-timepicker-->
+<!--                  disabled-->
+<!--                  v-model="endTimePicker"-->
+<!--                  auto-scroll-->
+<!--                ></vue-timepicker>-->
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="12">
+                <v-textarea
+                  outlined
+                  name="input-5-2"
+                  label="Заметка"
+                  value="Какая нить хрень про записываемого"
+                ></v-textarea>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-card-text>
+
+        <v-card-actions>
+          <div class="flex-grow-1"></div>
+          <v-btn color="blue darken-1" text @click="close">Закрыть</v-btn>
+          <v-btn color="blue darken-1" text @click="addEvent" :disabled="false">Добавить</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -38,67 +161,204 @@
     import timeGridPlugin from '@fullcalendar/timegrid'
     import interactionPlugin from '@fullcalendar/interaction'
     import resourceTimeGridPlugin from '@fullcalendar/resource-timegrid'
+    import allLocales from "@fullcalendar/core/locales-all";
+    import Schedule from './index.js'
+    import DatePicker from '../datePicker';
 
+
+    let selectId = []
 
     export default {
         components: {
+
+            DatePicker,
             FullCalendar // make the <FullCalendar> tag available
         },
         data: () => {
             return {
+                startTimePicker: {
+                    HH: '',
+                    mm: ''
+                },
+                endTimePicker: {
+                    HH: '',
+                    mm: ''
+                },
+                slider: 30,
+                allLocales,
+                buttons: {
+                    interval: {
+                        text: 'custom!',
+                        click: () => console.log(this)
+                    }
+                },
+                editedItem: {
+                    start: '',
+                    end: '',
+                    resourcesId: '',
+                    eventId: '-1',
+                    msg: '',
+                    title: '',
+                    clientId: '',
+                    lastName: '',
+                    firstName: '',
+                    middleName: '',
+                    clientPhone: '',
+
+                },
+
+                dialog: false,
+                dialogSetDuration: false,
+                employeesList: [],
+                employeeSelect: [],
+                lastResource: "",
+                date: new Date().toISOString().substr(0, 10),
+                pickerDate: null,
                 minTime: "8:00",
                 maxTime: "23:00",
-                slotDuration: "00:15",
+                slotDuration: "00:30",
                 calendarPlugins: [ // plugins must be defined in the JS
                     dayGridPlugin,
                     timeGridPlugin,
                     interactionPlugin, // needed for dateClick
                     resourceTimeGridPlugin
                 ],
+                defaultView: 'resourceTimeGridWeek',
                 calendarWeekends: true,
-                calendarEvents: [
-                //    {events(start, end, timezone, callback){
-
-                //        }},
-                    { title: 'Event Now', start: new Date() }
-                ]
-            }
-        },
-        methods: {
-            toggleWeekends() {
-                this.calendarWeekends = !this.calendarWeekends // update a property
-            },
-            gotoPast() {
-                let calendarApi = this.$refs.fullCalendar.getApi() // from the ref="..."
-                calendarApi.gotoDate('2000-01-01') // call a method on the Calendar object
-            },
-            handleDateClick(arg) {
-                if (confirm('Would you like to add an event to ' + arg.dateStr + ' ?')) {
-                    this.calendarEvents.push({ // add new event data
-                        title: 'New Event',
-                        start: arg.date,
-                        allDay: arg.allDay
-                    })
+                resources: function (fetchInfo, successCallback, failureCallback) {
+                    Schedule.getResources(fetchInfo, selectId, successCallback)
+                },
+                events: function (info, successCallback, failureCallback) {
+                    Schedule.getEvetns(info, selectId, successCallback)
                 }
             }
+
+        },
+        mounted() {
+            this.initialization()
+
+        },
+
+        methods: {
+            monthFormat(date) {
+                let i = new Date(date).getMonth(date)
+                return monthName[i]
+            },
+
+            weekFormat(date) {
+                let i = new Date(date).getDay(date)
+                return weekDayName[i]
+            },
+
+            titleDateFormat(date) {
+                return new Date(date).toLocaleDateString()
+            },
+
+            setResource() {
+                selectId = []
+                this.employeeSelect.forEach(function (item, i) {
+                    selectId.push(item.id)
+                })
+                let calendarApi = this.$refs.fullCalendar.getApi()
+                calendarApi.refetchResources()
+                calendarApi.refetchEvents()
+            },
+
+            initialization() {
+                Schedule.initialize(this)
+            },
+
+            select(arg) {
+                Schedule.setScheduleEmployees(this, arg, )
+            },
+
+            addEvent(){
+                let calendarApi = this.$refs.fullCalendar.getApi()
+                Schedule.addEvent(this, calendarApi)
+            },
+
+            eventClick(info) {
+                let endInfo = info.event.end;
+                let start = info.event.start.getTime() - 60000 * new Date().getTimezoneOffset();
+                let end = endInfo === null ? 0 : endInfo.getTime() - 60000 * new Date().getTimezoneOffset();
+
+                this.editedItem.start = new Date(start).toISOString().slice(0, 16)
+                this.editedItem.end = endInfo === null ? "" : new Date(end).toISOString().slice(0, 16)
+
+                this.editedItem.startTime = new Date(info.event.start.getTime())
+                this.dialog = true
+            },
+
+            eventDrop(arg) {
+                let calendarApi = this.$refs.fullCalendar.getApi()
+                Schedule.eventResizeAndDrop(arg, calendarApi)
+            },
+
+            eventResize(arg) {
+                let calendarApi = this.$refs.fullCalendar.getApi()
+                Schedule.eventResizeAndDrop(arg, calendarApi)
+            },
+
+            close() {
+                this.dialog = false
+                console.log(this.editedItem.startTime)
+            },
+
+            goToDates(date) {
+                this.date = date
+            }
+        },
+
+        watch: {
+            slider: function () {
+                this.slotDuration = "00:" + this.slider
+            },
+            date: function () {
+                let calendarApi = this.$refs.fullCalendar.getApi()
+                calendarApi.gotoDate(this.date)
+            }
+        },
+
+        computed: {
+            startTime() {
+                console.log(new Date(this.editedItem.startTime).toLocaleTimeString())
+                return new Date(this.editedItem.startTime).toLocaleTimeString()
+            }
         }
+
     }
 </script>
 
-<style >
+<style>
 
   @import '../../../../../node_modules/@fullcalendar/core/main.css';
   @import '../../../../../node_modules/@fullcalendar/daygrid/main.css';
   @import '../../../../../node_modules/@fullcalendar/timegrid/main.css';
-  .demo-app {
-    font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
-    font-size: 14px;
-  }
-  .demo-app-top {
-    margin: 0 0 3em;
-  }
-  .demo-app-calendar {
-    margin: 20px;
 
+  @media (min-width: 1264px) {
+    .container {
+      width: 100%
+    }
   }
+
+
+  .fc-button-active {
+    background: #1143d5;
+  }
+
+  .fc-button-primary {
+    background: #7386d5;
+  }
+
+  /*.demo-app {*/
+  /*  font-family: Arial, Helvetica Neue, Helvetica, sans-serif;*/
+  /*  font-size: 14px;*/
+  /*}*/
+  /*.demo-app-top {*/
+  /*  margin: 0 0 3em;*/
+  /*}*/
+  /*.demo-app-calendar {*/
+  /*  margin: 20px;*/
+
+  /*}*/
 </style>

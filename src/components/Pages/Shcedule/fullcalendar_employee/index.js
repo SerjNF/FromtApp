@@ -10,11 +10,6 @@ export default {
     })
   },
 
-  setDuration(sdf){
-
-    console.log("sdf")
-  },
-
   setScheduleEmployees(arg, calendarApi) {
     let url = "employee/setScheduleEmployees?token=" + this.getToken()
     if (arg.view.type !== "dayGridMonth") {
@@ -42,36 +37,12 @@ export default {
     }
   },
 
-  eventDrop(arg, calendarApi){
-    let resourceId = arg.newResource === null ? "" : arg.newResource.id;
-    let start = arg.event.start.getTime();
-    let end = arg.event.end === null ? 0 : arg.event.end.getTime();
-    let json = '{ "start":"' + start + '" ,' +
-      '"end":"' + end + '" ,' +
-      '"eventId":"' + arg.event.id + '" ,' +
-      '"resourcesId":"' + resourceId + '"}'
-    let url = "employee/eventDropScheduleEmployees?token=" + this.getToken()
-    axInst({
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json;charset=UTF-8',
-        "Access-Control-Allow-Origin": "*",
-      },
-      url: url,
-      data: json,
-    }).then((data) => {
-      console.log(data)
-      if (data.status === 200) {
-        calendarApi.unselect();
-        setTimeout(1000);
-        calendarApi.refetchEvents()
-      }
-    }).catch(() => {
-    })
-  },
-
-  eventResize(arg, calendarApi){
+  eventResizeAndDrop(arg, calendarApi){
     let resourceId = "";
+    if (arg.newResource !== undefined){
+      resourceId = arg.newResource === null ? "" : arg.newResource.id;
+    }
+
     let start = arg.event.start.getTime();
     let end = arg.event.end === null ? 0 : arg.event.end.getTime();
     let json = '{ "start":"' + start + '" ,' +
@@ -98,52 +69,6 @@ export default {
     }).catch(() => {
     })
   },
-
-// saveEmployee(context, employee, axInst) {
-//   console.log(employee)
-//   axInst({
-//     method: 'POST',
-//     headers: {
-//       'Content-Type': 'application/json;charset=UTF-8',
-//       "Access-Control-Allow-Origin": "*",
-//     },
-//     url: "/admin/employee/saveEmployee?token=" + this.getToken(),
-//     data: employee,
-//   }).then((res) => {
-//     this.access(context, res)
-//   }).catch((error) => {
-//     this.warning(context, error)
-//   })
-// },
-//
-// delEmployee(context, employee, axInst) {
-//   axInst({
-//     method: 'POST',
-//     headers: {
-//       'Content-Type': 'application/json;charset=UTF-8',
-//       "Access-Control-Allow-Origin": "*",
-//     },
-//     url: "/admin/delUser/" + user.id + "?token=" + this.getToken(),
-//     data: '',
-//   }).then((res) => {
-//     this.access(context, res)
-//   }).catch((error) => {
-//     this.warning(context, error)
-//   })
-// },
-//
-// access(context, res) {
-//   context.badData = true
-//   context.snacMessage = res.data
-//   context.snacColor = "green"
-//   context.initialize()
-// },
-//
-// warning(context, error) {
-//   context.badData = true
-//   context.snacMessage = error.response.data
-//   context.snacColor = "#ff5252"
-// },
 
   getPositions(context, axInst) {
     let url = "main/getAllPosition?token=" + this.getToken()
@@ -167,7 +92,6 @@ export default {
       '"resourcesId":"' + resourcesId + '"}';
     let url = "employee/getScheduleEmployees?token=" + this.getToken()
 
-
     axInst({
       method: 'POST',
       headers: {
@@ -184,5 +108,43 @@ export default {
       context.badPassword = true
       console.log("bad request")
     })
-  }
+  },
+
+
+  removeScheduleEmployee(context, eventId, calendarApi) {
+    let url = "employee/" + eventId + "/delScheduleEmployees?token=" + this.getToken()
+
+    axInst({
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+        "Access-Control-Allow-Origin": "*",
+      },
+      url: url,
+      data: "",
+    }).then((data) => {
+      if (data.status === 200) {
+        this.access(context, data)
+        context.dialog = false
+        calendarApi.refetchEvents()
+      }
+    }).catch(() => {
+      this.warning(context, data)
+      console.log("bad request")
+    })
+
+  },
+
+  access(context, res) {
+    context.badData = true
+    context.snacMessage = res.data
+    context.snacColor = "green"
+
+  },
+
+  warning(context, error) {
+    context.badData = true
+    context.snacMessage = error.response.data
+    context.snacColor = "#ff5252"
+  },
 }

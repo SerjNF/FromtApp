@@ -9,10 +9,12 @@
         <!--      (also, click a date/time to add an event)-->
         <!--    </div>-->
         <FullCalendar
+          locale="ru"
+          :locales="allLocales"
           schedulerLicenseKey='CC-Attribution-NonCommercial-NoDerivatives'
           class='demo-app-calendar'
           ref="fullCalendar"
-          locale="ru"
+
           height="auto"
           :slot-duration="slotDuration"
           :min-time="minTime"
@@ -39,11 +41,19 @@
         />
       </v-col>
       <v-col xl="2" lg="3" md="3" sm="12" class="pl-lg-0 pl-md-0 pa-sm-8 ">
-        <v-date-picker
-          v-model="date"
-          :show-current="true"
-          :picker-date.sync="pickerDate"
-          width="auto"></v-date-picker>
+        <v-flex xs25>
+          <v-subheader class="pl-0">Интервал рассписания</v-subheader>
+          <p></p>
+          <v-slider
+            v-model="slider"
+            thumb-label="always"
+            thumb-size="24"
+            step="5"
+            :max="60"
+            :min="10"
+          ></v-slider>
+        </v-flex>
+        <date-picker @setCurrentDate="goToDates"></date-picker>
         <v-select
           v-model="employeeSelect"
           :items="employeesList"
@@ -55,42 +65,7 @@
         </v-select>
       </v-col>
     </v-row>
-    <v-dialog v-model="dialog" max-width="800px">
-      <v-card>
-        <v-card-title>
-          <span class="headline">{{editedItem.title}}</span>
-        </v-card-title>
-
-        <v-card-text>
-          <v-container>
-            <v-row>
-              <v-col cols="12" sm="6" md="4">
-                <v-time-picker v-model="editedItem.startTime" color="green lighten-1"
-                               header-color="primary"></v-time-picker>
-              </v-col>
-              <v-col cols="12" sm="6" md="4">
-                <v-text-field
-                  prepend-icon="how_to_reg"
-                  v-model="editedItem.start" label="Начало смены"></v-text-field>
-              </v-col>
-              <v-col cols="12" sm="6" md="4">
-                <v-text-field
-                  prepend-icon="how_to_reg"
-                  v-model="editedItem.end" label="Окончание смены"></v-text-field>
-              </v-col>
-
-            </v-row>
-          </v-container>
-        </v-card-text>
-        <v-card-actions>
-          <div class="flex-grow-1"></div>
-          <v-btn color="blue darken-1" text @click="close">Закрыть</v-btn>
-          <v-btn color="blue darken-1" text :disabled="false">Сохранить</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-
-    <v-dialog v-model="dialogSetDuration" max-width="800px">
+    <v-dialog v-model="dialog" max-width="600px">
       <v-card>
         <v-card-title>
           <span class="headline">{{editedItem.title}}</span>
@@ -100,13 +75,20 @@
           <v-container>
             <v-row>
               <!--              <v-col cols="12" sm="6" md="4">-->
-              <v-col>
-                <v-subheader class="pl-0">Always show thumb label</v-subheader>
-                <v-slider
-                  v-model="slider"
-                  step="10"
-                  thumb-label="always"
-                ></v-slider>
+              <!--                <v-time-picker v-model="editedItem.startTime" color="green lighten-1"-->
+              <!--                               header-color="primary"></v-time-picker>-->
+              <!--              </v-col>-->
+              <v-col cols="12" sm="6" md="4">
+                <v-text-field
+                  disabled
+                  prepend-icon="how_to_reg"
+                  v-model="editedItem.startTime" label="Начало смены"></v-text-field>
+              </v-col>
+              <v-col cols="12" sm="6" md="4">
+                <v-text-field
+                  disabled
+                  prepend-icon="how_to_reg"
+                  v-model="editedItem.endTime" label="Окончание смены"></v-text-field>
               </v-col>
             </v-row>
           </v-container>
@@ -114,10 +96,24 @@
         <v-card-actions>
           <div class="flex-grow-1"></div>
           <v-btn color="blue darken-1" text @click="close">Закрыть</v-btn>
-          <v-btn color="blue darken-1" text :disabled="false">Сохранить</v-btn>
+          <v-btn color="error" text @click="removeEmployeeSchedule">Удалить</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-snackbar
+      bottom="bottom"
+      text
+      v-model="badData"
+      :color=snacColor>
+      {{ snacMessage }}
+      <v-btn
+        color="black"
+        text
+        @click="badData = false"
+      >
+        Закрыть
+      </v-btn>
+    </v-snackbar>
   </div>
 </template>
 
@@ -127,38 +123,45 @@
     import timeGridPlugin from '@fullcalendar/timegrid'
     import interactionPlugin from '@fullcalendar/interaction'
     import resourceTimeGridPlugin from '@fullcalendar/resource-timegrid'
+    import allLocales from "@fullcalendar/core/locales-all";
     import Employee from './index.js'
+    import DatePicker from '../datePicker';
 
     let selectId = ""
 
     export default {
         components: {
+            DatePicker,
             FullCalendar // make the <FullCalendar> tag available
         },
         data: () => {
             return {
-                slider: 45,
-
+                snacColor: "grey",
+                snacMessage: "",
+                badData: false,
+                slider: 30,
+                allLocales,
                 buttons: {
                     interval: {
                         text: 'custom!',
-                        click: () => this.a.date.dialogSetDuration = true
+                        click: () => console.log(this)
                     }
                 },
                 editedItem: {
                     start: '',
                     end: '',
                     title: '',
-                    startTime: ''
+                    startTime: '',
+                    endTime: '',
+                    eventId: ''
                 },
 
                 dialog: false,
-                dialogSetDuration: false,
                 employeesList: [],
                 employeeSelect: "",
                 lastResource: "",
                 date: new Date().toISOString().substr(0, 10),
-                pickerDate: null,
+
                 minTime: "8:00",
                 maxTime: "23:00",
                 slotDuration: "00:30",
@@ -207,11 +210,7 @@
             toggleWeekends() {
                 this.calendarWeekends = !this.calendarWeekends // update a property
             },
-            gotoPast(context) {
 
-
-                console.log(context)
-            },
             handleDateClick(arg) {
             },
 
@@ -221,35 +220,52 @@
             },
 
             eventClick(info) {
-                let endInfo = info.event.end;
-                let start = info.event.start.getTime() - 60000 * new Date().getTimezoneOffset();
-                let end = endInfo === null ? 0 : endInfo.getTime() - 60000 * new Date().getTimezoneOffset();
+                // let endInfo = info.event.end;
+                // let start = info.event.start.getTime() - 60000 * new Date().getTimezoneOffset();
+                // let end = endInfo === null ? 0 : endInfo.getTime() - 60000 * new Date().getTimezoneOffset();
 
-                this.editedItem.start = new Date(start).toISOString().slice(0, 16)
-                this.editedItem.end = endInfo === null ? "" : new Date(end).toISOString().slice(0, 16)
+                // this.editedItem.start = new Date(start).toISOString().slice(0, 16)
+                // this.editedItem.end = endInfo === null ? "" : new Date(end).toISOString().slice(0, 16)
 
-                this.editedItem.startTime = new Date(info.event.start.getTime())
+                this.editedItem.startTime = new Date(info.event.start).toLocaleTimeString()
+                this.editedItem.endTime = new Date(info.event.end).toLocaleTimeString()
+                this.editedItem.eventId = info.event.id
+                this.editedItem.title = info.event.title
                 this.dialog = true
             },
 
             eventDrop(arg) {
                 let calendarApi = this.$refs.fullCalendar.getApi()
-                Employee.eventDrop(arg, calendarApi)
+                Employee.eventResizeAndDrop(arg, calendarApi)
             },
 
             eventResize(arg) {
                 let calendarApi = this.$refs.fullCalendar.getApi()
-                Employee.eventResize(arg, calendarApi)
+                Employee.eventResizeAndDrop(arg, calendarApi)
             },
 
             close() {
                 this.dialog = false
+            },
+
+            goToDates(date) {
+                this.date = date
+            },
+
+            removeEmployeeSchedule() {
+                let calendarApi = this.$refs.fullCalendar.getApi()
+                Employee.removeScheduleEmployee(this, this.editedItem.eventId, calendarApi)
+                console.log(this.editedItem.eventId)
             }
         },
 
         watch: {
-            pickerDate(val) {
-                console.log(val)
+            slider: function () {
+                this.slotDuration = "00:" + this.slider
+            },
+            date: function () {
+                let calendarApi = this.$refs.fullCalendar.getApi()
+                calendarApi.gotoDate(this.date)
             }
         },
 
