@@ -49,7 +49,7 @@ export default {
 
   warning(context, error) {
     context.badData = true
-    context.snacMessage = error.response.data
+    context.snacMessage = error.response.data.msg
     context.snacColor = "#ff5252"
   },
 

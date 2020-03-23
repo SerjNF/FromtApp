@@ -2,7 +2,7 @@
   <div class='demo-app'>
 
       <v-row>
-        <v-col xl="10" lg="9" md="9" sm="12" >
+        <v-col xl="10" md="10" sm="12">
           <!--    <div class='demo-app-top'>-->
           <!--      <button @click="toggleWeekends">toggle weekends</button>-->
           <!--      <button @click="gotoPast">go to a date in the past</button>-->
@@ -32,7 +32,7 @@
             @dateClick="handleDateClick"
           />
         </v-col>
-        <v-col xl="2" lg="3" md="3" sm="12" class="pl-lg-0 pl-md-0 pa-sm-8 ">
+        <v-col xl="2" md="2" sm="12">
           <v-date-picker v-model="date" :show-current="false" width="auto"></v-date-picker>
           <v-select
             v-model="employeeSelect"
@@ -81,7 +81,7 @@
                     //    {events(start, end, timezone, callback){
 
                     //        }},
-                    {title: 'Event Now', start: new Date()}
+                    // {title: 'Event Now', start: new Date()}
                 ]
             }
         },
@@ -107,7 +107,7 @@
                     this.calendarEvents.push({ // add new event data
                         title: 'New Event',
                         start: arg.date,
-                        allDay: arg.allDay
+                        end: arg.date + 10000
                     })
                 }
             }

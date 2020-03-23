@@ -56,13 +56,13 @@ export default {
   //   context.snacColor = "#ff5252"
   // },
 
-  getPositions(context, axInst) {
-    let url = "main/getAllPosition?token=" + this.getToken()
-    context.desserts = []
-    axInst.get(url).then((res) => {
-      context.positionsList = res.data
-    })
-  },
+  // getPositions(context, axInst) {
+  //   let url = "main/getAllPosition?token=" + this.getToken()
+  //   context.desserts = []
+  //   axInst.get(url).then((res) => {
+  //     context.positionsList = res.data
+  //   })
+  // },
 
   getToken() {
     return document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1")
