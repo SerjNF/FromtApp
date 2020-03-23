@@ -10,8 +10,6 @@ export default {
     })
   },
 
-
-
   setScheduleEmployees(context, arg) {
 
     context.editedItem.resourcesId = arg.resource.id

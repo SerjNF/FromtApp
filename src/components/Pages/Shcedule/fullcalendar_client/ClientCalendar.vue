@@ -165,14 +165,13 @@
     import Schedule from './index.js'
     import DatePicker from '../datePicker';
 
-
     let selectId = []
 
     export default {
         components: {
 
             DatePicker,
-            FullCalendar // make the <FullCalendar> tag available
+            FullCalendar // make the <FullCalendar>
         },
         data: () => {
             return {
