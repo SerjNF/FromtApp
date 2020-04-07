@@ -24,7 +24,7 @@
           nav-links="true"
           selectable="true"
           editable="true"
-          :custom-buttons="buttons"
+          :eventOverlap="false"
           :header="{
         left: 'prev,next, today, interval',
         center: 'title',
@@ -78,17 +78,58 @@
               <!--                <v-time-picker v-model="editedItem.startTime" color="green lighten-1"-->
               <!--                               header-color="primary"></v-time-picker>-->
               <!--              </v-col>-->
-              <v-col cols="12" sm="6" md="4">
+              <v-col cols="6" sm="6" md="6">
                 <v-text-field
                   disabled
                   prepend-icon="how_to_reg"
                   v-model="editedItem.startTime" label="Начало смены"></v-text-field>
               </v-col>
-              <v-col cols="12" sm="6" md="4">
+              <v-col cols="6" sm="6" md="6">
                 <v-text-field
                   disabled
                   prepend-icon="how_to_reg"
                   v-model="editedItem.endTime" label="Окончание смены"></v-text-field>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="6" sm="3" md="3">
+                <v-select
+                  multiple
+                  v-model="selectDayOfWeek"
+                  :items="repeatDialog.weekDay"
+                  item-text="value"
+                  item-value="id"
+                  label="Дни повтора"
+                ></v-select>
+              </v-col>
+              <v-col cols="6" sm="3" md="3">
+                <v-select
+                  def
+                  v-model="selectDayNumber"
+                  :items="repeatDialog.dayNumber"
+                  item-text="value"
+                  item-value="id"
+                  label="Дни"
+
+                ></v-select>
+              </v-col>
+              <v-col cols="3" sm="3" md="3">
+                <v-select
+                  v-model="editedItem.repeatCount"
+                  :items="[1, 2, 3 , 4, 5]"
+                  item-text="value"
+                  label="Количество повторов"
+                  return="id"
+                ></v-select>
+              </v-col>
+              <v-col class="repeat_btn" cols="3" sm="3" md="3">
+                <v-btn
+                  icon
+                  color="green"
+                  @click="repeatEmployeeSchedule"
+                >
+                  <v-icon>repeat</v-icon>
+                </v-btn>
               </v-col>
             </v-row>
           </v-container>
@@ -136,18 +177,36 @@
         },
         data: () => {
             return {
+                selectDayNumber: {id: "2", value: "Любые"},
+                selectDayOfWeek: {id: "8", value: "Все дни"},
+                repeatDialog: {
+                    dayNumber: [
+                        {id: "2", value: "Любые"},
+                        {id: "1", value: "Нечетные"},
+                        {id: "0", value: "Четные"}
+                    ],
+                    weekDay: [
+                        {id: "8", value: "Все дни"},
+                        {id: "1", value: "Пн"},
+                        {id: "2", value: "Вт"},
+                        {id: "3", value: "Ср"},
+                        {id: "4", value: "Чт"},
+                        {id: "5", value: "Пт"},
+                        {id: "6", value: "Сб"},
+                        {id: "7", value: "Вс"}
+                    ]
+                },
+
                 snacColor: "grey",
                 snacMessage: "",
                 badData: false,
                 slider: 30,
                 allLocales,
-                buttons: {
-                    interval: {
-                        text: 'custom!',
-                        click: () => console.log(this)
-                    }
-                },
+
                 editedItem: {
+                    dayNumber: 2,
+                    selectDay: [8],
+                    repeatCount: '',
                     start: '',
                     end: '',
                     title: '',
@@ -188,7 +247,6 @@
         methods: {
             setResource() {
                 let calendarApi = this.$refs.fullCalendar.getApi()
-                console.log(this)
                 let res = calendarApi.getResourceById(this.lastResource)
                 if (res !== null) {
                     res.remove()
@@ -207,13 +265,6 @@
 
             },
 
-            toggleWeekends() {
-                this.calendarWeekends = !this.calendarWeekends // update a property
-            },
-
-            handleDateClick(arg) {
-            },
-
             select(arg) {
                 let calendarApi = this.$refs.fullCalendar.getApi()
                 Employee.setScheduleEmployees(arg, calendarApi)
@@ -223,15 +274,20 @@
                 // let endInfo = info.event.end;
                 // let start = info.event.start.getTime() - 60000 * new Date().getTimezoneOffset();
                 // let end = endInfo === null ? 0 : endInfo.getTime() - 60000 * new Date().getTimezoneOffset();
-
-                // this.editedItem.start = new Date(start).toISOString().slice(0, 16)
-                // this.editedItem.end = endInfo === null ? "" : new Date(end).toISOString().slice(0, 16)
+                console.log(info)
+                this.editedItem.start = info.event.start.getTime()
+                this.editedItem.end = info.event.end.getTime()
 
                 this.editedItem.startTime = new Date(info.event.start).toLocaleTimeString()
                 this.editedItem.endTime = new Date(info.event.end).toLocaleTimeString()
                 this.editedItem.eventId = info.event.id
                 this.editedItem.title = info.event.title
                 this.dialog = true
+            },
+
+            repeatEmployeeSchedule() {
+                let calendarApi = this.$refs.fullCalendar.getApi()
+                Employee.repeatEmployeeSchedule(this.editedItem, this, calendarApi)
             },
 
             eventDrop(arg) {
@@ -255,7 +311,6 @@
             removeEmployeeSchedule() {
                 let calendarApi = this.$refs.fullCalendar.getApi()
                 Employee.removeScheduleEmployee(this, this.editedItem.eventId, calendarApi)
-                console.log(this.editedItem.eventId)
             }
         },
 
@@ -266,6 +321,14 @@
             date: function () {
                 let calendarApi = this.$refs.fullCalendar.getApi()
                 calendarApi.gotoDate(this.date)
+            },
+            selectDayNumber: function () {
+                this.editedItem.dayNumber = this.selectDayNumber
+                console.log("selectDayNumber " + this.selectDayNumber)
+            },
+
+            selectDayOfWeek: function () {
+                this.editedItem.selectDay = this.selectDayOfWeek
             }
         },
 
@@ -290,6 +353,9 @@
     }
   }
 
+  .repeat_btn {
+    padding-top: 25px;
+  }
 
   .fc-button-active {
     background: #1143d5;

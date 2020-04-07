@@ -1,5 +1,11 @@
 import {axInst} from '@/plugins/axInst'
 
+function formatTime(time){
+  let date = new Date(time)
+  let minute = date.getMinutes().toString() === "0" ? "00" : date.getMinutes()
+  return date.getHours() + ":" + minute
+}
+
 export default {
 
   initialize(context) {
@@ -10,65 +16,82 @@ export default {
     })
   },
 
-  setScheduleEmployees(context, arg) {
-
+  setScheduleClient(context, arg) {
     context.editedItem.resourcesId = arg.resource.id
-    context.editedItem.startTime = arg.start
-    context.startTimePicker.HH = new Date(context.editedItem.startTime).getHours().toLocaleString()
-    context.startTimePicker.mm = new Date(context.editedItem.startTime).getMinutes().toLocaleString()
-    context.startTimePicker.mm = context.startTimePicker.mm === "0" ? context.startTimePicker.mm + "0" : context.startTimePicker.mm
+    context.editedItem.startTime = arg.start.getTime()
+    context.startTime = formatTime(arg.start)
 
-    context.editedItem.endTime = arg.end
-    context.endTimePicker.HH = new Date(context.editedItem.endTime).getHours().toLocaleString()
-    context.endTimePicker.mm = new Date(context.editedItem.endTime).getMinutes().toLocaleString()
-    context.endTimePicker.mm = context.endTimePicker.mm === "0" ? context.endTimePicker.mm + "0" : context.endTimePicker.mm
+    context.editedItem.endTime = arg.end.getTime()
+    context.endTime = formatTime(arg.end)
     context.dialog = true
-
-
-    // let url = "employee/setScheduleEmployees?token=" + this.getToken()
-    // if (arg.view.type !== "dayGridMonth") {
-    //   var json = '{ "start":"' + arg.start.getTime() + '" ,' +
-    //     '"end":"' + arg.end.getTime() + '" ,' +
-    //     '"resourcesId":"' + arg.resource.id + '"}';
-    //
-    //   axInst({
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json;charset=UTF-8',
-    //       "Access-Control-Allow-Origin": "*",
-    //     },
-    //     url: url,
-    //     data: json,
-    //   }).then((data) => {
-    //     console.log(data)
-    //     if (data.status === 200) {
-    //       calendarApi.unselect();
-    //       setTimeout(1000);
-    //       calendarApi.refetchEvents()
-    //     }
-    //   }).catch(() => {
-    //   })
-    // }
   },
 
-  addEvent(context, calendarApi){
+  addEvent(context, calendarApi) {
+     let json = '{ "start":"' + context.editedItem.startTime + '" ,' +
+      '"end":"' + context.editedItem.endTime + '" ,' +
+      '"eventId":"' + "" + '" ,' +
+      '"clientId":"' + context.editedItem.clientId + '" ,' +
+      '"lastName":"' + context.editedItem.lastName + '" ,' +
+      '"firstName":"' + context.editedItem.firstName + '" ,' +
+      '"middleName":"' + context.editedItem.middleName + '" ,' +
+      '"clientPhone":"' + context.editedItem.clientPhone + '" ,' +
+      '"msg":"' + context.editedItem.msg + '" ,' +
+      '"resourcesId":"' + context.editedItem.resourcesId + '"}'
 
+       let url = "client/setScheduleClient?token=" + this.getToken()
+    axInst({
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+        "Access-Control-Allow-Origin": "*",
+      },
+      url: url,
+      data: json,
+    }).then((data) => {
+      console.log(data)
+      this.access(context, data)
+      if (data.status === 200) {
+        calendarApi.unselect();
+        setTimeout(1000);
+        calendarApi.refetchEvents()
+        context.selectClient = null
+        context.editedItem = Object.assign({}, context.defaultItem)
+        context.dialog = false
+
+      }
+    }).catch(error => {
+        this.warning (context, error)
+
+      }
+    )
   },
 
-  eventResizeAndDrop(arg, calendarApi){
+  eventResizeAndDrop(arg, calendarApi) {
     let resourceId = "";
-    if (arg.newResource !== undefined){
+    if (arg.newResource !== undefined) {
       resourceId = arg.newResource === null ? "" : arg.newResource.id;
     }
 
     let start = arg.event.start.getTime();
     let end = arg.event.end === null ? 0 : arg.event.end.getTime();
+
     let json = '{ "start":"' + start + '" ,' +
       '"end":"' + end + '" ,' +
       '"eventId":"' + arg.event.id + '" ,' +
+      '"clientId":"' + "" + '" ,' +
+      '"lastName":"' + "" + '" ,' +
+      '"firstName":"' + "" + '" ,' +
+      '"middleName":"' + "" + '" ,' +
+      '"clientPhone":"' + "" + '" ,' +
+      '"msg":"' + "" + '" ,' +
       '"resourcesId":"' + resourceId + '"}'
 
-    let url = "employee/eventDropScheduleEmployees?token=" + this.getToken()
+    // let jsonOld = '{ "start":"' + start + '" ,' +
+    //   '"end":"' + end + '" ,' +
+    //   '"eventId":"' + arg.event.id + '" ,' +
+    //   '"resourcesId":"' + resourceId + '"}'
+
+    let url = "client/eventDropScheduleClient?token=" + this.getToken()
     axInst({
       method: 'POST',
       headers: {
@@ -84,7 +107,8 @@ export default {
         setTimeout(1000);
         calendarApi.refetchEvents()
       }
-    }).catch(() => {
+    }).catch((error) => {
+      console.log(error.response)
     })
   },
 
@@ -132,13 +156,10 @@ export default {
   },
 
   getEvetns(info, resourcesId, successCallback) {
-    let start = info.start.valueOf();
-    let end = info.end.valueOf();
-
-    let json = '{ "start": "' + start + '" ,' +
-      '"end":"' + end + '" ,' +
+    let json = '{ "start": "' + info.start.valueOf() + '" ,' +
+      '"end":"' + info.end.valueOf() + '" ,' +
       '"resourcesId":"' + resourcesId + '"}';
-    console.table(json)
+
     let url = "client/getClientEvents?token=" + this.getToken()
 
     axInst({
@@ -150,13 +171,45 @@ export default {
       url: url,
       data: json,
     }).then((data) => {
-      if (data.status === 200) {
-        console.table(data)
         successCallback(data.data)
-      }
     }).catch(() => {
-      context.badPassword = true
       console.log("bad request")
     })
-  }
+  },
+
+  getClientListFiltered(val, context) {
+    if (val.length === 2) {
+      console.log("Search " + val)
+
+      let url = "client/getClientListFiltered?token=" + this.getToken() + "&val=" + val
+
+      axInst({
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8',
+          "Access-Control-Allow-Origin": "*",
+        },
+        url: url,
+      }).then((data) => {
+        context.clientList = data.data
+      }).catch(() => {
+        console.log("bad request")
+      })
+    }
+  },
+
+  access(context, res) {
+    console.log("access")
+    context.badData = true
+    context.snacMessage = res.data
+    context.snacColor = "green"
+
+  },
+
+  warning(context, error) {
+    context.badData = true
+    context.snacMessage = error.response.data
+    context.snacColor = "#ff5252"
+  },
+
 }

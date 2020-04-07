@@ -26,7 +26,6 @@ export default {
         url: url,
         data: json,
       }).then((data) => {
-        console.log(data)
         if (data.status === 200) {
           calendarApi.unselect();
           setTimeout(1000);
@@ -60,7 +59,6 @@ export default {
       url: url,
       data: json,
     }).then((data) => {
-      console.log(data)
       if (data.status === 200) {
         calendarApi.unselect();
         setTimeout(1000);
@@ -132,7 +130,25 @@ export default {
       this.warning(context, data)
       console.log("bad request")
     })
+  },
 
+  repeatEmployeeSchedule(editedItem, context, calendarApi){
+    let url = "employee/repeatEmployeeSchedule?token=" + this.getToken()
+    axInst({
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+        "Access-Control-Allow-Origin": "*",
+      },
+      url: url,
+      data: editedItem,
+    }).then((data) => {
+      this.access(context, data)
+      calendarApi.refetchEvents()
+    }).catch((error) => {
+      this.warning(context, error)
+      console.log("bad request")
+    })
   },
 
   access(context, res) {
@@ -146,5 +162,5 @@ export default {
     context.badData = true
     context.snacMessage = error.response.data
     context.snacColor = "#ff5252"
-  },
+  }
 }
