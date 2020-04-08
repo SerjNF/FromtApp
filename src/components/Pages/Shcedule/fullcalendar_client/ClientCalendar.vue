@@ -40,6 +40,7 @@
           @eventClick="eventClick"
           @eventDrop="eventDrop"
           @eventResize="eventResize"
+          :dates-render="datesRender"
         />
       </v-col>
 
@@ -56,7 +57,7 @@
             :min="10"
           ></v-slider>
         </v-flex>
-        <date-picker @setCurrentDate="goToDates"></date-picker>
+        <date-picker :somedata ="toDatePickerDate" @setCurrentDate="goToDates"></date-picker>
         <v-select
           v-model="employeeSelect"
           :items="employeesList"
@@ -311,6 +312,7 @@
                 employeeSelect: [],
                 lastResource: "",
                 date: new Date().toISOString().substr(0, 10),
+                toDatePickerDate: '',
                 pickerDate: null,
                 minTime: "8:00",
                 maxTime: "23:00",
@@ -379,12 +381,12 @@
 
             eventDrop(arg) {
                 let calendarApi = this.$refs.fullCalendar.getApi()
-                Schedule.eventResizeAndDrop(arg, calendarApi)
+                Schedule.eventResizeAndDrop(arg, calendarApi, this)
             },
 
             eventResize(arg) {
                 let calendarApi = this.$refs.fullCalendar.getApi()
-                Schedule.eventResizeAndDrop(arg, calendarApi)
+                Schedule.eventResizeAndDrop(arg, calendarApi, this)
             },
 
             close() {
@@ -408,6 +410,10 @@
                     })
                     this.loading = false
                 }, 500)
+            },
+
+            datesRender(info){
+                this.toDatePickerDate =  info.view.currentStart.toLocaleDateString()
             }
         },
 

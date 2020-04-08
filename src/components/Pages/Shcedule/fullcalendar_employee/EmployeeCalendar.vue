@@ -38,6 +38,7 @@
           @eventClick="eventClick"
           @eventDrop="eventDrop"
           @eventResize="eventResize"
+          :dates-render="datesRender"
         />
       </v-col>
       <v-col xl="2" lg="3" md="3" sm="12" class="pl-lg-0 pl-md-0 pa-sm-8 ">
@@ -53,7 +54,7 @@
             :min="10"
           ></v-slider>
         </v-flex>
-        <date-picker @setCurrentDate="goToDates"></date-picker>
+        <date-picker :somedata ="toDatePickerDate" @setCurrentDate="goToDates"></date-picker>
         <v-select
           v-model="employeeSelect"
           :items="employeesList"
@@ -104,7 +105,6 @@
               </v-col>
               <v-col cols="6" sm="3" md="3">
                 <v-select
-                  def
                   v-model="selectDayNumber"
                   :items="repeatDialog.dayNumber"
                   item-text="value"
@@ -116,7 +116,7 @@
               <v-col cols="3" sm="3" md="3">
                 <v-select
                   v-model="editedItem.repeatCount"
-                  :items="[1, 2, 3 , 4, 5]"
+                  :items="[1, 2, 3 , 4, 5, 6, 7, 14]"
                   item-text="value"
                   label="Количество повторов"
                   return="id"
@@ -136,8 +136,8 @@
         </v-card-text>
         <v-card-actions>
           <div class="flex-grow-1"></div>
-          <v-btn color="blue darken-1" text @click="close">Закрыть</v-btn>
           <v-btn color="error" text @click="removeEmployeeSchedule">Удалить</v-btn>
+          <v-btn color="blue darken-1" text @click="close">Закрыть</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -178,7 +178,7 @@
         data: () => {
             return {
                 selectDayNumber: {id: "2", value: "Любые"},
-                selectDayOfWeek: {id: "8", value: "Все дни"},
+                selectDayOfWeek: [{id: "8", value: "Все дни"}],
                 repeatDialog: {
                     dayNumber: [
                         {id: "2", value: "Любые"},
@@ -207,8 +207,16 @@
                     dayNumber: 2,
                     selectDay: [8],
                     repeatCount: '',
-                    start: '',
-                    end: '',
+                    title: '',
+                    startTime: '',
+                    endTime: '',
+                    eventId: ''
+                },
+
+                defaultItem: {
+                    dayNumber: 2,
+                    selectDay: [8],
+                    repeatCount: '',
                     title: '',
                     startTime: '',
                     endTime: '',
@@ -220,7 +228,7 @@
                 employeeSelect: "",
                 lastResource: "",
                 date: new Date().toISOString().substr(0, 10),
-
+                toDatePickerDate : '',
                 minTime: "8:00",
                 maxTime: "23:00",
                 slotDuration: "00:30",
@@ -271,13 +279,6 @@
             },
 
             eventClick(info) {
-                // let endInfo = info.event.end;
-                // let start = info.event.start.getTime() - 60000 * new Date().getTimezoneOffset();
-                // let end = endInfo === null ? 0 : endInfo.getTime() - 60000 * new Date().getTimezoneOffset();
-                console.log(info)
-                this.editedItem.start = info.event.start.getTime()
-                this.editedItem.end = info.event.end.getTime()
-
                 this.editedItem.startTime = new Date(info.event.start).toLocaleTimeString()
                 this.editedItem.endTime = new Date(info.event.end).toLocaleTimeString()
                 this.editedItem.eventId = info.event.id
@@ -292,15 +293,16 @@
 
             eventDrop(arg) {
                 let calendarApi = this.$refs.fullCalendar.getApi()
-                Employee.eventResizeAndDrop(arg, calendarApi)
+                Employee.eventResizeAndDrop(arg, calendarApi, this)
             },
 
             eventResize(arg) {
                 let calendarApi = this.$refs.fullCalendar.getApi()
-                Employee.eventResizeAndDrop(arg, calendarApi)
+                Employee.eventResizeAndDrop(arg, calendarApi, this)
             },
 
             close() {
+                this.editedItem = Object.assign({}, this.defaultItem)
                 this.dialog = false
             },
 
@@ -311,6 +313,10 @@
             removeEmployeeSchedule() {
                 let calendarApi = this.$refs.fullCalendar.getApi()
                 Employee.removeScheduleEmployee(this, this.editedItem.eventId, calendarApi)
+            },
+
+            datesRender(info){
+                this.toDatePickerDate =  info.view.currentStart.toLocaleDateString()
             }
         },
 
@@ -318,10 +324,12 @@
             slider: function () {
                 this.slotDuration = "00:" + this.slider
             },
+
             date: function () {
                 let calendarApi = this.$refs.fullCalendar.getApi()
                 calendarApi.gotoDate(this.date)
             },
+
             selectDayNumber: function () {
                 this.editedItem.dayNumber = this.selectDayNumber
                 console.log("selectDayNumber " + this.selectDayNumber)
@@ -337,12 +345,10 @@
                 return this.editedIndex === -1 ? 'Новый сотрудник' : 'Редактировать профиль'
             },
         }
-
     }
 </script>
 
 <style>
-
   @import '../../../../../node_modules/@fullcalendar/core/main.css';
   @import '../../../../../node_modules/@fullcalendar/daygrid/main.css';
   @import '../../../../../node_modules/@fullcalendar/timegrid/main.css';

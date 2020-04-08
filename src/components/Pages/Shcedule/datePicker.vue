@@ -6,9 +6,12 @@
     :month-format="monthFormat"
     :first-day-of-week="1"
     :title-date-format="titleDateFormat"
-    :show-current="true"
+
+    :show-current="currentDate"
+
     width="auto">
   </v-date-picker>
+
 </template>
 
 <script>
@@ -17,9 +20,11 @@
     const weekDayName = ["вс", "пн", "вт", "ср", "чт", "пт", "сб"]
     const monthName = ["январь", "февраль", "март", "апрель", "май", "июнь", "июль", "август", "сентябрь", "октябрь", "ноябрь", "декабрь"]
     export default {
+        props: ['somedata'],
         data: () => {
             return {
-                name: "datePicker",
+                name: 'datePicker',
+                currentDate : new Date().toISOString().substr(0, 10),
                 datePickerLocale: "ruDatepicker",
                 date: new Date().toISOString().substr(0, 10),
             }
@@ -43,8 +48,11 @@
         watch: {
             date: function(){
                 this.$emit('setCurrentDate', this.date);
-
+            },
+            somedata: function () {
+                this.date = this.somedata.split(".").reverse().join("-")
             }
+
         },
     }
 </script>

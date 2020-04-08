@@ -57,7 +57,6 @@ export default {
         context.selectClient = null
         context.editedItem = Object.assign({}, context.defaultItem)
         context.dialog = false
-
       }
     }).catch(error => {
         this.warning (context, error)
@@ -66,7 +65,7 @@ export default {
     )
   },
 
-  eventResizeAndDrop(arg, calendarApi) {
+  eventResizeAndDrop(arg, calendarApi, context) {
     let resourceId = "";
     if (arg.newResource !== undefined) {
       resourceId = arg.newResource === null ? "" : arg.newResource.id;
@@ -86,11 +85,6 @@ export default {
       '"msg":"' + "" + '" ,' +
       '"resourcesId":"' + resourceId + '"}'
 
-    // let jsonOld = '{ "start":"' + start + '" ,' +
-    //   '"end":"' + end + '" ,' +
-    //   '"eventId":"' + arg.event.id + '" ,' +
-    //   '"resourcesId":"' + resourceId + '"}'
-
     let url = "client/eventDropScheduleClient?token=" + this.getToken()
     axInst({
       method: 'POST',
@@ -106,9 +100,10 @@ export default {
         calendarApi.unselect();
         setTimeout(1000);
         calendarApi.refetchEvents()
+        this.access(context, data)
       }
     }).catch((error) => {
-      console.log(error.response)
+      this.warning(context, error)
     })
   },
 
@@ -116,7 +111,6 @@ export default {
     let url = "main/getAllPosition?token=" + this.getToken()
     context.desserts = []
     axInst.get(url).then((res) => {
-
       context.positionsList = res.data
     })
   },

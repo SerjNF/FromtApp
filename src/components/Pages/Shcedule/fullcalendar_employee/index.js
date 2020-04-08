@@ -36,9 +36,9 @@ export default {
     }
   },
 
-  eventResizeAndDrop(arg, calendarApi){
+  eventResizeAndDrop(arg, calendarApi, context) {
     let resourceId = "";
-    if (arg.newResource !== undefined){
+    if (arg.newResource !== undefined) {
       resourceId = arg.newResource === null ? "" : arg.newResource.id;
     }
 
@@ -63,8 +63,10 @@ export default {
         calendarApi.unselect();
         setTimeout(1000);
         calendarApi.refetchEvents()
+        this.access(context, data)
       }
-    }).catch(() => {
+    }).catch((error) => {
+      this.warning(context, error)
     })
   },
 
@@ -103,7 +105,6 @@ export default {
         successCallback(data.data)
       }
     }).catch(() => {
-      context.badPassword = true
       console.log("bad request")
     })
   },
@@ -126,13 +127,13 @@ export default {
         context.dialog = false
         calendarApi.refetchEvents()
       }
-    }).catch(() => {
-      this.warning(context, data)
+    }).catch((error) => {
+      this.warning(context, error)
       console.log("bad request")
     })
   },
 
-  repeatEmployeeSchedule(editedItem, context, calendarApi){
+  repeatEmployeeSchedule(editedItem, context, calendarApi) {
     let url = "employee/repeatEmployeeSchedule?token=" + this.getToken()
     axInst({
       method: 'POST',
