@@ -49,10 +49,10 @@
             date: function(){
                 this.$emit('setCurrentDate', this.date);
             },
+
             somedata: function () {
                 this.date = this.somedata.split(".").reverse().join("-")
             }
-
         },
     }
 </script>

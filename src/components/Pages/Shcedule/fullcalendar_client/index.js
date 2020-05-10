@@ -9,7 +9,7 @@ function formatTime(time){
 export default {
 
   initialize(context) {
-    let url = "employee/getEmployeesFullName?token=" + this.getToken()
+    let url = "employee/getEmployeesWorkSchedule?token=" + this.getToken()
     context.employeesList = []
     axInst.get(url).then((res) => {
       context.employeesList = res.data
@@ -27,17 +27,6 @@ export default {
   },
 
   addEvent(context, calendarApi) {
-     let json = '{ "start":"' + context.editedItem.startTime + '" ,' +
-      '"end":"' + context.editedItem.endTime + '" ,' +
-      '"eventId":"' + "" + '" ,' +
-      '"clientId":"' + context.editedItem.clientId + '" ,' +
-      '"lastName":"' + context.editedItem.lastName + '" ,' +
-      '"firstName":"' + context.editedItem.firstName + '" ,' +
-      '"middleName":"' + context.editedItem.middleName + '" ,' +
-      '"clientPhone":"' + context.editedItem.clientPhone + '" ,' +
-      '"msg":"' + context.editedItem.msg + '" ,' +
-      '"resourcesId":"' + context.editedItem.resourcesId + '"}'
-
        let url = "client/setScheduleClient?token=" + this.getToken()
     axInst({
       method: 'POST',
@@ -46,9 +35,8 @@ export default {
         "Access-Control-Allow-Origin": "*",
       },
       url: url,
-      data: json,
+      data: context.editedItem,
     }).then((data) => {
-      console.log(data)
       this.access(context, data)
       if (data.status === 200) {
         calendarApi.unselect();
@@ -60,7 +48,6 @@ export default {
       }
     }).catch(error => {
         this.warning (context, error)
-
       }
     )
   },
@@ -95,7 +82,6 @@ export default {
       url: url,
       data: json,
     }).then((data) => {
-      console.log(data)
       if (data.status === 200) {
         calendarApi.unselect();
         setTimeout(1000);

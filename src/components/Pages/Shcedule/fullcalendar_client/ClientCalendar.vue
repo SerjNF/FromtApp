@@ -351,7 +351,6 @@
                 let calendarApi = this.$refs.fullCalendar.getApi()
                 calendarApi.refetchResources()
                 calendarApi.refetchEvents()
-                console.log("setResource")
             },
 
             initialization() {
@@ -420,15 +419,15 @@
         watch: {
             endTime: function () {
                 let splitTime = this.endTime.split(":")
-                this.editedItem.endTime = new Date(this.editedItem.endTime).setHours(splitTime[0])
-                this.editedItem.endTime = new Date(this.editedItem.endTime).setMinutes(splitTime[1])
-                console.log(new Date(this.editedItem.endTime).toLocaleTimeString())
+                this.editedItem.end = new Date(this.editedItem.endTime).setHours(splitTime[0])
+                this.editedItem.end = new Date(this.editedItem.endTime).setMinutes(splitTime[1])
+                console.log(new Date(this.editedItem.end).toLocaleTimeString())
             },
 
             startTime: function () {
                 let splitTime = this.startTime.split(":")
-                this.editedItem.startTime = new Date(this.editedItem.startTime).setHours(splitTime[0])
-                this.editedItem.startTime = new Date(this.editedItem.startTime).setMinutes(splitTime[1])
+                this.editedItem.start = new Date(this.editedItem.startTime).setHours(splitTime[0])
+                this.editedItem.start = new Date(this.editedItem.startTime).setMinutes(splitTime[1])
             },
 
             selectClient: function () {
