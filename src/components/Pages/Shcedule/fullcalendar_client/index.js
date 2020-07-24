@@ -62,17 +62,20 @@ export default {
     let start = arg.event.start.getTime();
     let end = arg.event.end === null ? 0 : arg.event.end.getTime();
 
-    let json = '{ "start":"' + start + '" ,' +
-      '"end":"' + end + '" ,' +
-      '"eventId":"' + arg.event.id + '" ,' +
-      '"clientId":"' + "" + '" ,' +
-      '"lastName":"' + "" + '" ,' +
-      '"firstName":"' + "" + '" ,' +
-      '"middleName":"' + "" + '" ,' +
-      '"clientPhone":"' + "" + '" ,' +
-      '"msg":"' + "" + '" ,' +
-      '"resourcesId":"' + resourceId + '"}'
-
+    context.editedItem.start = start
+    context.editedItem.end = end
+    context.editedItem.eventId = arg.event.id
+    context.editedItem.resourcesId = resourceId
+    // let json = '{ "start":"' + start + '" ,' +
+    //   '"end":"' + end + '" ,' +
+    //   '"eventId":"' + arg.event.id + '" ,' +
+    //   '"clientId":"' + "" + '" ,' +
+    //   '"lastName":"' + "" + '" ,' +
+    //   '"firstName":"' + "" + '" ,' +
+    //   '"middleName":"' + "" + '" ,' +
+    //   '"clientPhone":"' + "" + '" ,' +
+    //   '"msg":"' + "" + '" ,' +
+    //   '"resourcesId":"' + resourceId + '"}'
     let url = "client/eventDropScheduleClient?token=" + this.getToken()
     axInst({
       method: 'POST',
@@ -81,7 +84,7 @@ export default {
         "Access-Control-Allow-Origin": "*",
       },
       url: url,
-      data: json,
+      data: context.editedItem,
     }).then((data) => {
       if (data.status === 200) {
         calendarApi.unselect();
@@ -181,7 +184,6 @@ export default {
   },
 
   access(context, res) {
-    console.log("access")
     context.badData = true
     context.snacMessage = res.data
     context.snacColor = "green"

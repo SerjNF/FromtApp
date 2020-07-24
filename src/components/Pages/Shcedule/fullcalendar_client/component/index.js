@@ -26,6 +26,8 @@ export default {
       url: url,
     }).then((data) => {
       context.editedItem = data.data
+      context.defaultItem = Object.assign({}, context.editedItem)
+      // console.log(context.editedItem)
       context.startTime = formatTime(context.editedItem.start)
       context.endTime = formatTime(context.editedItem.end)
     }).catch(() => {
@@ -33,11 +35,37 @@ export default {
     })
   },
 
+  changeClientRecordDetails(calendarApi, context) {
+    let url = "client/eventDropScheduleClient?token=" + this.getToken()
+    axInst({
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+        "Access-Control-Allow-Origin": "*",
+      },
+      url: url,
+      data: context.editedItem,
+    }).then((data) => {
+      if (data.status === 200) {
+        context.defaultItem = Object.assign({}, context.editedItem)
+        context.changed = false
+        calendarApi.unselect();
+        this.access(context, data)
+        setTimeout(1000);
+        calendarApi.refetchEvents()
+        context.close()
+      }
+    }).catch((error) => {
+      calendarApi.refetchEvents()
+      this.warning(context, error)
+    })
+  },
+
   access(context, res) {
-    console.log("access")
-    context.badData = true
-    context.snacMessage = res.data
+    context.snacMessage = res.data,
     context.snacColor = "green"
+    context.badData = true
+
 
   },
   warning(context, error) {

@@ -2,7 +2,7 @@
   <div>
     <v-data-table
       :headers="headers"
-      :items="desserts"
+      :items="users"
       :items-per-page.sync="itemsPerPage"
       :page="page"
       hide-default-footer
@@ -129,7 +129,7 @@
         <v-chip :color="getState(item.state).color" dark>{{ getState(item.state).state }}</v-chip>
       </template>
       <template v-slot:footer>
-        <footerr :itemLength="desserts.length"
+        <footerr :itemLength="users.length"
                  @changePage="changePageNumber"
                  @changeItemPerPage="changeItemPerPag"></footerr>
       </template>
@@ -184,7 +184,7 @@
                 {text: 'Стутус', value: 'state'},
                 {text: 'Действия', value: 'action', sortable: false},
             ],
-            desserts: [],
+            users: [],
             phoneValid: false,
             editedIndex: -1,
             editedItem: {
@@ -234,7 +234,7 @@
             },
 
             numberOfPages() {
-                return Math.ceil(this.desserts.length / this.itemsPerPage)
+                return Math.ceil(this.users.length / this.itemsPerPage)
             },
 
         },
@@ -284,21 +284,21 @@
             },
 
             initialize() {
-                this.desserts = []
+                this.users = []
                 User.initialization(this)
                 //       let token = store.state.user.User.token
 
             },
 
             editItem(item) {
-                this.editedIndex = this.desserts.indexOf(item)
+                this.editedIndex = this.users.indexOf(item)
                 this.editedItem = Object.assign({}, item)
                 this.editedItem.password = ''
                 this.dialog = true
             },
 
             deleteItem(item) {
-                const index = this.desserts.indexOf(item)
+                const index = this.users.indexOf(item)
                 confirm('Удалить пользователя, логин: ' + item.login + ' ?') && User.delUser(this, item)
             },
 

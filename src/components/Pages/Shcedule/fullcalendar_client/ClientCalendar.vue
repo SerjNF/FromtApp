@@ -199,10 +199,12 @@
               <v-col cols="12">
                 <v-textarea
                   outlined
-                  name="input-5-2"
+                  auto-grow
+                  rows="1"
+                  row-height="15"
                   label="Заметка"
-                  value="Какая нить хрень про записываемого"
                   v-model="editedItem.msg"
+
                 ></v-textarea>
               </v-col>
             </v-row>
@@ -211,19 +213,19 @@
 
         <v-card-actions>
           <div class="flex-grow-1"></div>
-          <v-btn color="blue darken-1" text @click="close">Закрыть</v-btn>
           <v-btn color="blue darken-1" text @click="addEvent" :disabled="false">Добавить</v-btn>
+          <v-btn color="blue darken-1" text @click="close">Закрыть</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
 
-    <v-dialog v-model="clientDialog" max-width="1300px">
+    <v-dialog v-model="clientDialog" max-width="1000px">
       <!--      <v-card>-->
       <!--        <v-card-title>-->
       <!--          Title-->
       <!--        </v-card-title>-->
       <!--        <v-card-text>-->
-            <RecordDetails :clientInfo="clientScheduleId" @setClientDialog="clientDialogClose"></RecordDetails>
+            <RecordDetails :clientInfo="clientScheduleId" :apiCalendar="apiCalendar" @setClientDialog="clientDialogClose" @setSnackBar="snacStatusChange"></RecordDetails>
       <!--        </v-card-text>-->
       <!--        <v-card-actions>-->
       <!--          <div class="flex-grow-1"></div>-->
@@ -304,6 +306,7 @@
                     firstName: '',
                     middleName: '',
                     clientPhone: '',
+                    eventId: ''
                 },
                 defaultItem: {
                     start: '',
@@ -316,11 +319,13 @@
                     firstName: '',
                     middleName: '',
                     clientPhone: '',
+                    eventId: ''
                 },
 
                 dialog: false,
                 clientDialog: false,
                 clientScheduleId: "",
+                apiCalendar:"",
                 employeesList: [],
                 employeeSelect: [],
                 lastResource: "",
@@ -381,6 +386,7 @@
 
             eventClick(info) {
                 this.clientScheduleId = info
+                this.apiCalendar = this.$refs.fullCalendar.getApi()
                 this.clientDialog = true
             },
 
@@ -402,6 +408,12 @@
 
             clientDialogClose() {
                 this.clientDialog = false
+            },
+
+            snacStatusChange(data){
+                this.badData = data.badData
+                this.snacMessage = data.snacMessage
+                this.snacColor = data.snacColor
             },
 
             goToDates(date) {

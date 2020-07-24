@@ -5,7 +5,7 @@ export default {
 
     let url = "admin/getUsers?token=" + this.getToken()
     axInst.get(url).then((res) => {
-      context.desserts = res.data
+      context.users = res.data
     })
   },
 
