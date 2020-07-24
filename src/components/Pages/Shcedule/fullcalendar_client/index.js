@@ -1,6 +1,6 @@
 import {axInst} from '@/plugins/axInst'
 
-function formatTime(time){
+function formatTime(time) {
   let date = new Date(time)
   let minute = date.getMinutes().toString() === "0" ? "00" : date.getMinutes()
   return date.getHours() + ":" + minute
@@ -11,6 +11,7 @@ export default {
   initialize(context) {
     let url = "employee/getEmployeesWorkSchedule?token=" + this.getToken()
     context.employeesList = []
+
     axInst.get(url).then((res) => {
       context.employeesList = res.data
     })
@@ -18,16 +19,16 @@ export default {
 
   setScheduleClient(context, arg) {
     context.editedItem.resourcesId = arg.resource.id
-    context.editedItem.startTime = arg.start.getTime()
+    context.editedItem.start = arg.start.getTime()
     context.startTime = formatTime(arg.start)
 
-    context.editedItem.endTime = arg.end.getTime()
+    context.editedItem.end = arg.end.getTime()
     context.endTime = formatTime(arg.end)
     context.dialog = true
   },
 
   addEvent(context, calendarApi) {
-       let url = "client/setScheduleClient?token=" + this.getToken()
+    let url = "client/setScheduleClient?token=" + this.getToken()
     axInst({
       method: 'POST',
       headers: {
@@ -47,7 +48,7 @@ export default {
         context.dialog = false
       }
     }).catch(error => {
-        this.warning (context, error)
+        this.warning(context, error)
       }
     )
   },
@@ -89,6 +90,7 @@ export default {
         this.access(context, data)
       }
     }).catch((error) => {
+      calendarApi.refetchEvents()
       this.warning(context, error)
     })
   },
@@ -151,7 +153,7 @@ export default {
       url: url,
       data: json,
     }).then((data) => {
-        successCallback(data.data)
+      successCallback(data.data)
     }).catch(() => {
       console.log("bad request")
     })
@@ -192,4 +194,9 @@ export default {
     context.snacColor = "#ff5252"
   },
 
+  batTime(context, msg) {
+    context.badData = true
+    context.snacMessage = msg
+    context.snacColor = "#ffd33d"
+  }
 }

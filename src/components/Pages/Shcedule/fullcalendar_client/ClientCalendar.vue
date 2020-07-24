@@ -1,5 +1,5 @@
 <template xmlns="http://www.w3.org/1999/html">
-  <div class='demo-app'>
+  <div>
 
     <v-row>
       <v-col xl="10" lg="9" md="9" sm="12">
@@ -57,7 +57,7 @@
             :min="10"
           ></v-slider>
         </v-flex>
-        <date-picker :somedata ="toDatePickerDate" @setCurrentDate="goToDates"></date-picker>
+        <date-picker :somedata="toDatePickerDate" @setCurrentDate="goToDates"></date-picker>
         <v-select
           v-model="employeeSelect"
           :items="employeesList"
@@ -71,7 +71,6 @@
       </v-col>
     </v-row>
     <v-dialog v-model="dialog" max-width="1000px">
-
       <v-card>
         <v-card-title>
           <span class="headline">Новая Запись</span>
@@ -99,7 +98,6 @@
                     solo
                     prepend-icon="search"
                   ></v-autocomplete>
-
                 </v-toolbar>
               </v-col>
             </v-row>
@@ -136,7 +134,6 @@
               </v-col>
             </v-row>
             <v-row>
-
               <v-col cols="12" sm="6" md="4">
                 <v-menu
                   ref="menuStartEvent"
@@ -165,7 +162,7 @@
                     @click:minute="$refs.menuStartEvent.save(startTime)"
                   ></v-time-picker>
                 </v-menu>
-              <v-spacer></v-spacer>
+                <v-spacer></v-spacer>
               </v-col>
               <v-col cols="12" sm="6" md="4">
                 <v-menu
@@ -195,7 +192,7 @@
                     @click:minute="$refs.menuEndEvent.save(endTime)"
                   ></v-time-picker>
                 </v-menu>
-              <v-spacer></v-spacer>
+                <v-spacer></v-spacer>
               </v-col>
             </v-row>
             <v-row>
@@ -218,6 +215,22 @@
           <v-btn color="blue darken-1" text @click="addEvent" :disabled="false">Добавить</v-btn>
         </v-card-actions>
       </v-card>
+    </v-dialog>
+
+    <v-dialog v-model="clientDialog" max-width="1300px">
+      <!--      <v-card>-->
+      <!--        <v-card-title>-->
+      <!--          Title-->
+      <!--        </v-card-title>-->
+      <!--        <v-card-text>-->
+            <RecordDetails :clientInfo="clientScheduleId" @setClientDialog="clientDialogClose"></RecordDetails>
+      <!--        </v-card-text>-->
+      <!--        <v-card-actions>-->
+      <!--          <div class="flex-grow-1"></div>-->
+      <!--          <v-btn color="blue darken-1" text @click="close2">Закрыть</v-btn>-->
+      <!--          <v-btn color="blue darken-1" text @click="" :disabled="false">Добавить</v-btn>-->
+      <!--        </v-card-actions>-->
+      <!--      </v-card>-->
     </v-dialog>
     <v-snackbar
       bottom="bottom"
@@ -242,14 +255,16 @@
     import timeGridPlugin from '@fullcalendar/timegrid'
     import interactionPlugin from '@fullcalendar/interaction'
     import resourceTimeGridPlugin from '@fullcalendar/resource-timegrid'
-    import allLocales from "@fullcalendar/core/locales-all";
+    import allLocales from "@fullcalendar/core/locales-all"
     import Schedule from './index.js'
-    import DatePicker from '../datePicker';
+    import DatePicker from '../datePicker'
+    import RecordDetails from "./component/RecordDetails"
 
     let selectEmployeeId = []
 
     export default {
         components: {
+            RecordDetails,
 
             DatePicker,
             FullCalendar // make the <FullCalendar>
@@ -279,8 +294,6 @@
                     }
                 },
                 editedItem: {
-                    startTime: "",
-                    endTime: "",
                     start: '',
                     end: '',
                     resourcesId: '',
@@ -293,8 +306,6 @@
                     clientPhone: '',
                 },
                 defaultItem: {
-                    startTime: "",
-                    endTime: "",
                     start: '',
                     end: '',
                     resourcesId: '',
@@ -308,6 +319,8 @@
                 },
 
                 dialog: false,
+                clientDialog: false,
+                clientScheduleId: "",
                 employeesList: [],
                 employeeSelect: [],
                 lastResource: "",
@@ -367,15 +380,8 @@
             },
 
             eventClick(info) {
-                // let endInfo = info.event.end;
-                // let start = info.event.start.getTime() - 60000 * new Date().getTimezoneOffset();
-                // let end = endInfo === null ? 0 : endInfo.getTime() - 60000 * new Date().getTimezoneOffset();
-                //
-                // this.editedItem.start = new Date(start).toISOString().slice(0, 16)
-                // this.editedItem.end = endInfo === null ? "" : new Date(end).toISOString().slice(0, 16)
-                //
-                // this.editedItem.startTime = new Date(info.event.start.getTime())
-                this.dialog = true
+                this.clientScheduleId = info
+                this.clientDialog = true
             },
 
             eventDrop(arg) {
@@ -394,13 +400,16 @@
                 this.dialog = false
             },
 
+            clientDialogClose() {
+                this.clientDialog = false
+            },
+
             goToDates(date) {
                 this.date = date
             },
 
             querySelections(val) {
                 this.loading = true
-                // Simulated ajax query
                 Schedule.getClientListFiltered(val, this)
                 setTimeout(() => {
                     this.items = this.clientList.filter(e => {
@@ -411,23 +420,34 @@
                 }, 500)
             },
 
-            datesRender(info){
-                this.toDatePickerDate =  info.view.currentStart.toLocaleDateString()
+            datesRender(info) {
+                this.toDatePickerDate = info.view.currentStart.toLocaleDateString()
             }
         },
 
         watch: {
             endTime: function () {
                 let splitTime = this.endTime.split(":")
-                this.editedItem.end = new Date(this.editedItem.endTime).setHours(splitTime[0])
-                this.editedItem.end = new Date(this.editedItem.endTime).setMinutes(splitTime[1])
-                console.log(new Date(this.editedItem.end).toLocaleTimeString())
+                let date = new Date(this.editedItem.end)
+                date.setHours(splitTime[0])
+                date.setMinutes(splitTime[1])
+                if (date <= this.editedItem.start) {
+                    Schedule.batTime(this, "Неверное время окончания приёма")
+                } else {
+                    this.editedItem.end = new Date(date).getTime()
+                }
             },
 
             startTime: function () {
                 let splitTime = this.startTime.split(":")
-                this.editedItem.start = new Date(this.editedItem.startTime).setHours(splitTime[0])
-                this.editedItem.start = new Date(this.editedItem.startTime).setMinutes(splitTime[1])
+                let date = new Date(this.editedItem.start)
+                date.setHours(splitTime[0])
+                date.setMinutes(splitTime[1])
+                if (date >= this.editedItem.end) {
+                    Schedule.batTime(this, "Неверное время начала приёма")
+                } else {
+                    this.editedItem.start = new Date(date).getTime()
+                }
             },
 
             selectClient: function () {
@@ -453,13 +473,7 @@
             },
         },
 
-        computed: {
-
-            // startTime() {
-            //     console.log(new Date(this.editedItem.startTime).toLocaleTimeString())
-            //     return new Date(this.editedItem.startTime).toLocaleTimeString()
-            // }
-        }
+        computed: {}
 
     }
 </script>
