@@ -167,6 +167,7 @@
     import allLocales from "@fullcalendar/core/locales-all";
     import Employee from './index.js'
     import DatePicker from '../datePicker';
+    import store from "@/store/index";
 
     let selectId = ""
 
@@ -251,6 +252,12 @@
             this.initialization()
 
         },
+
+        created() {
+            this.minTime = store.state.general.Time.start
+            this.maxTime = store.state.general.Time.end
+        },
+
 
         methods: {
             setResource() {

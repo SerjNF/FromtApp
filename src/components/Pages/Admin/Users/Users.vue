@@ -6,7 +6,6 @@
       :items-per-page.sync="itemsPerPage"
       :page="page"
       hide-default-footer
-      sort-by="calories"
       class="elevation-1"
     >
       <template v-slot:top>
@@ -152,7 +151,7 @@
 </template>
 
 <script>
-    import store from "@/store/index";
+
     import User from './index.js'
     import Footer from '../Footer/Footer.vue'
 

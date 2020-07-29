@@ -225,7 +225,7 @@
       <!--          Title-->
       <!--        </v-card-title>-->
       <!--        <v-card-text>-->
-            <RecordDetails :clientInfo="clientScheduleId" :apiCalendar="apiCalendar" @setClientDialog="clientDialogClose" @setSnackBar="snacStatusChange"></RecordDetails>
+            <record-details :clientInfo="clientScheduleId" :apiCalendar="apiCalendar" @setClientDialog="clientDialogClose" @setSnackBar="snacStatusChange"></record-details>
       <!--        </v-card-text>-->
       <!--        <v-card-actions>-->
       <!--          <div class="flex-grow-1"></div>-->
@@ -261,13 +261,13 @@
     import Schedule from './index.js'
     import DatePicker from '../datePicker'
     import RecordDetails from "./component/RecordDetails"
+    import store from "@/store/index";
 
     let selectEmployeeId = []
 
     export default {
         components: {
             RecordDetails,
-
             DatePicker,
             FullCalendar // make the <FullCalendar>
         },
@@ -332,8 +332,8 @@
                 date: new Date().toISOString().substr(0, 10),
                 toDatePickerDate: '',
                 pickerDate: null,
-                minTime: "8:00",
-                maxTime: "23:00",
+                minTime: "",
+                maxTime: "",
                 slotDuration: "00:30",
                 calendarPlugins: [ // plugins must be defined in the JS
                     dayGridPlugin,
@@ -356,8 +356,15 @@
             }
         },
         mounted() {
+
+
             this.initialization()
 
+        },
+
+        created() {
+            this.minTime = store.state.general.Time.start
+            this.maxTime = store.state.general.Time.end
         },
 
         methods: {

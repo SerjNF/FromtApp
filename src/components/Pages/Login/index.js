@@ -24,6 +24,7 @@ export default {
 
         store.dispatch('user/SET_TOKEN', token)
         store.dispatch('user/GET_USER', token)
+        store.dispatch('general/GET_WORKTIME', token)
         if (redirect) router.push(redirect)
       }
     }).catch(() => {

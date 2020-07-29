@@ -152,6 +152,10 @@
 
             ],
         }),
+
+        mounted() {
+            document.title = "Администрирование"
+        },
         methods:
             {
 

@@ -105,6 +105,7 @@
         }),
 
         mounted: function () {
+            document.title = "Вход"
             axInst.get(`/general/getLogin`).then((res) => {
                 this.items = res.data;
             })

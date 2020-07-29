@@ -5,13 +5,16 @@ import createPersistedState from 'vuex-persistedstate'
 import page from './modules/pageLink'
 import currentUser from './modules/currentUser'
 
+import general from './modules/general'
+
 Vue.use(Vuex)
 
 
 export default new Vuex.Store({
   modules: {
     link: page,
-    user : currentUser
+    user : currentUser,
+    general: general
   },
   state: {},
   actions: {},
@@ -21,7 +24,7 @@ export default new Vuex.Store({
 
   plugins: [
     createPersistedState({
-      paths: ['user']
+      paths: ['user', 'general']
     })
     // createMutationsSharer({predicate: ["mutation1", "mutation2"]})
   ]

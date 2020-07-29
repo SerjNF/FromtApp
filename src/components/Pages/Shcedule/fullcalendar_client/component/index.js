@@ -65,9 +65,8 @@ export default {
     context.snacMessage = res.data,
     context.snacColor = "green"
     context.badData = true
-
-
   },
+
   warning(context, error) {
     context.badData = true
     context.snacMessage = error.response.data

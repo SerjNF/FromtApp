@@ -6,8 +6,13 @@ import Router from 'vue-router'
 import Login from '@/components/Pages/Login/Login'
 import Schedule from "../components/Pages/Shcedule/Schedule";
 import Admin from "../components/Pages/Admin/Admin";
+import ClientCards from "../components/Pages/ClientCadr/ClientCards";
 
 Vue.use(Router)
+
+function dynamicProps() {
+
+}
 
 const router = new Router({
   routes: [
@@ -34,7 +39,23 @@ const router = new Router({
       meta: {
         requiredAuth: false
       }
-    }
+    },
+    {
+      path: '/card/:id?',
+      name: 'Card',
+      component: ClientCards,
+      meta: {
+        requiredAuth: true
+      }
+    },
+    // {
+    //   path: '/card/:id?',
+    //   name: 'Card',
+    //   component: ClientCards,
+    //   meta: {
+    //     requiredAuth: true
+    //   }
+    // }
   ]
 })
 /* eslint-disable */

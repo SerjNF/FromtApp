@@ -115,7 +115,7 @@
             items: [
                 {title: 'Расписание', icon: 'today', href: '/#/'},
                 {title: 'Администрирование', icon: 'assignment_ind', href: '/#/admin'},
-                {title: 'Что еще', icon: 'android'},
+                {title: 'Список клиентов', icon: 'supervisor_account', href: '/#/card'},
             ],
             right: null,
         }),

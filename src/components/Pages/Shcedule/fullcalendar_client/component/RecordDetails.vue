@@ -10,16 +10,19 @@
           <v-row>
             <v-col cols="12" sm="6" md="4">
               <v-text-field
+                :disabled="editedItem.clientCardId > 0"
                 prepend-icon="how_to_reg"
                 v-model="editedItem.lastName" label="Фамилия"></v-text-field>
             </v-col>
             <v-col cols="12" sm="6" md="4">
               <v-text-field
+                :disabled="editedItem.clientCardId > 0"
                 prepend-icon="how_to_reg"
                 v-model="editedItem.firstName" label="Имя"></v-text-field>
             </v-col>
             <v-col cols="12" sm="6" md="4">
               <v-text-field
+                :disabled="editedItem.clientCardId > 0"
                 prepend-icon="how_to_reg"
                 aria-required="true"
                 v-model="editedItem.middleName" label="Отчество"></v-text-field>
@@ -30,6 +33,7 @@
               <v-tooltip top="">
                 <template v-slot:activator="{ on }">
                   <v-text-field
+                    :disabled="editedItem.clientCardId > 0"
                     type="tel"
                     prepend-icon="phone"
                     v-on="on"
@@ -126,6 +130,7 @@
           <v-row>
             <v-col cols="12">
               <v-textarea
+                prepend-icon="notes"
                 outlined
                 auto-grow
                 rows="1"
@@ -140,6 +145,7 @@
 
       <v-card-actions>
         <div class="flex-grow-1"></div>
+        <v-btn color="blue darken-1" text @click="route" >{{buttonName}}</v-btn>
         <v-btn color="blue darken-1" text @click="save" :disabled="!changed">Сохранить</v-btn>
         <v-btn color="blue darken-1" text @click="close">Закрыть</v-btn>
       </v-card-actions>
@@ -149,6 +155,7 @@
 
 <script>
     import RecordDetails from './index.js'
+    import objecktCompare from "@/plugins/objeckCompare";
 
     export default {
         props: ['clientInfo', 'apiCalendar'],
@@ -182,7 +189,8 @@
                     end: '',
                     msg: '',
                     state: '',
-                    user: ''
+                    user: '',
+                    clientCardId: ''
                 },
 
                 defaultItem: {
@@ -198,9 +206,11 @@
                     end: '',
                     msg: '',
                     state: '',
-                    user: ''
+                    user: '',
+                    clientCardId: 0
                 },
                 changed: false,
+                count: 0
             }
         },
 
@@ -214,7 +224,13 @@
                 this.defaultItem = Object.assign({}, this.editedItem)
                 this.changed = false
             },
+            route(){
+                let routeData = this.$router.resolve({name: 'Card', params: {id: this.editedItem.clientId}});
+                window.open(routeData.href, '_blank');
+                this.close()
+            }
         },
+
         mounted() {
             RecordDetails.getClientRecordDetails(this, this.clientInfo.event._def.publicId)
         },
@@ -248,29 +264,15 @@
                 }
             },
 
-            "editedItem.state": function () {
-                this.changed = (this.editedItem.state !== this.defaultItem.state)
-            },
-            "editedItem.start": function () {
-                this.changed = (this.editedItem.start !== this.defaultItem.start)
-            },
-            "editedItem.end": function () {
-                this.changed = (this.editedItem.end !== this.defaultItem.end)
-            },
-            "editedItem.firstName": function () {
-                this.changed = (this.editedItem.firstName !== this.defaultItem.firstName)
-            },
-            "editedItem.middleName": function () {
-                this.changed = (this.editedItem.middleName !== this.defaultItem.middleName)
-            },
-            "editedItem.clientPhone": function () {
-                this.changed = (this.editedItem.clientPhone !== this.defaultItem.clientPhone)
-            },
-            "editedItem.msg": function () {
-                this.changed = (this.editedItem.msg !== this.defaultItem.msg)
-            },
-            "editedItem.lastName": function () {
-                this.changed = (this.editedItem.lastName !== this.defaultItem.lastName)
+            "editedItem":  {
+                handler: function (val, oldVal) {
+                    if (this.count < 1) {
+                        this.count += 1
+                    } else {
+                        this.changed = !objecktCompare.isEquivalent(this.editedItem, this.defaultItem)
+                    }
+                },
+                deep: true
             },
 
             badData: function () {
@@ -279,6 +281,12 @@
                     "snacMessage": this.snacMessage,
                     "snacColor": this.snacColor
                 })
+            }
+        },
+
+        computed: {
+            buttonName() {
+                return this.editedItem.clientCardId > 0 ? "Открыть карту слиента" : "Создать карту клиента"
             }
         }
     }
