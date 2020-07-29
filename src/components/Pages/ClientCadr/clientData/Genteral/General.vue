@@ -6,21 +6,20 @@
       </v-card-title>
       <v-card-text>
         <v-row>
-          <v-col cols="12" sm="12" md="12">
+          <v-col cols="12" sm="4" md="4">
             <v-text-field
               v-model="clientData.clientDto.lastName"
               prepend-icon="how_to_reg"
               label="Фамилия"></v-text-field>
           </v-col>
-        </v-row>
-        <v-row>
-          <v-col cols="12" sm="12" md="6">
+
+          <v-col cols="12" sm="4" md="4">
             <v-text-field
               v-model="clientData.clientDto.firstName"
               prepend-icon="how_to_reg"
               label="Имя"></v-text-field>
           </v-col>
-          <v-col cols="12" sm="12" md="6">
+          <v-col cols="12" sm="4" md="4">
             <v-text-field
               v-model="clientData.clientDto.middleName"
               prepend-icon="how_to_reg"
@@ -29,41 +28,22 @@
           </v-col>
         </v-row>
         <v-row>
-          <v-col cols="12" sm="12" md="4">
-            <v-menu
-              ref="menu"
-              v-model="menu"
-              :close-on-content-click="false"
-              transition="scale-transition"
-              offset-y
-              min-width="290px"
-            >
-              <template v-slot:activator="{ on, attrs }">
-                <v-text-field
-                  v-model="date"
-                  label="Дата рождения"
-                  prepend-icon="event"
-                  readonly
-                  v-bind="attrs"
-                  v-on="on"
-                ></v-text-field>
-              </template>
-              <v-date-picker
-                ref="picker"
-                v-model="date"
-                :max="new Date().toISOString().substr(0, 10)"
-                min="1920-01-01"
-              ></v-date-picker>
-            </v-menu>
+          <v-col cols="12" sm="6" md="4">
+            <v-text-field
+              prepend-icon="calendar_today"
+              type="date"
+              label="День рождения"
+              v-model="clientData.clientCardDto.birthday"></v-text-field>
           </v-col>
 
-          <v-col cols="12" sm="12" md="2">
+          <v-col cols="12" sm="6" md="2">
             <v-select
+              prepend-icon="how_to_reg"
               :items="items"
               label="Пол"
             ></v-select>
           </v-col>
-          <v-col cols="12" sm="12" md="6">
+          <v-col cols="12" sm="6" md="4">
             <v-tooltip top="">
               <template v-slot:activator="{ on }">
                 <v-text-field
@@ -75,6 +55,13 @@
               </template>
               <span>Пример: +71234567890</span>
             </v-tooltip>
+          </v-col>
+          <v-col cols="12" sm="6" md="2">
+            <v-text-field
+              disabled
+              prepend-icon="how_to_reg"
+              label="Добавил/Изменил"
+              v-model="clientData.clientDto.user"></v-text-field>
           </v-col>
         </v-row>
       </v-card-text>
@@ -101,7 +88,7 @@
               </v-col>
               <v-col cols="12" sm="4" md="3">
                 <v-text-field
-                  prepend-icon="date"
+                  prepend-icon="calendar_today"
                   type="date"
                   label="Дата выдачи"
                   v-model="clientData.clientCardDto.passportDate"></v-text-field>
@@ -227,7 +214,7 @@
             },
 
             save(){
-              General.save(this.ClientData)
+              General.save(this)
             }
 
         },

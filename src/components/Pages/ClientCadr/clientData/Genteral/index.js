@@ -23,4 +23,30 @@ export default {
       console.log("bad request")
     })
   },
+
+  save(context){
+    console.log("save")
+    let url = "client/saveClientCard?token=" + this.getToken()
+    axInst({
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+        "Access-Control-Allow-Origin": "*",
+      },
+      url: url,
+      data: context.clientData,
+    }).then((data) => {
+      console.log(data)
+      if (data.status === 200) {
+        context.clientDefData.clientDto = Object.assign({}, context.clientData.clientDto)
+        context.clientDefData.clientCardDto = Object.assign({}, context.clientData.clientCardDto)
+         context.isClient = true
+         context.isCard = true
+        this.access(context, data)
+        setTimeout(1000);
+      }
+    }).catch((error) => {
+      this.warning(context, error)
+    })
+  }
 }

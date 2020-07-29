@@ -15,6 +15,7 @@ export default {
       },
       url: url,
     }).then((data) => {
+    //  console.log(data.data)
       context.clientList = data.data
     }).catch(() => {
       console.log("bad request")
