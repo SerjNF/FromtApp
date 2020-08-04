@@ -7,8 +7,31 @@ function formatTime(time) {
 }
 
 export default {
+  printSchedule(data) {
+    let calendar = data.$refs.fullCalendar.getApi()
 
-  initialize(context) {
+    let resId = []
+    calendar.getResources().forEach((value) => {
+      resId.push(value._resource.id)
+    })
+    let start = Number(calendar.getDate().getTime())
+    let end = start + 86400000
+    console.log(calendar.getDate())
+
+    // let json = {"start": "1596301200000", "end": "1596387600000", "resourcesId": ""}
+    //   http://localhost:8080/api/v1/client/printSchedule?token=ftScCkizAM&start=1596301200000&end=1596387600000&resourcesId=%22%22
+    let url = "/client/printSchedule?token=" + this.getToken() + "&start=" + start + "&end=" + end + "&res=" + resId.toString()
+
+     window.location = axInst.defaults.baseURL + url
+
+
+  },
+
+  initialize(context, d) {
+    if (d !== undefined) {
+      context.date = new Date(parseInt(d)).toISOString().substr(0, 10)
+    }
+
     let url = "employee/getEmployeesWorkSchedule?token=" + this.getToken()
     context.employeesList = []
 
@@ -66,16 +89,7 @@ export default {
     context.editedItem.end = end
     context.editedItem.eventId = arg.event.id
     context.editedItem.resourcesId = resourceId
-    // let json = '{ "start":"' + start + '" ,' +
-    //   '"end":"' + end + '" ,' +
-    //   '"eventId":"' + arg.event.id + '" ,' +
-    //   '"clientId":"' + "" + '" ,' +
-    //   '"lastName":"' + "" + '" ,' +
-    //   '"firstName":"' + "" + '" ,' +
-    //   '"middleName":"' + "" + '" ,' +
-    //   '"clientPhone":"' + "" + '" ,' +
-    //   '"msg":"' + "" + '" ,' +
-    //   '"resourcesId":"' + resourceId + '"}'
+
     let url = "client/eventDropScheduleClient?token=" + this.getToken()
     axInst({
       method: 'POST',
@@ -146,7 +160,6 @@ export default {
       '"resourcesId":"' + resourcesId + '"}';
 
     let url = "client/getClientEvents?token=" + this.getToken()
-
     axInst({
       method: 'POST',
       headers: {

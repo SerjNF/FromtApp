@@ -192,9 +192,8 @@
             'chrome-picker': Chrome,
         },
         data: () => ({
-
             page: 1,
-            itemsPerPage: 10,
+            itemsPerPage: 20,
             badData: false,
             snacMessage: '',
             snacColor: '',

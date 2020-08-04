@@ -8,20 +8,27 @@
         :items="clientList"
         :items-per-page.sync="itemsPerPage"
         :page="page"
+        :search="search"
+        :custom-filter="filter"
         hide-default-footer
         class="elevation-1"
       >
-        <template v-slot:top>
-          <v-toolbar flat color="white">
-            <v-toolbar-title>Список клиентов</v-toolbar-title>
-            <v-divider
-              class="mx-4"
-              inset
-              vertical
-            ></v-divider>
-            <div class="flex-grow-1"></div>
+<!--        <template v-slot:top>-->
+<!--          <v-toolbar flat color="white">-->
+<!--            <v-toolbar-title>Список клиентов</v-toolbar-title>-->
+<!--            <v-divider-->
+<!--              class="mx-4"-->
+<!--              inset-->
+<!--              vertical-->
+<!--            ></v-divider>-->
 
-          </v-toolbar>
+<!--            <div class="flex-grow-1"></div>-->
+
+<!--          </v-toolbar>-->
+
+<!--        </template>-->
+        <template v-slot:top>
+          <v-text-field v-model="search" label="Начните вводить..." class="mx-4"></v-text-field>
         </template>
         <template v-slot:item.createDate="{item}">
           <v-chip color="primary" outlined>{{ getDate(item) }}</v-chip>
@@ -70,13 +77,14 @@
 
         data: () => ({
             page: 1,
-            itemsPerPage: 10,
+            itemsPerPage: 20,
+            search: '',
             headers: [
                 {
                     text: '№',
                     align: 'left',
                     sortable: true,
-                    value: 'id',
+                    value: 'clientCardId',
                 },
                 {text: 'Фамилия', value: 'lastName'},
                 {text: 'Имя', value: 'firstName'},
@@ -86,11 +94,13 @@
             ],
 
             clientList: [],
+            clientListLoad: []
         }),
 
         mounted() {
             document.title = "Список клиентов"
             this.initialize()
+
         },
 
         methods: {
@@ -115,8 +125,17 @@
 
             getDate(date) {
                 return new Date(date.createDate).toLocaleDateString()
-            }
+            },
+
+            filter (value, search, item) {
+                return value != null &&
+                    search != null &&
+                    typeof value === 'string' &&
+                    value.toString().toLocaleLowerCase().indexOf(search) !== -1
+            },
+
         },
+
     }
 </script>
 

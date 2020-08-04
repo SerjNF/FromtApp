@@ -1,12 +1,13 @@
 import {axInst} from '@/plugins/axInst'
 
+
 export default {
   getToken() {
     return document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1")
   },
 
-  initialization(context) {
-    let url = "client/getAllClients?token=" + this.getToken()
+  initialization(context, id) {
+    let url = "client/getClientHistory?token=" + this.getToken() + "&clientId=" + id;
     axInst({
       method: 'GET',
       headers: {
@@ -15,12 +16,9 @@ export default {
       },
       url: url,
     }).then((data) => {
-    //  console.log(data.data)
-      context.clientListLoad = data.data
-      context.clientList = context.clientListLoad;
+      context.historyList = data.data
     }).catch(() => {
       console.log("bad request")
     })
-  },
-
+  }
 }

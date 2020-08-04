@@ -26,12 +26,14 @@
 <script>
 
     import General from "./Genteral/General";
+    import History from "./History/HistoryList"
 
     export default {
         name: "ClientData",
         props: ['clientId'],
         components: {
-            General
+            General,
+            History
         },
 
         data() {
@@ -39,6 +41,7 @@
                 tab: null,
                 items: [
                     {name: 'Основные данные', component: 'General'},
+                    {name: 'История посещений', component: 'History'},
                 ],
                 clId : ''
             }
@@ -46,6 +49,7 @@
 
         mounted() {
             this.clId = this.clientId;
+
         },
     }
 </script>

@@ -215,8 +215,8 @@
                 },
 
                 defaultItem: {
-                    dayNumber: "",
-                    selectDay: [],
+                    dayNumber: 2,
+                    selectDay: [8],
                     repeatCount: '',
                     title: '',
                     startTime: '',

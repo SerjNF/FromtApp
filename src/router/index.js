@@ -25,6 +25,14 @@ const router = new Router({
       }
     },
     {
+      path: '/date/:d?',
+      name: 'ScheduleOnDate',
+      component: Schedule,
+      meta: {
+        requiredAuth: true
+      }
+    },
+    {
       path: '/admin',
       name: 'Admin',
       component: Admin,

@@ -26,7 +26,7 @@
           selectConstraint="businessHours"
           :custom-buttons="buttons"
           :header="{
-        left: 'prev,next, today, interval',
+        left: 'prev,next, today, printSchedule',
         center: 'title',
         right: 'dayGridMonth,resourceTimeGridWeek,resourceTimeGridDay,listWeek'
       }"
@@ -83,7 +83,7 @@
                 <v-toolbar
                   light
                 >
-                  <v-toolbar-title>Поиск:</v-toolbar-title>
+                  <!--                  <v-toolbar-title>Поиск:</v-toolbar-title>-->
                   <v-autocomplete
                     v-model="selectClient"
                     :loading="loading"
@@ -104,16 +104,19 @@
             <v-row>
               <v-col cols="12" sm="6" md="4">
                 <v-text-field
+                  :disabled="this.editedItem.clientId > 0"
                   prepend-icon="how_to_reg"
                   v-model="editedItem.lastName" label="Фамилия"></v-text-field>
               </v-col>
               <v-col cols="12" sm="6" md="4">
                 <v-text-field
+                  :disabled="this.editedItem.clientId > 0"
                   prepend-icon="how_to_reg"
                   v-model="editedItem.firstName" label="Имя"></v-text-field>
               </v-col>
               <v-col cols="12" sm="6" md="4">
                 <v-text-field
+                  :disabled="this.editedItem.clientId > 0"
                   prepend-icon="how_to_reg"
                   aria-required="true"
                   v-model="editedItem.middleName" label="Отчество"></v-text-field>
@@ -124,12 +127,13 @@
                 <v-tooltip top="">
                   <template v-slot:activator="{ on }">
                     <v-text-field
+                      :error="pv"
                       type="tel"
                       prepend-icon="phone"
                       v-on="on"
                       v-model="editedItem.clientPhone" label="Телефон "></v-text-field>
                   </template>
-                  <span>Пример: +71234567890</span>
+                  <span>Формат: +7-123-456-78-90</span>
                 </v-tooltip>
               </v-col>
             </v-row>
@@ -213,19 +217,22 @@
 
         <v-card-actions>
           <div class="flex-grow-1"></div>
-          <v-btn color="blue darken-1" text @click="addEvent" :disabled="false">Добавить</v-btn>
+          <v-btn :disabled="buttonDisabled" color="blue darken-1" text @click="addEvent">Добавить</v-btn>
           <v-btn color="blue darken-1" text @click="close">Закрыть</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
-
+<v-container>
+  <p>{{datadata}}</p>
+</v-container>
     <v-dialog v-model="clientDialog" max-width="1000px">
       <!--      <v-card>-->
       <!--        <v-card-title>-->
       <!--          Title-->
       <!--        </v-card-title>-->
       <!--        <v-card-text>-->
-            <record-details :clientInfo="clientScheduleId" :apiCalendar="apiCalendar" @setClientDialog="clientDialogClose" @setSnackBar="snacStatusChange"></record-details>
+      <record-details :clientInfo="clientScheduleId" :apiCalendar="apiCalendar" @setClientDialog="clientDialogClose"
+                      @setSnackBar="snacStatusChange"></record-details>
       <!--        </v-card-text>-->
       <!--        <v-card-actions>-->
       <!--          <div class="flex-grow-1"></div>-->
@@ -262,17 +269,23 @@
     import DatePicker from '../datePicker'
     import RecordDetails from "./component/RecordDetails"
     import store from "@/store/index";
+    import phoneValid from "@/plugins/phoneValidate";
 
     let selectEmployeeId = []
 
     export default {
+        props:['clientDate'],
         components: {
             RecordDetails,
             DatePicker,
             FullCalendar // make the <FullCalendar>
         },
-        data: () => {
+        data() {
             return {
+
+                datadata:'',
+
+                // clientDate: this.$route.params.date,
                 time: null,
                 startMenu: false,
                 startTime: null,
@@ -286,13 +299,14 @@
                 search: null,
                 selectClient: null,
                 loading: false,
-
+                pv: true,
+                buttonDisabled: true,
                 slider: 30,
                 allLocales,
                 buttons: {
-                    interval: {
-                        text: 'custom!',
-                        click: () => console.log(this)
+                    printSchedule: {
+                        text: 'Распечатать',
+                        click: () => (Schedule.printSchedule(this))
                     }
                 },
                 editedItem: {
@@ -306,7 +320,8 @@
                     firstName: '',
                     middleName: '',
                     clientPhone: '',
-                    eventId: ''
+                    eventId: '',
+                    clientCard: ''
                 },
                 defaultItem: {
                     start: '',
@@ -319,13 +334,14 @@
                     firstName: '',
                     middleName: '',
                     clientPhone: '',
-                    eventId: ''
+                    eventId: '',
+                    clientCard: ''
                 },
 
                 dialog: false,
                 clientDialog: false,
                 clientScheduleId: "",
-                apiCalendar:"",
+                apiCalendar: "",
                 employeesList: [],
                 employeeSelect: [],
                 lastResource: "",
@@ -357,9 +373,7 @@
         },
         mounted() {
 
-
-            this.initialization()
-
+            this.initialization(this.clientDate)
         },
 
         created() {
@@ -368,6 +382,7 @@
         },
 
         methods: {
+
             setResource() {
                 selectEmployeeId = []
                 this.employeeSelect.forEach(function (item, i) {
@@ -378,8 +393,8 @@
                 calendarApi.refetchEvents()
             },
 
-            initialization() {
-                Schedule.initialize(this)
+            initialization(CliDate) {
+                Schedule.initialize(this, CliDate)
             },
 
             select(arg) {
@@ -417,7 +432,7 @@
                 this.clientDialog = false
             },
 
-            snacStatusChange(data){
+            snacStatusChange(data) {
                 this.badData = data.badData
                 this.snacMessage = data.snacMessage
                 this.snacColor = data.snacColor
@@ -439,12 +454,37 @@
                 }, 500)
             },
 
+            phone() {
+
+            },
+
             datesRender(info) {
                 this.toDatePickerDate = info.view.currentStart.toLocaleDateString()
             }
         },
 
         watch: {
+            'editedItem.clientPhone': function () {
+                this.pv = true
+                this.editedItem.clientPhone = this.editedItem.clientPhone.replace(/^8/, "+7")
+                this.editedItem.clientPhone = this.editedItem.clientPhone.replace(/(\d{3})(\d{3})(\d{2})(\d{2})/, '$1' + "-" + '$2' + "-" + '$3' + "-" + '$4')
+                let length = this.editedItem.clientPhone.length
+                if (length === 2 || length === 6 || length === 10 || length === 13) {
+                    this.editedItem.clientPhone = this.editedItem.clientPhone + "-"
+                }
+
+                if (phoneValid.phoneValidate(this.editedItem.clientPhone)) {
+                    this.pv = false
+                }
+            },
+
+            'editedItem': {
+                handler: function () {
+                    this.buttonDisabled = this.pv || this.editedItem.lastName.length < 2 || this.editedItem.firstName.length < 2
+                },
+                deep: true
+            },
+
             endTime: function () {
                 let splitTime = this.endTime.split(":")
                 let date = new Date(this.editedItem.end)
@@ -476,6 +516,7 @@
                     this.editedItem.lastName = this.selectClient.lastName
                     this.editedItem.middleName = this.selectClient.middleName
                     this.editedItem.clientPhone = this.selectClient.clientPhone
+
                 }
             },
             slider: function () {
@@ -490,6 +531,11 @@
             search(val) {
                 val && val !== this.select && this.querySelections(val)
             },
+
+            // clientDate: function () {
+            //     console.log(this.clientDate)
+            //     // if (this.clientDate !== null)
+            // }
         },
 
         computed: {}

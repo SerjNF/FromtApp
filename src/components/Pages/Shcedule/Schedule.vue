@@ -21,7 +21,7 @@
         <v-tab-item
           v-for="item in items"
           :key="item.name">
-          <component :is="item.component"></component>
+          <component :clientDate="clientDate" :is="item.component"></component>
         </v-tab-item>
       </v-tabs-items>
 
@@ -137,20 +137,24 @@
         beforeRouteEnter(to, from, next) {
             checkToken.beforeRoute(to, from, next, 0)
         },
-        data: () => ({
+        data() {
+            return {
+                clientDate: this.$route.params.d,
+                dialog: false,
 
-            dialog: false,
-
-            tab: null,
-            items: [
-                {name: 'Расписание', component: 'ClientCalendar'},
-                {name: 'График работы', component: 'EmployeeCalendar'}
-            ],
-            // text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-        }),
+                tab: null,
+                items: [
+                    {name: 'Расписание', component: 'ClientCalendar'},
+                    {name: 'График работы', component: 'EmployeeCalendar'}
+                ],
+                // text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+            }
+        },
 
         mounted() {
+
             document.title = "Рассписание"
-        }
+        },
+
     }
 </script>

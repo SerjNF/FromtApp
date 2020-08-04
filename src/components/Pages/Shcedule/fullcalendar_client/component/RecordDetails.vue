@@ -174,7 +174,8 @@
                     {key: 'RECEPTION_CANCELED', text: 'Отменен'},
                     {key: 'RECEPTION_CONFIRMED', text: 'Подтвержден'},
                     {key: 'RECEPTION_DELETE', text: 'Удален'},
-                    {key: 'RECEPTION_NEW', text: 'Новая запись'}
+                    {key: 'RECEPTION_NEW', text: 'Новая запись'},
+                    {key: 'RECEPTION_OVER', text: 'Прием окончен'}
                 ],
                 editedItem: {
                     eventId: '',

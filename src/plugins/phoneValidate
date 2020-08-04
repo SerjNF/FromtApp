@@ -1,0 +1,14 @@
+export default {
+  phoneValidate(phone) {
+    const regex = /^\+[7]-\s?\d{3}-\s?\d{3}(-\d{2}){2}$/;
+    let m;
+
+    if ((m = regex.exec(phone)) !== null) {
+      // The result can be accessed through the `m`-variable.
+      m.forEach((match, groupIndex) => {
+    //    console.log(`Found match, group ${groupIndex}: ${match}`);
+      })
+      return true;
+    }
+  }
+}

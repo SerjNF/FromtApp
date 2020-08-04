@@ -47,6 +47,7 @@
             <v-tooltip top="">
               <template v-slot:activator="{ on }">
                 <v-text-field
+                  :error="pv"
                   v-model="clientData.clientDto.clientPhone"
                   type="tel"
                   prepend-icon="phone"
@@ -133,19 +134,17 @@
 <script>
     import General from "./index"
     import objecktCompare from "@/plugins/objeckCompare";
+    import phoneValid from "@/plugins/phoneValidate";
 
     export default {
         name: "ClientData",
         props: ['clientId'],
 
-        beforeMount() {
-
-        },
-
         data: () => {
             return {
                 isClient: true,
                 isCard: true,
+                pv: true,
                 items: ['Ж', 'М'],
                 count: 0,
                 clientData: {
@@ -196,7 +195,6 @@
         },
 
         mounted() {
-
         },
 
         methods: {
@@ -244,7 +242,21 @@
                     }
                 },
                 deep: true
-            }
+            },
+
+            'clientData.clientDto.clientPhone': function () {
+                this.pv = true
+                this.clientData.clientDto.clientPhone = this.clientData.clientDto.clientPhone.replace(/^8/, "+7-")
+                this.clientData.clientDto.clientPhone = this.clientData.clientDto.clientPhone.replace(/(\d{3})(\d{3})(\d{2})(\d{2})/, '$1' + "-"+'$2' + "-"+'$3' + "-"+'$4')
+                let length = this.clientData.clientDto.clientPhone
+                if (length === 6 || length === 10 || length === 13) {
+                    this.clientData.clientDto.clientPhone = this.clientData.clientDto.clientPhone + "-"
+                }
+
+                if (phoneValid.phoneValidate(this.clientData.clientDto.clientPhone)) {
+                    this.pv = false
+                }
+            },
         }
     }
 </script>
