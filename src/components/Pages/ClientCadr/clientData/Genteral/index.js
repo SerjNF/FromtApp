@@ -40,8 +40,8 @@ export default {
       if (data.status === 200) {
         context.clientDefData.clientDto = Object.assign({}, context.clientData.clientDto)
         context.clientDefData.clientCardDto = Object.assign({}, context.clientData.clientCardDto)
-         context.isClient = true
-         context.isCard = true
+        context.isClient = true
+        context.isCard = true
         this.access(context, data)
         setTimeout(1000);
       }

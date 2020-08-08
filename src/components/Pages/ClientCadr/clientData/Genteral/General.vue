@@ -69,6 +69,23 @@
       <v-divider></v-divider>
       <v-expansion-panels>
         <v-expansion-panel>
+          <v-expansion-panel-header>Адреса</v-expansion-panel-header>
+          <v-expansion-panel-content>
+            <v-row>
+              <v-col cols="12" sm="12" md="12">
+                <v-textarea
+                  prepend-icon="note"
+                  v-model="clientData.clientCardDto.address"
+                  auto-grow
+                  rows="1"
+                  row-height="15"
+                  label="Адрес проживания">
+                </v-textarea>
+              </v-col>
+            </v-row>
+          </v-expansion-panel-content>
+        </v-expansion-panel>
+        <v-expansion-panel>
           <v-expansion-panel-header>Паспорт</v-expansion-panel-header>
           <v-expansion-panel-content>
             <v-row>
@@ -164,7 +181,8 @@
                         passportDate: '',
                         passportOrder: '',
                         jod: '',
-                        position: ''
+                        position: '',
+                        address: ''
                     }
                 },
                 clientDefData: {
@@ -184,7 +202,8 @@
                         passportDate: '',
                         passportOrder: '',
                         jod: '',
-                        position: ''
+                        position: '',
+                        address: ''
                     }
                 }
             }

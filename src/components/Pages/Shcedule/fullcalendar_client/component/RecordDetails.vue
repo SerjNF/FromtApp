@@ -33,6 +33,7 @@
               <v-tooltip top="">
                 <template v-slot:activator="{ on }">
                   <v-text-field
+                    :error="pv"
                     :disabled="editedItem.clientCardId > 0"
                     type="tel"
                     prepend-icon="phone"
@@ -156,12 +157,14 @@
 <script>
     import RecordDetails from './index.js'
     import objecktCompare from "@/plugins/objeckCompare";
+    import phoneValid from "@/plugins/phoneValidate";
 
     export default {
         props: ['clientInfo', 'apiCalendar'],
         name: "ClientTime",
         data: () => {
             return {
+                pv: false,
                 badData: false,
                 snacMessage: '',
                 snacColor: 'green',
@@ -237,6 +240,21 @@
         },
 
         watch: {
+            'editedItem.clientPhone': function () {
+                this.pv = true
+                this.editedItem.clientPhone = this.editedItem.clientPhone.replace(/^8/, "+7")
+                this.editedItem.clientPhone = this.editedItem.clientPhone.replace(/(\d{3})(\d{3})(\d{2})(\d{2})/, '$1' + "-" + '$2' + "-" + '$3' + "-" + '$4')
+                let length = this.editedItem.clientPhone.length
+                if (length === 2 || length === 6 || length === 10 || length === 13) {
+                    this.editedItem.clientPhone = this.editedItem.clientPhone + "-"
+                }
+
+                if (phoneValid.phoneValidate(this.editedItem.clientPhone)) {
+                    this.pv = false
+                }
+            },
+
+
             clientInfo: function () {
                 RecordDetails.getClientRecordDetails(this, this.clientInfo.event._def.publicId)
             },

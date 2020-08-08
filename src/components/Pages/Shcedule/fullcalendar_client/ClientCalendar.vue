@@ -271,7 +271,7 @@
     import store from "@/store/index";
     import phoneValid from "@/plugins/phoneValidate";
 
-    let selectEmployeeId = []
+    let selectEmployeeId = [];
 
     export default {
         props:['clientDate'],
@@ -367,7 +367,7 @@
                 },
                 fullName: function (val) {
                     let mn = val.middleName !== null ? val.middleName : ''
-                    return val.lastName + ' ' + val.firstName + ' ' + mn
+                    return val.lastName + ' ' + val.firstName + ' ' + mn + ' тел: ' + val.clientPhone
                 }
             }
         },
@@ -448,7 +448,8 @@
                 setTimeout(() => {
                     this.items = this.clientList.filter(e => {
                         return (e.firstName || '').toLowerCase().indexOf((val || '').toLowerCase()) > -1 ||
-                            (e.lastName || '').toLowerCase().indexOf((val || '').toLowerCase()) > -1
+                            (e.lastName || '').toLowerCase().indexOf((val || '').toLowerCase()) > -1 ||
+                            (e.clientPhone || '').toLowerCase().indexOf((val || '').toLowerCase()) > -1
                     })
                     this.loading = false
                 }, 500)
@@ -486,10 +487,10 @@
             },
 
             endTime: function () {
-                let splitTime = this.endTime.split(":")
-                let date = new Date(this.editedItem.end)
-                date.setHours(splitTime[0])
-                date.setMinutes(splitTime[1])
+                let splitTime = this.endTime.split(":");
+                let date = new Date(this.editedItem.end);
+                date.setHours(splitTime[0]);
+                date.setMinutes(splitTime[1]);
                 if (date <= this.editedItem.start) {
                     Schedule.batTime(this, "Неверное время окончания приёма")
                 } else {
@@ -498,10 +499,10 @@
             },
 
             startTime: function () {
-                let splitTime = this.startTime.split(":")
-                let date = new Date(this.editedItem.start)
-                date.setHours(splitTime[0])
-                date.setMinutes(splitTime[1])
+                let splitTime = this.startTime.split(":");
+                let date = new Date(this.editedItem.start);
+                date.setHours(splitTime[0]);
+                date.setMinutes(splitTime[1]);
                 if (date >= this.editedItem.end) {
                     Schedule.batTime(this, "Неверное время начала приёма")
                 } else {
@@ -511,31 +512,26 @@
 
             selectClient: function () {
                 if (this.selectClient !== null) {
-                    this.editedItem.clientId = this.selectClient.id
-                    this.editedItem.firstName = this.selectClient.firstName
-                    this.editedItem.lastName = this.selectClient.lastName
-                    this.editedItem.middleName = this.selectClient.middleName
-                    this.editedItem.clientPhone = this.selectClient.clientPhone
+                    this.editedItem.clientId = this.selectClient.id;
+                    this.editedItem.firstName = this.selectClient.firstName;
+                    this.editedItem.lastName = this.selectClient.lastName;
+                    this.editedItem.middleName = this.selectClient.middleName;
+                    this.editedItem.clientPhone = this.selectClient.clientPhone;
 
                 }
             },
             slider: function () {
-                this.slotDuration = "00:" + this.slider
+                this.slotDuration = "00:" + this.slider;
             },
 
             date: function () {
-                let calendarApi = this.$refs.fullCalendar.getApi()
+                let calendarApi = this.$refs.fullCalendar.getApi();
                 calendarApi.gotoDate(this.date)
             },
 
             search(val) {
                 val && val !== this.select && this.querySelections(val)
             },
-
-            // clientDate: function () {
-            //     console.log(this.clientDate)
-            //     // if (this.clientDate !== null)
-            // }
         },
 
         computed: {}
@@ -554,8 +550,6 @@
       width: 100%
     }
   }
-
-
   .fc-button-active {
     background: #1143d5;
   }
@@ -564,15 +558,4 @@
     background: #7386d5;
   }
 
-  /*.demo-app {*/
-  /*  font-family: Arial, Helvetica Neue, Helvetica, sans-serif;*/
-  /*  font-size: 14px;*/
-  /*}*/
-  /*.demo-app-top {*/
-  /*  margin: 0 0 3em;*/
-  /*}*/
-  /*.demo-app-calendar {*/
-  /*  margin: 20px;*/
-
-  /*}*/
 </style>

@@ -61,8 +61,8 @@
         props: ['itemLength'],
         data: () => ({
             page: 1,
-            itemsPerPageArray: [10, 20, 30],
-            itemsPerPage: 10,
+            itemsPerPageArray: [20, 40, 100],
+            itemsPerPage: 20,
         }),
 
         computed: {

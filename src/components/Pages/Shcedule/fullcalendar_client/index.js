@@ -1,30 +1,25 @@
 import {axInst} from '@/plugins/axInst'
 
 function formatTime(time) {
-  let date = new Date(time)
-  let minute = date.getMinutes().toString() === "0" ? "00" : date.getMinutes()
+  let date = new Date(time);
+  let minute = date.getMinutes().toString() === "0" ? "00" : date.getMinutes();
   return date.getHours() + ":" + minute
 }
 
 export default {
   printSchedule(data) {
-    let calendar = data.$refs.fullCalendar.getApi()
+    let calendar = data.$refs.fullCalendar.getApi();
 
-    let resId = []
+    let resId = [];
     calendar.getResources().forEach((value) => {
       resId.push(value._resource.id)
-    })
-    let start = Number(calendar.getDate().getTime())
-    let end = start + 86400000
-    console.log(calendar.getDate())
+    });
+    let start = Number(calendar.getDate().getTime());
+    let oneDay = Number(86400000);
+    let end = start + oneDay;
 
-    // let json = {"start": "1596301200000", "end": "1596387600000", "resourcesId": ""}
-    //   http://localhost:8080/api/v1/client/printSchedule?token=ftScCkizAM&start=1596301200000&end=1596387600000&resourcesId=%22%22
-    let url = "/client/printSchedule?token=" + this.getToken() + "&start=" + start + "&end=" + end + "&res=" + resId.toString()
-
-     window.location = axInst.defaults.baseURL + url
-
-
+    let url = "/client/printSchedule?token=" + this.getToken() + "&start=" + start + "&end=" + end + "&res=" + resId.toString();
+    window.location = axInst.defaults.baseURL + url;
   },
 
   initialize(context, d) {
@@ -32,8 +27,8 @@ export default {
       context.date = new Date(parseInt(d)).toISOString().substr(0, 10)
     }
 
-    let url = "employee/getEmployeesWorkSchedule?token=" + this.getToken()
-    context.employeesList = []
+    let url = "employee/getEmployeesWorkSchedule?token=" + this.getToken();
+    context.employeesList = [];
 
     axInst.get(url).then((res) => {
       context.employeesList = res.data
@@ -41,17 +36,17 @@ export default {
   },
 
   setScheduleClient(context, arg) {
-    context.editedItem.resourcesId = arg.resource.id
-    context.editedItem.start = arg.start.getTime()
-    context.startTime = formatTime(arg.start)
+    context.editedItem.resourcesId = arg.resource.id;
+    context.editedItem.start = arg.start.getTime();
+    context.startTime = formatTime(arg.start);
 
-    context.editedItem.end = arg.end.getTime()
-    context.endTime = formatTime(arg.end)
+    context.editedItem.end = arg.end.getTime();
+    context.endTime = formatTime(arg.end);
     context.dialog = true
   },
 
   addEvent(context, calendarApi) {
-    let url = "client/setScheduleClient?token=" + this.getToken()
+    let url = "client/setScheduleClient?token=" + this.getToken();
     axInst({
       method: 'POST',
       headers: {
@@ -61,13 +56,13 @@ export default {
       url: url,
       data: context.editedItem,
     }).then((data) => {
-      this.access(context, data)
+      this.access(context, data);
       if (data.status === 200) {
         calendarApi.unselect();
         setTimeout(1000);
-        calendarApi.refetchEvents()
-        context.selectClient = null
-        context.editedItem = Object.assign({}, context.defaultItem)
+        calendarApi.refetchEvents();
+        context.selectClient = null;
+        context.editedItem = Object.assign({}, context.defaultItem);
         context.dialog = false
       }
     }).catch(error => {
@@ -85,12 +80,12 @@ export default {
     let start = arg.event.start.getTime();
     let end = arg.event.end === null ? 0 : arg.event.end.getTime();
 
-    context.editedItem.start = start
-    context.editedItem.end = end
-    context.editedItem.eventId = arg.event.id
-    context.editedItem.resourcesId = resourceId
+    context.editedItem.start = start;
+    context.editedItem.end = end;
+    context.editedItem.eventId = arg.event.id;
+    context.editedItem.resourcesId = resourceId;
 
-    let url = "client/eventDropScheduleClient?token=" + this.getToken()
+    let url = "client/eventDropScheduleClient?token=" + this.getToken();
     axInst({
       method: 'POST',
       headers: {
@@ -124,7 +119,7 @@ export default {
     return document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1")
   },
 
-  //client
+
   getResources(info, selectId, successCallback) {
     let onSchedule = selectId.length === 0
 
@@ -177,8 +172,6 @@ export default {
 
   getClientListFiltered(val, context) {
     if (val.length === 2) {
-      console.log("Search " + val)
-
       let url = "client/getClientListFiltered?token=" + this.getToken() + "&val=" + val
 
       axInst({
@@ -200,7 +193,6 @@ export default {
     context.badData = true
     context.snacMessage = res.data
     context.snacColor = "green"
-
   },
 
   warning(context, error) {
