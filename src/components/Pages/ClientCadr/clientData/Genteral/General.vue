@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card >
+    <v-card>
       <v-card-title>
         <v-btn :disabled="(isCard && isClient)" color="primary" dark class="mb-2" @click="save">Сохранить</v-btn>
       </v-card-title>
@@ -38,9 +38,12 @@
 
           <v-col cols="12" sm="6" md="2">
             <v-select
-              prepend-icon="how_to_reg"
-              :items="items"
+              v-model="clientData.clientCardDto.gender"
+              :items="genders"
+              item-text="text"
+              item-value="key"
               label="Пол"
+              prepend-icon="how_to_reg"
             ></v-select>
           </v-col>
           <v-col cols="12" sm="6" md="4">
@@ -171,7 +174,8 @@
                         lastName: '',
                         middleName: '',
                         clientPhone: '',
-                        createDate: ''},
+                        createDate: ''
+                    },
                     clientCardDto: {
                         id: '',
                         birthday: '',
@@ -192,7 +196,8 @@
                         lastName: '',
                         middleName: '',
                         clientPhone: '',
-                        createDate: ''},
+                        createDate: ''
+                    },
                     clientCardDto: {
                         id: '',
                         birthday: '',
@@ -205,7 +210,11 @@
                         position: '',
                         address: ''
                     }
-                }
+                },
+                genders: [
+                    {key: 'MALE', text: 'Муж'},
+                    {key: 'FEMALE', text: 'Жен'},
+                ],
             }
         },
 
@@ -223,16 +232,16 @@
                 }, 0)
             },
 
-            check (){
-                this.count  = this.count + 1
+            check() {
+                this.count = this.count + 1
                 if (this.count > 1) {
                     console.log("change")
                 }
             },
 
-            save(){
-              General.save(this)
-            }
+            save() {
+                General.save(this)
+            },
 
         },
 
@@ -241,7 +250,7 @@
                 document.title = this.clientData.clientDto.lastName
             },
 
-            "clientData.clientDto":  {
+            "clientData.clientDto": {
                 handler: function (val, oldVal) {
                     if (this.count < 1) {
                         this.count += 1
@@ -252,7 +261,7 @@
                 deep: true
             },
 
-            "clientData.clientCardDto":  {
+            "clientData.clientCardDto": {
                 handler: function (val, oldVal) {
                     if (this.count < 1) {
                         this.count += 1
@@ -266,7 +275,7 @@
             'clientData.clientDto.clientPhone': function () {
                 this.pv = true
                 this.clientData.clientDto.clientPhone = this.clientData.clientDto.clientPhone.replace(/^8/, "+7-")
-                this.clientData.clientDto.clientPhone = this.clientData.clientDto.clientPhone.replace(/(\d{3})(\d{3})(\d{2})(\d{2})/, '$1' + "-"+'$2' + "-"+'$3' + "-"+'$4')
+                this.clientData.clientDto.clientPhone = this.clientData.clientDto.clientPhone.replace(/(\d{3})(\d{3})(\d{2})(\d{2})/, '$1' + "-" + '$2' + "-" + '$3' + "-" + '$4')
                 let length = this.clientData.clientDto.clientPhone
                 if (length === 6 || length === 10 || length === 13) {
                     this.clientData.clientDto.clientPhone = this.clientData.clientDto.clientPhone + "-"

@@ -40,7 +40,7 @@
                     v-on="on"
                     v-model="editedItem.clientPhone" label="Телефон "></v-text-field>
                 </template>
-                <span>Пример: +71234567890</span>
+                <span>Пример: +7-123-456-78-90</span>
               </v-tooltip>
             </v-col>
 

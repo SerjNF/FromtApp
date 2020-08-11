@@ -222,24 +222,12 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-<v-container>
-  <p>{{datadata}}</p>
-</v-container>
+    <v-container>
+      <p>{{datadata}}</p>
+    </v-container>
     <v-dialog v-model="clientDialog" max-width="1000px">
-      <!--      <v-card>-->
-      <!--        <v-card-title>-->
-      <!--          Title-->
-      <!--        </v-card-title>-->
-      <!--        <v-card-text>-->
       <record-details :clientInfo="clientScheduleId" :apiCalendar="apiCalendar" @setClientDialog="clientDialogClose"
                       @setSnackBar="snacStatusChange"></record-details>
-      <!--        </v-card-text>-->
-      <!--        <v-card-actions>-->
-      <!--          <div class="flex-grow-1"></div>-->
-      <!--          <v-btn color="blue darken-1" text @click="close2">Закрыть</v-btn>-->
-      <!--          <v-btn color="blue darken-1" text @click="" :disabled="false">Добавить</v-btn>-->
-      <!--        </v-card-actions>-->
-      <!--      </v-card>-->
     </v-dialog>
     <v-snackbar
       bottom="bottom"
@@ -271,10 +259,11 @@
     import store from "@/store/index";
     import phoneValid from "@/plugins/phoneValidate";
 
+
     let selectEmployeeId = [];
 
     export default {
-        props:['clientDate'],
+        props: ['clientDate'],
         components: {
             RecordDetails,
             DatePicker,
@@ -282,10 +271,7 @@
         },
         data() {
             return {
-
-                datadata:'',
-
-                // clientDate: this.$route.params.date,
+                datadata: '',
                 time: null,
                 startMenu: false,
                 startTime: null,
@@ -550,6 +536,7 @@
       width: 100%
     }
   }
+
   .fc-button-active {
     background: #1143d5;
   }

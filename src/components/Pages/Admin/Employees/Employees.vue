@@ -6,7 +6,7 @@
       :items-per-page.sync="itemsPerPage"
       :page="page"
       hide-default-footer
-      sort-by="calories"
+
       class="elevation-1"
     >
       <template v-slot:top>
@@ -129,12 +129,7 @@
         >
           edit
         </v-icon>
-        <!--        <v-icon-->
-        <!--          small-->
-        <!--          @click="deleteItem(item)"-->
-        <!--        >-->
-        <!--          delete-->
-        <!--        </v-icon>-->
+
       </template>
 
       <template v-slot:no-data>

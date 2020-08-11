@@ -25,8 +25,9 @@ export default {
   },
 
   save(context){
-    console.log("save")
+    console.log(context.clientData)
     let url = "client/saveClientCard?token=" + this.getToken()
+
     axInst({
       method: 'POST',
       headers: {

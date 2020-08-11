@@ -30,10 +30,9 @@
 
     <span
       class="mr-4
-            grey--text"
-    >
+            grey--text">
             Page {{ page }} of {{ numberOfPages }}
-          </span>
+    </span>
     <v-btn
       fab
       dark
