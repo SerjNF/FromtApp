@@ -36,7 +36,7 @@ export default {
   },
 
   changeClientRecordDetails(calendarApi, context) {
-    let url = "client/eventDropScheduleClient?token=" + this.getToken()
+    let url = "client/noPersonal/eventDropScheduleClient?token=" + this.getToken()
     axInst({
       method: 'POST',
       headers: {

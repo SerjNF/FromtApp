@@ -7,7 +7,7 @@ export default {
   },
 
   initialization(context, id) {
-    let url = "client/getClientHistory?token=" + this.getToken() + "&clientId=" + id;
+    let url = "client/noPersonal/getClientHistory?token=" + this.getToken() + "&clientId=" + id;
     axInst({
       method: 'GET',
       headers: {

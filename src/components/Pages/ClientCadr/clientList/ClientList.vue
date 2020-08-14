@@ -15,7 +15,15 @@
       >
 
         <template v-slot:top>
-          <v-text-field v-model="search" label="Начните вводить..." class="mx-4"></v-text-field>
+          <v-toolbar flat color="white">
+            <v-toolbar-title>Список пользователей</v-toolbar-title>
+            <v-divider
+              class="mx-4"
+              inset
+              vertical
+            ></v-divider>
+            <v-text-field v-model="search" label="Начните вводить..." class="pt-5"></v-text-field>
+          </v-toolbar>
         </template>
         <template v-slot:item.createDate="{item}">
           <v-chip color="primary" outlined>{{ getDate(item) }}</v-chip>
@@ -95,7 +103,7 @@
                 return new Date(date.createDate).toLocaleDateString()
             },
 
-            filter (value, search, item) {
+            filter(value, search, item) {
                 return value != null &&
                     search != null &&
                     typeof value === 'string' &&

@@ -6,7 +6,7 @@ export default {
   },
 
   initialization(context) {
-    let url = "client/getAllClients?token=" + this.getToken()
+    let url = "client/noPersonal/getAllClients?token=" + this.getToken()
     axInst({
       method: 'GET',
       headers: {

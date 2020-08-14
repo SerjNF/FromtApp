@@ -7,7 +7,7 @@ export default {
   },
 
   initialization(context, id) {
-    let url = "client/getClientCard?token=" + this.getToken() + "&clientId=" + id
+    let url = "client/noPersonal/getClientCard?token=" + this.getToken() + "&clientId=" + id
     axInst({
       method: 'GET',
       headers: {
@@ -26,7 +26,7 @@ export default {
 
   save(context){
     console.log(context.clientData)
-    let url = "client/saveClientCard?token=" + this.getToken()
+    let url = "client/noPersonal/saveClientCard?token=" + this.getToken()
 
     axInst({
       method: 'POST',

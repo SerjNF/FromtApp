@@ -119,6 +119,7 @@
             ],
             right: null,
         }),
+
         methods: {
           exit() {
 

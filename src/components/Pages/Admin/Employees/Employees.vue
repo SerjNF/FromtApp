@@ -123,9 +123,10 @@
       </template>
       <template v-slot:item.action="{ item }">
         <v-icon
-          small
+          medium
           class="mr-2"
           @click="editItem(item)"
+          color="blue darken-1"
         >
           edit
         </v-icon>

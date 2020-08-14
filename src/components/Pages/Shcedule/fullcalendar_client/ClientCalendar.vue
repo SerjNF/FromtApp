@@ -301,7 +301,7 @@
                     resourcesId: '',
                     msg: '',
                     title: '',
-                    clientId: '-1',
+                    clientId: '0',
                     lastName: '',
                     firstName: '',
                     middleName: '',
@@ -315,7 +315,7 @@
                     resourcesId: '',
                     msg: '',
                     title: '',
-                    clientId: '-1',
+                    clientId: '0',
                     lastName: '',
                     firstName: '',
                     middleName: '',
@@ -365,6 +365,7 @@
         created() {
             this.minTime = store.state.general.Time.start
             this.maxTime = store.state.general.Time.end
+
         },
 
         methods: {

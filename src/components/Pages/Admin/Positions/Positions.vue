@@ -73,8 +73,9 @@
                     <v-list-item-content>Действие:</v-list-item-content>
                     <v-list-item-content class="align-end v-list-item_data">
                       <v-icon
+                        color="blue darken-1"
                         class="align-end"
-                        small
+                        medium
                         @click="deleteItem(item)"
                       >
                         delete

@@ -10,9 +10,6 @@ import ClientCards from "../components/Pages/ClientCadr/ClientCards";
 
 Vue.use(Router)
 
-function dynamicProps() {
-
-}
 
 const router = new Router({
   routes: [

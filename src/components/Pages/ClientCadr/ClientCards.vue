@@ -10,6 +10,7 @@
 
 <script>
     import checkToken from "@/plugins/checkToken";
+    import store from '@/store/index'
     import ClientList from "./clientList/ClientList"
     import ClientData from "./clientData/ClientData"
 
@@ -18,7 +19,13 @@
         components: {ClientList, ClientData},
 
         beforeRouteEnter(to, from, next) {
-            checkToken.beforeRoute(to, from, next, 2)
+
+            if (store.state.user.User.role === "PERSONAL") {
+                next(false)
+            } else {
+                checkToken.beforeRoute(to, from, next, 2)
+
+            }
         },
         data() {
             return {

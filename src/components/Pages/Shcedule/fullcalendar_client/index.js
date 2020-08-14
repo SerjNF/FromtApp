@@ -46,7 +46,7 @@ export default {
   },
 
   addEvent(context, calendarApi) {
-    let url = "client/setScheduleClient?token=" + this.getToken();
+    let url = "client/noPersonal/setScheduleClient?token=" + this.getToken();
     axInst({
       method: 'POST',
       headers: {
@@ -85,7 +85,7 @@ export default {
     context.editedItem.eventId = arg.event.id;
     context.editedItem.resourcesId = resourceId;
 
-    let url = "client/eventDropScheduleClient?token=" + this.getToken();
+    let url = "client/noPersonal/eventDropScheduleClient?token=" + this.getToken();
     axInst({
       method: 'POST',
       headers: {

@@ -102,14 +102,16 @@
       </template>
       <template v-slot:item.action="{ item }">
         <v-icon
-          small
+          color="blue darken-1"
+          medium
           class="mr-2"
           @click="editItem(item)"
         >
           edit
         </v-icon>
         <v-icon
-          small
+          color="blue darken-1"
+          medium
           @click="deleteItem(item)"
         >
           delete
