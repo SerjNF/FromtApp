@@ -358,7 +358,7 @@
 
             'priceEdit.value' : function () {
                 this.valueError = true;
-                const regex = /^[0-9]+$/;
+                const regex = /^[0-9]+.?[0-9]+?$/;
                 if ((regex.exec(this.priceEdit.value)) !== null) {
                     this.valueError = false;
                 }

@@ -1,0 +1,36 @@
+import {axInst} from '@/plugins/axInst'
+
+export default {
+  namespaced: true,
+  state: {
+    cardList: []
+  },
+  actions: {
+    ADD_CARDTOLIST({commit}, data) {
+
+      commit('SET_CARD', data)
+    },
+
+    DEL_CARDFORMLIST({commit}, data) {
+      commit('DEL_CARD', data)
+
+    }
+  },
+  mutations: {
+    SET_CARD(state, data) {
+      console.log(data)
+      if ( !state.cardList.some(function (item) {
+        return item.id === data.id
+      })) {
+        state.cardList.push(data)
+        console.log(data)
+      }
+    },
+    DEL_CARD(state, data) {
+      state.cardList.splice(data, 1)
+    }
+  },
+  getters: {},
+
+
+}

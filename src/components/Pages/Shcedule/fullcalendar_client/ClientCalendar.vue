@@ -1,4 +1,4 @@
-<template xmlns="http://www.w3.org/1999/html">
+<template xmlns="http://www.w3.org/1999/html" xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
   <div>
 
     <v-row>
@@ -227,7 +227,7 @@
     </v-container>
     <v-dialog v-model="clientDialog" max-width="1000px">
       <record-details :clientInfo="clientScheduleId" :apiCalendar="apiCalendar" @setClientDialog="clientDialogClose"
-                      @setSnackBar="snacStatusChange"></record-details>
+                      @setSnackBar="snacStatusChange" ></record-details>
     </v-dialog>
     <v-snackbar
       bottom="bottom"
@@ -287,7 +287,7 @@
                 loading: false,
                 pv: true,
                 buttonDisabled: true,
-                slider: 30,
+                slider: 15,
                 allLocales,
                 buttons: {
                     printSchedule: {
@@ -336,7 +336,7 @@
                 pickerDate: null,
                 minTime: "",
                 maxTime: "",
-                slotDuration: "00:30",
+                slotDuration: "00:15",
                 calendarPlugins: [ // plugins must be defined in the JS
                     dayGridPlugin,
                     timeGridPlugin,
@@ -424,6 +424,10 @@
                 this.snacMessage = data.snacMessage
                 this.snacColor = data.snacColor
             },
+
+          addOpenCard(data){
+              console.log(data)
+          },
 
             goToDates(date) {
                 this.date = date

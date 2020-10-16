@@ -6,6 +6,7 @@ import page from './modules/pageLink'
 import currentUser from './modules/currentUser'
 
 import general from './modules/general'
+import openedCard from "./modules/openedCard";
 
 Vue.use(Vuex)
 
@@ -14,7 +15,8 @@ export default new Vuex.Store({
   modules: {
     link: page,
     user : currentUser,
-    general: general
+    general: general,
+    openCard: openedCard
   },
   state: {},
   actions: {},
@@ -24,7 +26,7 @@ export default new Vuex.Store({
 
   plugins: [
     createPersistedState({
-      paths: ['user', 'general']
+      paths: ['user', 'general', 'openCard']
     })
     // createMutationsSharer({predicate: ["mutation1", "mutation2"]})
   ]

@@ -1,4 +1,4 @@
-<template>
+<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
   <div>
     <v-navigation-drawer
       v-model="drawer"
@@ -14,9 +14,9 @@
           </v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
-  <!--    <v-btn icon>
-        <v-icon @click='exit'>exit_to_app</v-icon>
-      </v-btn> -->
+      <!--    <v-btn icon>
+            <v-icon @click='exit'>exit_to_app</v-icon>
+          </v-btn> -->
       <v-divider>
       </v-divider>
 
@@ -30,6 +30,7 @@
             :key="i"
             link
             :href="item.href"
+
           >
             <v-list-item-icon>
               <v-icon>{{ item.icon }}</v-icon>
@@ -42,7 +43,41 @@
           </v-list-item>
         </v-list-item-group>
       </v-list>
-         <template v-slot:append>
+
+      <v-divider>
+      </v-divider>
+
+
+      <v-list
+        dense
+        nav
+      >
+
+        <v-subheader>Открытые карты</v-subheader>
+        <v-list-item-group v-model="cardModel" mandatory color="secondary">
+          <v-list-item
+            v-for="(select, k) in this.$store.state.openCard.cardList"
+            :key="select.id"
+            link
+            :href="'/#/card/' + select.id"
+            @click="clickOnRow">
+            <v-list-item-content>
+              <v-list-item-title>
+                {{select.name}}
+              </v-list-item-title>
+
+            </v-list-item-content>
+            <v-list-item-action>
+              <v-btn x-small icon @click='del(k)'>
+                <v-icon>close</v-icon>
+              </v-btn>
+            </v-list-item-action>
+          </v-list-item>
+        </v-list-item-group>
+      </v-list>
+
+
+      <template v-slot:append>
         <div class="pa-2">
           <v-btn block @click='exit'>Выход</v-btn>
         </div>
@@ -101,37 +136,49 @@
 </template>
 
 <script>
-    import store from "@/store/index";
-    import router from '@/router'
-    import {axInst} from '@/plugins/axInst'
+  import store from "@/store/index";
+  import router from '@/router'
+  import {axInst} from '@/plugins/axInst'
 
 
-    export default {
-        name: 'navigation',
-        data: () => ({
-            model: store.state.link.page,
-            dialog: false,
-            drawer: null,
-            items: [
-                {title: 'Расписание', icon: 'today', href: '/#/'},
-                {title: 'Администрирование', icon: 'assignment_ind', href: '/#/admin'},
-                {title: 'Список клиентов', icon: 'supervisor_account', href: '/#/card'},
-            ],
-            right: null,
-        }),
+  export default {
+    name: 'navigation',
+    data: () => ({
+      model: store.state.link.page,
+      cardModel: 1,
+      dialog: false,
+      drawer: null,
+      items: [
+        {title: 'Расписание', icon: 'today', href: '/#/'},
+        {title: 'Администрирование', icon: 'assignment_ind', href: '/#/admin'},
+        {title: 'Список клиентов', icon: 'supervisor_account', href: '/#/card'},
+      ],
+      right: null,
 
-        methods: {
-          exit() {
+    }),
 
-              // let token = this.cookie.get('token')
-               let token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1")
-               let url = "/exitUser?token=" + token
-               axInst.get(url).then()
-               localStorage.clear()
-               router.push('/login')
-          }
-        },
-    }
+    methods: {
+      exit() {
+
+        // let token = this.cookie.get('token')
+        let token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1")
+        let url = "/exitUser?token=" + token
+        axInst.get(url).then()
+        localStorage.clear()
+        router.push('/login')
+      },
+
+      del(index) {
+        store.dispatch('openCard/DEL_CARDFORMLIST', index)
+      },
+
+      clickOnRow(data) {
+        let routeData = this.$router.resolve({name: 'Card', params: {id: data.id}});
+        window.open(routeData.href, '_self');
+      }
+
+    },
+  }
 </script>
 
 <style scoped>
