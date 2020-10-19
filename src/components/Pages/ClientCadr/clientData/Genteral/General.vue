@@ -235,7 +235,6 @@
             check() {
                 this.count = this.count + 1
                 if (this.count > 1) {
-                    console.log("change")
                 }
             },
 

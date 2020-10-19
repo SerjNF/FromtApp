@@ -1,5 +1,5 @@
 <template>
-  <v-content
+  <v-main
     class="ml-3 mr-3">
     <v-tabs
       v-model="tab"
@@ -11,47 +11,52 @@
         :key="item.name">
         {{ item.name }}
       </v-tab>
-    </v-tabs>
+
 
     <v-tabs-items v-model="tab">
       <v-tab-item
         v-for="item in items"
         :key="item.name">
-        <component :clientId="clId"  :is="item.component"></component>
+        <component :clientId="clId" :is="item.component"></component>
       </v-tab-item>
     </v-tabs-items>
-  </v-content>
+    </v-tabs>
+  </v-main>
+
 </template>
 
 <script>
 
-    import General from "./Genteral/General";
-    import History from "./History/HistoryList"
+  import General from "./Genteral/General";
+  import History from "./History/HistoryList"
+  import Orders from "./Orders/Orders"
 
-    export default {
-        name: "ClientData",
-        props: ['clientId'],
-        components: {
-            General,
-            History
-        },
+  export default {
+    name: "ClientData",
+    props: ['clientId'],
+    components: {
+      General,
+      History,
+      Orders
+    },
 
-        data() {
-            return {
-                tab: null,
-                items: [
-                    {name: 'Основные данные', component: 'General'},
-                    {name: 'История посещений', component: 'History'},
-                ],
-                clId : ''
-            }
-        },
+    data() {
+      return {
+        tab: null,
+        items: [
+          {name: 'Основные данные', component: 'General'},
+          {name: 'Счета', component: 'Orders'},
+          {name: 'История посещений', component: 'History'},
+        ],
+        clId: ''
+      }
+    },
 
-        mounted() {
-            this.clId = this.clientId;
+    mounted() {
+      this.clId = this.clientId;
 
-        },
-    }
+    },
+  }
 </script>
 
 <style scoped>

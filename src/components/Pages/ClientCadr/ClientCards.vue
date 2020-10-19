@@ -14,6 +14,7 @@
     import ClientList from "./clientList/ClientList"
     import ClientData from "./clientData/ClientData"
 
+
     export default {
         name: 'root',
         components: {ClientList, ClientData},
