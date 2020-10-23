@@ -1,5 +1,7 @@
 <template>
-  <div>History</div>
+  <div>
+    History
+  </div>
 
 </template>
 
