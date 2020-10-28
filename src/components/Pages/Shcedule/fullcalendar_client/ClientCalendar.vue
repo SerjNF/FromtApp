@@ -1,47 +1,46 @@
 <template xmlns="http://www.w3.org/1999/html" xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
   <div>
-
     <v-row>
       <v-col xl="10" lg="9" md="9" sm="12">
-
-        <FullCalendar
-          locale="ru"
-          :locales="allLocales"
-          schedulerLicenseKey='CC-Attribution-NonCommercial-NoDerivatives'
-          class='demo-app-calendar'
-          ref="fullCalendar"
-          height="auto"
-          :slot-duration="slotDuration"
-          :min-time="minTime"
-          :max-time="maxTime"
-          defaultView="resourceTimeGrid"
-          now-indicator="true"
-          nav-links="true"
-          selectable="true"
-          editable="true"
-          :eventOverlap="false"
-          :selectOverlap="false"
-          :selectMirror="false"
-          :businessHours="true"
-          selectConstraint="businessHours"
-          :custom-buttons="buttons"
-          :header="{
+          <FullCalendar
+            locale="ru"
+            :locales="allLocales"
+            schedulerLicenseKey='CC-Attribution-NonCommercial-NoDerivatives'
+            class='demo-app-calendar'
+            ref="fullCalendar"
+            height="auto"
+            :slot-duration="slotDuration"
+            :min-time="minTime"
+            :max-time="maxTime"
+            defaultView="resourceTimeGrid"
+            now-indicator="true"
+            nav-links="true"
+            selectable="true"
+            editable="true"
+            :eventOverlap="false"
+            :selectOverlap="false"
+            :selectMirror="false"
+            :businessHours="true"
+            selectConstraint="businessHours"
+            :custom-buttons="buttons"
+            :header="{
         left: 'prev,next, today, printSchedule',
         center: 'title',
         right: 'dayGridMonth,resourceTimeGridWeek,resourceTimeGridDay,listWeek'
       }"
-          :refetch-resources-on-navigate="true"
-          :plugins="calendarPlugins"
-          :resources="resources"
-          :selectable="true"
-          :weekends="calendarWeekends"
-          :events="events"
-          @select="select"
-          @eventClick="eventClick"
-          @eventDrop="eventDrop"
-          @eventResize="eventResize"
-          :dates-render="datesRender"
-        />
+            :refetch-resources-on-navigate="true"
+            :plugins="calendarPlugins"
+            :resources="resources"
+            :selectable="true"
+            :weekends="calendarWeekends"
+            :events="events"
+            @select="select"
+            @eventClick="eventClick"
+            @eventDrop="eventDrop"
+            @eventResize="eventResize"
+            :dates-render="datesRender"
+          />
+
       </v-col>
 
       <v-col xl="2" lg="3" md="3" sm="12" class="pl-lg-0 pl-md-0 pa-sm-8 ">
@@ -81,7 +80,7 @@
             <v-row>
               <v-col cols="12">
                 <v-toolbar
-                  light
+
                 >
                   <!--                  <v-toolbar-title>Поиск:</v-toolbar-title>-->
                   <v-autocomplete
@@ -91,11 +90,11 @@
                     :search-input.sync="search"
                     :item-text="fullName"
                     return-object
-                    flat
+
                     hide-no-data
                     hide-details
                     label="Введите фамилию клиента..."
-                    solo
+
                     prepend-icon="search"
                   ></v-autocomplete>
                 </v-toolbar>
@@ -222,12 +221,12 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-container>
-      <p>{{datadata}}</p>
-    </v-container>
-    <v-dialog v-model="clientDialog" max-width="1000px">
+
+    <v-dialog v-model="clientDialog" max-width="1000px"
+              hide-overlay
+              transition="dialog-bottom-transition">
       <record-details :clientInfo="clientScheduleId" :apiCalendar="apiCalendar" @setClientDialog="clientDialogClose"
-                      @setSnackBar="snacStatusChange" ></record-details>
+                      @setSnackBar="snacStatusChange"></record-details>
     </v-dialog>
     <v-snackbar
       bottom="bottom"
@@ -259,9 +258,7 @@
     import store from "@/store/index";
     import phoneValid from "@/plugins/phoneValidate";
 
-
     let selectEmployeeId = [];
-
     export default {
         props: ['clientDate'],
         components: {
@@ -425,9 +422,9 @@
                 this.snacColor = data.snacColor
             },
 
-          addOpenCard(data){
-              console.log(data)
-          },
+            addOpenCard(data) {
+                console.log(data)
+            },
 
             goToDates(date) {
                 this.date = date

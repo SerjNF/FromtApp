@@ -101,8 +101,8 @@
                 <v-text-field
                   number
                   v-model="props.item.code"
-                  :rules="[max25chars]"
-                  label="Edit"
+                  :rules="[numberCode, max10chars]"
+                  label="Редактировать"
                   single-line
                   counter
                 ></v-text-field>
@@ -122,8 +122,8 @@
               <template v-slot:input>
                 <v-text-field
                   v-model="props.item.serviceName"
-                  :rules="[max25chars]"
-                  label="Edit"
+                  :rules="[max100chars]"
+                  label="Редактировать"
                   single-line
                   counter
                 ></v-text-field>
@@ -143,8 +143,8 @@
               <template v-slot:input>
                 <v-text-field
                   v-model="props.item.value"
-                  :rules="[max25chars]"
-                  label="Edit"
+                  :rules="[numberValue, max10chars]"
+                  label="Редактировать"
                   single-line
                   counter
                 ></v-text-field>
@@ -240,8 +240,10 @@
             },
             editCategory: false,
             editPrice: false,
-            max25chars: v => v.length <= 25 || 'Input too long!',
-
+            max10chars: v => v.length <= 10 || 'Превышена длина',
+            max100chars: v => v.length <= 100 || 'Превышена длина',
+            numberCode: v => /^[0-9]+$/.exec(v) != null || 'Введите число' ,
+            numberValue: v => /^[0-9]+[.]?[0-9]+$/.exec(v) != null || 'Введите число' ,
             categoryHead: [
                 {text: 'Категория', value: 'nameCategory'},
                 {text: '', value: 'action'},
@@ -365,7 +367,6 @@
             }
 
         }
-
     }
 </script>
 

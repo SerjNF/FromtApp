@@ -2,7 +2,8 @@
   <v-app id="inspire">
     <navigation></navigation>
 
-    <v-content>
+    <v-content
+      class="ml-3 mr-3">
       <v-tabs
         v-model="tab"
         background-color="transparent"

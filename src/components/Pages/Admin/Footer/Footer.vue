@@ -34,7 +34,6 @@
             Page {{ page }} of {{ numberOfPages }}
     </span>
     <v-btn
-      fab
       dark
       color="blue darken-3"
       class="mr-1"
@@ -43,10 +42,9 @@
       <v-icon>keyboard_arrow_left</v-icon>
     </v-btn>
     <v-btn
-      fab
       dark
       color="blue darken-3"
-      class="ml-1"
+      class="v-size--x-small"
       @click="nextPage"
     >
       <v-icon>keyboard_arrow_right</v-icon>

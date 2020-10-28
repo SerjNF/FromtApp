@@ -11,7 +11,8 @@
         grow>
         <v-tab
           v-for="item in items"
-          :key="item.name">
+          :key="item.name"
+          class="font-weight-bold">
           {{ item.name }}
         </v-tab>
       </v-tabs>

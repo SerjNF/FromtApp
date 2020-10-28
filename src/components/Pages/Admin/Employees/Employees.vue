@@ -10,7 +10,7 @@
       class="elevation-1"
     >
       <template v-slot:top>
-        <v-toolbar flat color="white">
+        <v-toolbar flat>
           <v-toolbar-title>Список сотрудников</v-toolbar-title>
           <v-divider
             class="mx-4"
@@ -138,9 +138,10 @@
       </template>
 
       <template v-slot:item.scheduleView="{ item }">
-        <v-chip :color="getScheduleView(item.scheduleView).color">{{ getScheduleView(item.scheduleView).scheduleView
+<!--        <v-chip :color="getScheduleView(item.scheduleView).color">-->
+          {{ getScheduleView(item.scheduleView).scheduleView
           }}
-        </v-chip>
+<!--        </v-chip>-->
       </template>
 
       <template v-slot:item.state="{ item }">
@@ -152,7 +153,7 @@
       </template>
 
       <template v-slot:item.positions="{ item }">
-        <v-chip color="white">{{ getPositions(item.positions)}}</v-chip>
+        {{ getPositions(item.positions)}}
       </template>
       <template v-slot:footer>
         <footerr :itemLength="desserts.length"

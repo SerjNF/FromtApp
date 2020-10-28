@@ -57,14 +57,12 @@ export default {
       data: context.editedItem,
     }).then((data) => {
       this.access(context, data);
-      if (data.status === 200) {
         calendarApi.unselect();
         setTimeout(1000);
         calendarApi.refetchEvents();
         context.selectClient = null;
         context.editedItem = Object.assign({}, context.defaultItem);
         context.dialog = false
-      }
     }).catch(error => {
         this.warning(context, error)
       }

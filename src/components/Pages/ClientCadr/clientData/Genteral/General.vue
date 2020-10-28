@@ -1,10 +1,20 @@
 <template>
-  <div>
+
     <v-card>
       <v-card-title>
-        <v-btn :disabled="(isCard && isClient)" color="primary" dark class="mb-2" @click="save">Сохранить</v-btn>
+        <v-row>
+          <v-col cols="6" sm="6" md="6">
+            <v-btn :disabled="(isCard && isClient)" color="primary" dark class="mb-2" @click="save">Сохранить</v-btn>
+          </v-col>
+
+          <v-col cols="6" sm="6" md="6" class="text-right">
+            <h3>Карта номер: {{clientData.clientCardDto.id}}</h3>
+          </v-col>
+        </v-row>
+
       </v-card-title>
       <v-card-text>
+
         <v-row>
           <v-col cols="12" sm="4" md="4">
             <v-text-field
@@ -148,7 +158,7 @@
 
     </v-card>
 
-  </div>
+
 </template>
 
 <script>

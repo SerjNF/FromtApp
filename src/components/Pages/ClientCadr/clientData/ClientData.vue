@@ -1,14 +1,15 @@
 <template>
-  <v-main
+  <v-content
     class="ml-3 mr-3">
     <v-tabs
       v-model="tab"
-      background-color="transparent"
-      color="basil"
+
+
       grow>
       <v-tab
         v-for="item in items"
-        :key="item.name">
+        :key="item.name"
+        class="font-weight-bold">
         {{ item.name }}
       </v-tab>
 
@@ -21,7 +22,7 @@
       </v-tab-item>
     </v-tabs-items>
     </v-tabs>
-  </v-main>
+  </v-content>
 
 </template>
 

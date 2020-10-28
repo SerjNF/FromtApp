@@ -27,7 +27,6 @@ export default {
     }).then((data) => {
       context.editedItem = data.data
       context.defaultItem = Object.assign({}, context.editedItem)
-      // console.log(context.editedItem)
       context.startTime = formatTime(context.editedItem.start)
       context.endTime = formatTime(context.editedItem.end)
     }).catch(() => {

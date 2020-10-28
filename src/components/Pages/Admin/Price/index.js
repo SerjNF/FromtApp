@@ -44,9 +44,6 @@ export default {
     })
   },
 
-
-
-
   getPriceByCategoryId(id, context) {
     let url = "admin/price/getPriceByCategoryId?id="+ id +"&token=" + this.getToken()
 

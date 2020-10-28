@@ -1,6 +1,7 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
   <div>
     <v-navigation-drawer
+
       v-model="drawer"
       :clipped="$vuetify.breakpoint.lgAndUp"
       app>
@@ -87,8 +88,9 @@
     <v-app-bar
       :clipped-left="$vuetify.breakpoint.lgAndUp"
       app
-      color="blue darken-3"
-      dark
+
+      color="primary"
+
     >
       <v-toolbar-title
         style="width: 20%"
@@ -101,14 +103,14 @@
         <!--        <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>-->
         <span class="hidden-sm-and-down">Какой нить титул , может название страницы</span>
       </v-toolbar-title>
-      <v-text-field
-        flat
-        solo-inverted
-        hide-details
-        prepend-inner-icon="search"
-        label="Search"
-        class="hidden-sm-and-down"
-      ></v-text-field>
+<!--      <v-text-field-->
+<!--        flat-->
+<!--        solo-inverted-->
+<!--        hide-details-->
+<!--        prepend-inner-icon="search"-->
+<!--        label="Search"-->
+<!--        class="hidden-sm-and-down"-->
+<!--      ></v-text-field>-->
       <div class="flex-grow-1"></div>
       <v-btn icon>
         <v-icon>mdi-apps</v-icon>

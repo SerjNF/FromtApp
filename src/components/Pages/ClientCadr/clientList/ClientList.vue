@@ -27,7 +27,6 @@
         </template>
         <template v-slot:item.createDate="{item}">
           <v-chip color="primary" outlined>{{ getDate(item) }}</v-chip>
-          <!--        <v-text-field :disabled="true" :value="getDate(item)"></v-text-field>-->
         </template>
 
         <template v-slot:footer>
@@ -111,7 +110,6 @@
             },
 
         },
-
     }
 </script>
 

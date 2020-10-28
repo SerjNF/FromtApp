@@ -2,20 +2,21 @@
 
     <v-card
       class="ml-3 mr-3">
+      <v-card-title
+        class="d-flex flex-row-reverse">
+        <span class="ыьф">Баланс: {{clId}}</span>
+      </v-card-title>
+
       <v-tabs
         vertical
         v-model="tab"
-        background-color="transparent"
-        color="basil"
-        grow
       >
         <v-tab
           v-for="item in items"
-          :key="item.name">
+          :key="item.name"
+        class="font-weight-bold">
           {{ item.name }}
         </v-tab>
-
-
 
         <v-tabs-items v-model="tab">
           <v-tab-item

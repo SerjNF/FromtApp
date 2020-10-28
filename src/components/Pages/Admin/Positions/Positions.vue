@@ -9,7 +9,7 @@
         hide-default-footer
       >
         <template v-slot:header>
-          <v-toolbar flat color="white">
+          <v-toolbar flat>
             <v-toolbar-title>Список должностей</v-toolbar-title>
             <v-divider
               class="mx-4"
