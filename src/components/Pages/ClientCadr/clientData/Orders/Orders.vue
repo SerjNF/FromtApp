@@ -1,10 +1,10 @@
 <template>
 
     <v-card
-      class="ml-3 mr-3">
+ >
       <v-card-title
         class="d-flex flex-row-reverse">
-        <span class="ыьф">Баланс: {{clId}}</span>
+        <span class="">Баланс: {{clId}}</span>
       </v-card-title>
 
       <v-tabs

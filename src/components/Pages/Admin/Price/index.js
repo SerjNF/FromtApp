@@ -4,7 +4,6 @@ import {axInst} from '@/plugins/axInst'
 export default {
   initialization (context){
     let url = "admin/price/getCategory?token=" + this.getToken()
-
     context.categoryItems = []
     axInst.get(url).then((res) => {
       context.categoryItems = res.data
@@ -26,7 +25,6 @@ export default {
       this.warning(context, error)
     })
   },
-
 
   removeCategory(row, context){
     axInst({
@@ -53,7 +51,6 @@ export default {
     })
   },
 
-
   savePrice(row, context){
     axInst({
       method: 'POST',
@@ -65,7 +62,9 @@ export default {
       data: row,
     }).then((res) => {
       context.priceItems = res.data
-    }).catch((error) => {
+      context.editPrice = false;
+    }).catch(error => {
+      console.log(error)
       this.warning(context, error)
       this.getPriceByCategoryId(context.selectRowCategory.id, context)
     })
@@ -87,6 +86,11 @@ export default {
       this.warning(context, error)
       this.getPriceByCategoryId(context.selectRowCategory.id, context)
     })
+  },
+
+  printPrice() {
+    let url = "/admin/price/download?token=" + this.getToken();
+    window.location = axInst.defaults.baseURL + url;
   },
 
   getToken() {

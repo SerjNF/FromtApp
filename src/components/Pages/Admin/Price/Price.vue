@@ -1,12 +1,54 @@
 <template>
   <v-container fluid>
     <v-row>
-      <v-col>
+      <v-col cols="12" sm="12" lg="3" md="3">
+        <v-card class="mr-0">
+          <template v-if="editCategory">
+            <v-btn color="blue darken-1" text right @click="addCategory">
+              <v-icon>add</v-icon>
+            </v-btn>
+            <v-btn color="blue darken-1" text right @click="removeCategory" :disabled="selectRowCategory === ''">
+              <v-icon>remove</v-icon>
+            </v-btn>
+          </template>
+          <v-btn color="primary" dark @click="lockCategory">{{lockedCategory}}</v-btn>
+        </v-card>
+      </v-col>
+      <v-col cols="12" sm="12" lg="9" md="9">
+        <v-card class="d-flex justify-space-between">
+          <v-card class="d-flex justify-start">
+            <v-btn color="primary" dark   @click="printPrice">
+             Скачать прайс
+            </v-btn>
+            <v-divider vertical></v-divider>
+            <v-btn color="primary" dark   @click="priceDialog = true">
+              Загрузить прайс
+            </v-btn>
+
+          </v-card>
+        <v-card class="d-flex justify-end">
+          <v-btn color="blue darken-1" text right @click="priceDialog = true" :disabled="selectRowCategory === ''">
+            <v-icon>add</v-icon>
+          </v-btn>
+          <v-divider vertical></v-divider>
+          <template v-if=editPrice>
+            <v-btn color="blue darken-1" text right @click="removePrice">
+              <v-icon>remove</v-icon>
+            </v-btn>
+          </template>
+        </v-card>
+        </v-card>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col cols="12" sm="12" lg="3" md="3">
         <v-card>
           <v-data-table
             @click:row="rowCategoryClick"
             :headers="categoryHead"
             :items="categoryItems"
+            :items-per-page.sync="itemsPerPageCategory"
+            :page="pageCategory"
             hide-default-footer
             :calculate-widths="true"
           >
@@ -22,7 +64,7 @@
                 <template v-slot:input>
                   <v-text-field
                     v-model="props.item.nameCategory"
-                    :rules="[max25chars]"
+                    :rules="[max20chars]"
                     label="Edit"
                     single-line
                     counter
@@ -32,19 +74,11 @@
             </template>
 
             <template v-slot:footer>
-              <v-card class="d-flex flex-row-reverse">
-                <template v-if="editCategory">
-                  <v-btn color="blue darken-1" text right @click="addCategory">
-                    <v-icon>add</v-icon>
-                  </v-btn>
-                  <v-btn color="blue darken-1" text right @click="removeCategory">
-                    <v-icon>remove</v-icon>
-                  </v-btn>
-                </template>
-                <v-btn color="dark" @click="lockCategory">{{lockedCategory}}</v-btn>
-              </v-card>
-            </template>
-
+            <footers :itemLength="categoryItems.length"
+                     :startItemPerPage="itemsPerPageCategory"
+                     @changePage="changePageCatNumber"
+                     @changeItemPerPage="changeCatItemPerPag"></footers>
+          </template>
 
             <template
               v-slot:item.action="{ item }">
@@ -55,33 +89,27 @@
                 class="d-flex flex-row-reverse">
                 lens
               </v-icon>
-
             </template>
           </v-data-table>
         </v-card>
       </v-col>
-      <v-divider vertical></v-divider>
-      <v-col cols="9">
 
-        <v-data-table
-          @click:row="rowPriceClick"
-          :headers="priceHead"
-          :items="priceItems"
-          hide-default-footer
-          class="elevation-1">
+      <v-col cols="12" sm="12" lg="9" md="9">
+
+        <v-data-table v-if="selectRowCategory !== ''"
+                      @click:row="rowPriceClick"
+                      :headers="priceHead"
+                      :items="priceItems"
+                      :items-per-page.sync="itemsPerPagePrice"
+                      :page="pagePrice"
+                      hide-default-footer
+                      class="elevation-1">
           :calculate-widths="true"
           <template v-slot:footer>
-            <v-card class="d-flex flex-row-reverse">
-
-              <v-btn color="blue darken-1" text right @click="priceDialog = true">
-                <v-icon>add</v-icon>
-              </v-btn>
-              <template v-if=editPrice>
-              <v-btn color="blue darken-1" text right @click="removePrice">
-                <v-icon>remove</v-icon>
-              </v-btn>
-              </template>
-            </v-card>
+            <footers :itemLength="priceItems.length"
+                     :startItemPerPage="itemsPerPagePrice"
+                     @changePage="changePagePriceNumber"
+                     @changeItemPerPage="changePriceItemPerPag"></footers>
           </template>
 
           <template v-slot:no-data>
@@ -92,7 +120,7 @@
             v-slot:item.code="props">
             <v-edit-dialog
               :return-value.sync="props.item.code"
-              @save="saveCode(props.item)"
+              @save="savePrice(props.item)"
               :large="true"
               save-text="Сохранить"
               cancel-text="Закрыть"
@@ -101,10 +129,10 @@
                 <v-text-field
                   number
                   v-model="props.item.code"
-                  :rules="[numberCode, max10chars]"
+                  :rules="[numberCode, chars3]"
                   label="Редактировать"
                   single-line
-                  counter
+                  counte
                 ></v-text-field>
               </template>
             </v-edit-dialog>
@@ -114,15 +142,36 @@
             v-slot:item.serviceName="props">
             <v-edit-dialog
               :return-value.sync="props.item.serviceName"
-              @save="saveName(props.item)"
+              @save="savePrice(props.item)"
               :large="true"
               save-text="Сохранить"
               cancel-text="Закрыть"
             > {{ props.item.serviceName }}
               <template v-slot:input>
-                <v-text-field
+                <v-textarea
                   v-model="props.item.serviceName"
-                  :rules="[max100chars]"
+                  :rules="[max200chars]"
+                  label="Редактировать"
+                  single-line
+                  counter
+                ></v-textarea>
+              </template>
+            </v-edit-dialog>
+          </template>
+
+          <template
+            v-slot:item.article="props">
+            <v-edit-dialog
+              :return-value.sync="props.item.article"
+              @save="savePrice(props.item)"
+              :large="true"
+              save-text="Сохранить"
+              cancel-text="Закрыть"
+            > {{ props.item.article }}
+              <template v-slot:input>
+                <v-text-field
+                  v-model="props.item.article"
+                  :rules="[articleChars]"
                   label="Редактировать"
                   single-line
                   counter
@@ -143,7 +192,7 @@
               <template v-slot:input>
                 <v-text-field
                   v-model="props.item.value"
-                  :rules="[numberValue, max10chars]"
+                  :rules="[numberValue, max20chars]"
                   label="Редактировать"
                   single-line
                   counter
@@ -161,8 +210,6 @@
               lens
             </v-icon>
           </template>
-
-
         </v-data-table>
 
         <v-dialog v-model="priceDialog" max-width="800px" @keyup.enter="saveNewPrice">
@@ -173,21 +220,29 @@
             <v-card-text>
               <v-container>
                 <v-row>
-                  <v-col cols="12" sm="3" md="12">
+                  <v-col cols="12" sm="12" md="6">
+                    <v-text-field
+                      :error="articleError"
+                      prepend-icon="how_to_reg"
+                      v-model="priceEdit.article" label="Номенклатура"
+                      @keyup.enter="saveNewPrice"></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="12" md="6">
                     <v-text-field
                       :error="codeError"
+                      :rules="[chars3]"
                       prepend-icon="how_to_reg"
                       v-model="priceEdit.code" label="Код"
                       @keyup.enter="saveNewPrice"></v-text-field>
                   </v-col>
-                  <v-col cols="12" sm="3" md="12">
+                  <v-col cols="12" sm="12" md="12">
                     <v-text-field
-                     :error="priceEdit.serviceName.length < 3"
+                      :error="priceEdit.serviceName.length < 3"
                       prepend-icon="how_to_reg"
                       v-model="priceEdit.serviceName" label="Наименование"
                       @keyup.enter="saveNewPrice"></v-text-field>
                   </v-col>
-                  <v-col cols="12" sm="3" md="12">
+                  <v-col cols="12" sm="12" md="12">
                     <v-text-field
                       :error="valueError"
                       prepend-icon="how_to_reg"
@@ -200,58 +255,74 @@
             <v-card-actions>
               <div class="flex-grow-1"></div>
               <v-btn color="blue darken-1" text @click="close">Закрыть</v-btn>
-              <v-btn color="blue darken-1" text @click="saveNewPrice" :disabled="codeError || valueError" >Сохранить</v-btn>
+              <v-btn color="blue darken-1" text @click="saveNewPrice" :disabled="codeError || valueError">Сохранить
+              </v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
       </v-col>
     </v-row>
-        <v-snackbar
-          bottom="bottom"
-          text
-          v-model="badData"
-          :color=snacColor>
-          {{ snacMessage }}
-          <v-btn
-            color="black"
-            text
-            @click="badData = false"
-          >
-            Закрыть
-          </v-btn>
-        </v-snackbar>
+    <v-snackbar
+      bottom="bottom"
+      text
+      v-model="badData"
+      :color=snacColor>
+      {{ snacMessage }}
+      <v-btn
+        color="black"
+        text
+        @click="badData = false"
+      >
+        Закрыть
+      </v-btn>
+    </v-snackbar>
 
   </v-container>
 </template>
 
 <script>
+    import Footer from '@/components/Pages/Admin/Footer/Footer.vue'
     import Price from './index'
 
     export default {
+        components: {
+            footers: Footer
+        },
         name: "Price",
         data: () => ({
+            pageCategory: 1,
+            itemsPerPageCategory: 10,
+            pagePrice: 1,
+            itemsPerPagePrice: 20,
             codeError: true,
+            articleError: true,
             valueError: true,
             priceDialog: false,
             priceEdit: {
                 code: '',
+                article: '',
                 serviceName: '',
                 value: ''
             },
             editCategory: false,
             editPrice: false,
-            max10chars: v => v.length <= 10 || 'Превышена длина',
+            chars3: v => v.length === 3 || '3 знака',
+            max20chars: v => v.length <= 20 || 'Превышена длина',
             max100chars: v => v.length <= 100 || 'Превышена длина',
-            numberCode: v => /^[0-9]+$/.exec(v) != null || 'Введите число' ,
-            numberValue: v => /^[0-9]+[.]?[0-9]+$/.exec(v) != null || 'Введите число' ,
+            max200chars: v => v.length <= 200 || 'Превышена длина',
+            numberCode: v => /^[0-9]+$/.exec(v) != null || 'Введите число',
+            numberValue: v => /^[0-9]+[.]?[0-9]+$/.exec(v) != null || 'Введите число',
+            articleChars: v => /^[A-ZА-Я][0-9]{2}.[0-9]{2,3}.[0-9]{3}(.[0-9]{3})?$/.exec(v) != null || 'Неверный артикль',
             categoryHead: [
+                {text: '№', value: 'id'},
                 {text: 'Категория', value: 'nameCategory'},
                 {text: '', value: 'action'},
             ],
             categoryItems: [],
-
+            max25chars: 25,
             priceHead: [
-                {text: 'Код', value: 'code'},
+                {text: '№', value: 'code'},
+                {text: 'Артикль', value: 'article'},
                 {text: 'Наименование услуги', value: 'serviceName'},
                 {text: 'Цена', value: 'value'},
                 {text: '', value: 'action'}],
@@ -270,13 +341,29 @@
 
         computed: {
             lockedCategory() {
-                return this.editCategory ? 'Блокировать' : 'Разблокировать'
+                return this.editCategory ? 'Блокировать' : 'Редактировать'
             }
         },
 
         methods: {
             initialization() {
                 Price.initialization(this)
+            },
+
+            changePageCatNumber(p) {
+                this.pageCategory = p
+            },
+
+            changeCatItemPerPag(i) {
+                this.itemsPerPageCategory = i
+            },
+
+            changePagePriceNumber(p) {
+                this.pagePrice = p
+            },
+
+            changePriceItemPerPag(i) {
+                this.itemsPerPagePrice = i
             },
 
             lockCategory() {
@@ -289,11 +376,7 @@
                 Price.saveCategory(newItem, this)
             },
 
-            // addPrice() {
-            //     this.priceItems.push({code: '', serviceName: '', value: ''})
-            // },
-
-            saveNewPrice(){
+            saveNewPrice() {
                 Price.savePrice(this.priceEdit, this)
                 this.close()
             },
@@ -306,13 +389,17 @@
                 Price.savePrice(row, this)
             },
 
-            saveCode(row) {
-                Price.savePrice(row, this)
+            printPrice(){
+              Price.printPrice()
             },
 
-            saveName(row) {
-                Price.savePrice(row, this)
-            },
+            // saveCode(row) {
+            //     Price.savePrice(row, this)
+            // },
+            //
+            // saveName(row) {
+            //     Price.savePrice(row, this)
+            // },
 
             removePrice() {
                 if (confirm("Удалить позицию: " + this.selectRowPrice.serviceName + ' ?')) {
@@ -328,7 +415,7 @@
 
             rowCategoryClick(row) {
                 this.selectRowCategory = row;
-                this.editPrice =false;
+                this.editPrice = false;
                 Price.getPriceByCategoryId(row.id, this)
             },
 
@@ -337,35 +424,37 @@
                 this.editPrice = true
             },
 
-            close(){
-              this.priceDialog = false;
-              this.priceEdit = {
-                  code: '',
-                  serviceName: '',
-                  value: ''
-              }
+            close() {
+                this.priceDialog = false;
+                this.priceEdit = {
+                    code: '',
+                    article: '',
+                    serviceName: '',
+                    value: ''
+                }
             },
         },
 
         watch: {
-            'priceEdit.code' : function () {
-
-                const regex = /^[0-9]+$/;
-                this.codeError = true;
-
-                if ((regex.exec(this.priceEdit.code)) !== null) {
-                    this.codeError = false;
-                }
+            'priceEdit.code': function () {
+                const regex = /^[0-9]{3}$/;
+                this.codeError = (regex.exec(this.priceEdit.code)) === null;
             },
 
-            'priceEdit.value' : function () {
+            'priceEdit.article': function () {
+                const regex = /^[A-ZА-Я][0-9]{2}.[0-9]{2,3}.[0-9]{3}(.[0-9]{3})?$/;
+                this.priceEdit.article = this.priceEdit.article.replace(/,/, ".")
+                this.articleError = (regex.exec(this.priceEdit.article)) === null;
+            },
+
+            'priceEdit.value': function () {
                 this.valueError = true;
+                this.priceEdit.value = this.priceEdit.value.replace(/,/, ".")
                 const regex = /^[0-9]+.?[0-9]+?$/;
                 if ((regex.exec(this.priceEdit.value)) !== null) {
                     this.valueError = false;
                 }
             }
-
         }
     }
 </script>

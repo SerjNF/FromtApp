@@ -44,6 +44,7 @@
 
       <template v-slot:footer>
         <footerr :itemLength="historyList.length"
+                 :startItemPerPage=itemsPerPage
                  @changePage="changePageNumber"
                  @changeItemPerPage="changeItemPerPag"></footerr>
       </template>
@@ -80,10 +81,7 @@
                 {text: 'Врач', value: 'employee'},
                 {text: 'Внес/изменил', value: 'user'},
             ],
-
             historyList: [],
-
-
         }),
 
         methods: {
@@ -125,12 +123,11 @@
 
         mounted() {
             History.initialization(this, this.clientId)
-
         },
 
         computed: {
             client() {
-                return this.historyList[0].client
+                return this.historyList.length === 0 ? " " : this.historyList[0].client
             }
         }
     }

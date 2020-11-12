@@ -55,14 +55,19 @@
 
 <script>
     export default {
-        props: ['itemLength'],
+        props: ['itemLength', 'startItemPerPage'],
         data: () => ({
             page: 1,
-            itemsPerPageArray: [20, 40, 100],
-            itemsPerPage: 20,
+            itemsPerPageArray: [10, 15, 20, 40, 100],
+            itemsPerPage: 10
         }),
 
+        mounted() {
+            this.itemsPerPage = this.startItemPerPage
+        },
+
         computed: {
+
             numberOfPages() {
                 return Math.ceil(this.itemLength / this.itemsPerPage)
             },

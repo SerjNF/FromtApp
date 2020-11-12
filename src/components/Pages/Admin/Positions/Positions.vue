@@ -91,6 +91,7 @@
 <!--        <foo :itemlength="desserts.length"></foo>-->
         <template v-slot:footer>
           <footerr :itemLength="desserts.length"
+                   :startItemPerPage=itemsPerPage
                    @changePage="changePageNumber"
                    @changeItemPerPage="changeItemPerPag"></footerr>
         </template>

@@ -14,7 +14,7 @@
       </v-tab>
 
 
-    <v-tabs-items v-model="tab">
+    <v-tabs-items v-model="tab" class="elevation-10">
       <v-tab-item
         v-for="item in items"
         :key="item.name">

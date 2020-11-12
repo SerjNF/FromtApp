@@ -31,6 +31,7 @@
 
         <template v-slot:footer>
           <my-footer :itemLength="clientList.length"
+                     :startItemPerPage=itemsPerPage
                      @changePage="changePageNumber"
                      @changeItemPerPage="changeItemPerPag"></my-footer>
         </template>
@@ -52,7 +53,7 @@
 
         data: () => ({
             page: 1,
-            itemsPerPage: 20,
+            itemsPerPage: 15,
             search: '',
             headers: [
                 {

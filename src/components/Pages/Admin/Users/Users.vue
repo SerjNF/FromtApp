@@ -131,6 +131,7 @@
       </template>
       <template v-slot:footer>
         <footerr :itemLength="users.length"
+                 :startItemPerPage=itemsPerPage
                  @changePage="changePageNumber"
                  @changeItemPerPage="changeItemPerPag"></footerr>
       </template>

@@ -170,7 +170,7 @@ export default {
 
   getClientListFiltered(val, context) {
     if (val.length === 2) {
-      let url = "client/getClientListFiltered?token=" + this.getToken() + "&val=" + val
+      let url = "client/noPersonal/getClientListFiltered?token=" + this.getToken() + "&val=" + val
 
       axInst({
         method: 'GET',

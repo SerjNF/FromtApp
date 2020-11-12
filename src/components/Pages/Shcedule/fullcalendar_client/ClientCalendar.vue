@@ -410,6 +410,7 @@
                 this.selectClient = null
                 this.editedItem = Object.assign({}, this.defaultItem)
                 this.dialog = false
+                this.loading = false
             },
 
             clientDialogClose() {

@@ -8,12 +8,12 @@
           </v-col>
 
           <v-col cols="6" sm="6" md="6" class="text-right">
-            <h3>Карта номер: {{clientData.clientCardDto.id}}</h3>
+            <span>Карта номер: {{clientData.clientCardDto.id}}</span>
           </v-col>
         </v-row>
 
       </v-card-title>
-      <v-card-text>
+      <v-card-text class="elevation-5">
 
         <v-row>
           <v-col cols="12" sm="4" md="4">
