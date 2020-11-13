@@ -17,26 +17,26 @@
       <v-col cols="12" sm="12" lg="9" md="9">
         <v-card class="d-flex justify-space-between">
           <v-card class="d-flex justify-start">
-            <v-btn color="primary" dark   @click="printPrice">
-             Скачать прайс
+            <v-btn color="primary" dark @click="printPrice">
+              Скачать прайс
             </v-btn>
             <v-divider vertical></v-divider>
-            <v-btn color="primary" dark   @click="priceDialog = true">
-              Загрузить прайс
+            <v-btn color="primary" dark @click="uploadPriceDialog = true">
+              Загрузить
             </v-btn>
 
           </v-card>
-        <v-card class="d-flex justify-end">
-          <v-btn color="blue darken-1" text right @click="priceDialog = true" :disabled="selectRowCategory === ''">
-            <v-icon>add</v-icon>
-          </v-btn>
-          <v-divider vertical></v-divider>
-          <template v-if=editPrice>
-            <v-btn color="blue darken-1" text right @click="removePrice">
-              <v-icon>remove</v-icon>
+          <v-card class="d-flex justify-end">
+            <v-btn color="blue darken-1" text right @click="priceDialog = true" :disabled="selectRowCategory === ''">
+              <v-icon>add</v-icon>
             </v-btn>
-          </template>
-        </v-card>
+            <v-divider vertical></v-divider>
+            <template v-if=editPrice>
+              <v-btn color="blue darken-1" text right @click="removePrice">
+                <v-icon>remove</v-icon>
+              </v-btn>
+            </template>
+          </v-card>
         </v-card>
       </v-col>
     </v-row>
@@ -74,11 +74,11 @@
             </template>
 
             <template v-slot:footer>
-            <footers :itemLength="categoryItems.length"
-                     :startItemPerPage="itemsPerPageCategory"
-                     @changePage="changePageCatNumber"
-                     @changeItemPerPage="changeCatItemPerPag"></footers>
-          </template>
+              <footers :itemLength="categoryItems.length"
+                       :startItemPerPage="itemsPerPageCategory"
+                       @changePage="changePageCatNumber"
+                       @changeItemPerPage="changeCatItemPerPag"></footers>
+            </template>
 
             <template
               v-slot:item.action="{ item }">
@@ -260,10 +260,39 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
+
+        <v-dialog v-model="uploadPriceDialog" max-width="800px">
+          <v-card>
+            <v-card-title>
+              <span class="headline">Загрузка прайса</span>
+            </v-card-title>
+            <v-card-text>
+              <v-container>
+                <template>
+                  <v-file-input
+                    show-size
+                    counter
+                    chips
+                    label="File input"
+                    ref="file"
+                    v-model="file"
+                  ></v-file-input>
+                </template>
+
+              </v-container>
+            </v-card-text>
+            <v-card-actions>
+              <div class="flex-grow-1"></div>
+              <v-btn color="blue darken-1" text @click="uploadPriceDialog = false">Закрыть</v-btn>
+              <v-btn color="blue darken-1" text @click="uploadPrice" :disabled="file === null">Загрузить</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
       </v-col>
     </v-row>
     <v-snackbar
       bottom="bottom"
+      :timeout="timeOut"
       text
       v-model="badData"
       :color=snacColor>
@@ -314,7 +343,7 @@
             numberValue: v => /^[0-9]+[.]?[0-9]+$/.exec(v) != null || 'Введите число',
             articleChars: v => /^[A-ZА-Я][0-9]{2}.[0-9]{2,3}.[0-9]{3}(.[0-9]{3})?$/.exec(v) != null || 'Неверный артикль',
             categoryHead: [
-                {text: '№', value: 'id'},
+                {text: '№', value: 'pos'},
                 {text: 'Категория', value: 'nameCategory'},
                 {text: '', value: 'action'},
             ],
@@ -329,10 +358,12 @@
             priceItems: [],
             selectRowCategory: '',
             selectRowPrice: {},
-
+            uploadPriceDialog: false,
             badData: false,
             snacMessage: '',
             snacColor: 'green',
+            file: null,
+            timeOut: 2000
         }),
 
         mounted() {
@@ -389,17 +420,13 @@
                 Price.savePrice(row, this)
             },
 
-            printPrice(){
-              Price.printPrice()
+            printPrice() {
+                Price.printPrice()
             },
 
-            // saveCode(row) {
-            //     Price.savePrice(row, this)
-            // },
-            //
-            // saveName(row) {
-            //     Price.savePrice(row, this)
-            // },
+            uploadPrice() {
+                Price.uploadPrice(this)
+            },
 
             removePrice() {
                 if (confirm("Удалить позицию: " + this.selectRowPrice.serviceName + ' ?')) {
