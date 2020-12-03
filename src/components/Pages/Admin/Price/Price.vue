@@ -224,7 +224,7 @@
                     <v-text-field
                       :error="articleError"
                       prepend-icon="how_to_reg"
-                      v-model="priceEdit.article" label="Номенклатура"
+                      v-model="priceEdit.article" label="Артикль"
                       @keyup.enter="saveNewPrice"></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="12" md="6">

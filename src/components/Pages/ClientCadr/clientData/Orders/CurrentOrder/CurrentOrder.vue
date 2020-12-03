@@ -1,6 +1,10 @@
 <template>
   <v-card
     class="ml-3 mr-3 body-2">
+    <v-card-title
+      class="d-flex flex-row-reverse">
+      <span class="">Баланс: {{clId}}</span>
+    </v-card-title>
     <v-data-table
       :headers="headers"
       :items="orderData"
@@ -18,6 +22,7 @@
       </template>
       <template v-slot:footer>
         <footerr :itemLength="orderData.length"
+                 :startItemPerPage = "itemsPerPage"
                  @changePage="changePageNumber"
                  @changeItemPerPage="changeItemPerPag"></footerr>
       </template>
@@ -36,7 +41,7 @@
             v-model="scheduleSelect"
             :items="scheduleClient"
             :item-text="selectText"
-            label="Сотрудник"
+            label="Выбрать приём"
             prepend-icon="assignment_ind"
             return-object>
           </v-select>
@@ -47,11 +52,9 @@
           :search-input.sync="search"
           :item-text="priceName"
           return-object
-
           hide-no-data
           hide-details
           label="Код или наименование"
-
           prepend-icon="search"
         ></v-autocomplete>
         </v-card-text>
@@ -68,7 +71,7 @@
 
     export default {
         name: "CurrentOrder",
-        props: ['clientId', ],
+        props: ["clientId" ],
         components: {
             footerr: Footer
         },

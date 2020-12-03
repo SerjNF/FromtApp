@@ -23,6 +23,7 @@ export default {
   },
 
   initialize(context, d) {
+
     if (d !== undefined) {
       context.date = new Date(parseInt(d)).toISOString().substr(0, 10)
     }
@@ -148,6 +149,7 @@ export default {
   },
 
   getEvetns(info, resourcesId, successCallback) {
+    console.log("getEvetns")
     let json = '{ "start": "' + info.start.valueOf() + '" ,' +
       '"end":"' + info.end.valueOf() + '" ,' +
       '"resourcesId":"' + resourcesId + '"}';

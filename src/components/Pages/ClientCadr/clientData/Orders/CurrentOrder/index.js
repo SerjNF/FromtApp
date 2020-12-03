@@ -25,6 +25,7 @@ export default {
   getScheduleClientByClient(context) {
     let url = "client/noPersonal/getScheduleClientByClient?token=" + this.getToken() + "&clientId=" + context.clId
 
+    console.log(context.clId)
     axInst({
       method: 'GET',
       headers: {

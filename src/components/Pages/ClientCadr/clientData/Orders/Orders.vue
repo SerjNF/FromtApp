@@ -39,7 +39,7 @@
   export default {
     name: "Orders",
     props: ['clientId'],
-    components: {CurrentOrder, OrderHistory},
+    components: {CurrentOrder},
 
 
     data() {
@@ -47,7 +47,7 @@
         tab: null,
         items: [
           {name: 'Текущий', component: 'CurrentOrder'},
-          {name: 'История', component: 'OrderHistory'},
+
         ],
         clId: ''
       }
