@@ -248,7 +248,7 @@
             states: [
                 {key: 'ACTIVE', text: 'Разрешён'},
                 {key: 'BANNED', text: 'Заблокирован'},
-                {key: 'DELETE', text: 'Удален'}
+                {key: 'DELETED', text: 'Удален'}
             ],
             positionsList: [],
         }),

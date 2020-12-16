@@ -149,7 +149,6 @@ export default {
   },
 
   getEvetns(info, resourcesId, successCallback) {
-    console.log("getEvetns")
     let json = '{ "start": "' + info.start.valueOf() + '" ,' +
       '"end":"' + info.end.valueOf() + '" ,' +
       '"resourcesId":"' + resourcesId + '"}';

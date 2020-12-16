@@ -1,37 +1,51 @@
 <template>
   <v-card
-    class="ml-3 mr-3 body-2">
+    class="body-2">
     <v-card-title
       class="d-flex flex-row-reverse">
       <span class="">Баланс: {{clId}}</span>
     </v-card-title>
-    <v-data-table
-      :headers="headers"
-      :items="orderData"
-      item-key="id"
-      sort-by="id"
-      :items-per-page.sync="itemsPerPage"
-      :page="page"
-      hide-default-footer
-      class="elevation-0"
-    >
-      <template v-slot:top>
-        <v-btn color="blue darken-1" text right @click="dialog()">
-          <v-icon>search</v-icon>
-        </v-btn>
-      </template>
-      <template v-slot:footer>
-        <footerr :itemLength="orderData.length"
-                 :startItemPerPage = "itemsPerPage"
-                 @changePage="changePageNumber"
-                 @changeItemPerPage="changeItemPerPag"></footerr>
-      </template>
-    </v-data-table>
+    <v-expansion-panels>
+      <v-expansion-panel>
+        <v-expansion-panel-header>Адреса
+        </v-expansion-panel-header>
+        <v-expansion-panel-content>
+          <v-data-table
+            :headers="headers"
+            :items="orderData"
+            group-by="orderDate"
+            item-key="id"
+            sort-by="id"
+            :items-per-page.sync="itemsPerPage"
+            :page="page"
+            hide-default-footer
+            class="elevation-0"
+          >
+            <template v-slot:top>
+              <v-btn color="blue darken-1" text right @click="dialog()">
+                <v-icon>add</v-icon>
+              </v-btn>
+            </template>
+            <template v-slot:group-by>
+              dfg
+            </template>
+            <template v-slot:footer>
+              <footerr :itemLength="orderData.length"
+                       :startItemPerPage="itemsPerPage"
+                       @changePage="changePageNumber"
+                       @changeItemPerPage="changeItemPerPag"></footerr>
+            </template>
+          </v-data-table>
+
+        </v-expansion-panel-content>
+      </v-expansion-panel>
+    </v-expansion-panels>
+
 
     <v-dialog v-model="searchPrice" max-width="500px"
               hide-overlay
               transition="dialog-bottom-transition"
-              >
+    >
       <v-card>
         <v-card-title>
           <span>Добавить услугу</span>
@@ -45,18 +59,18 @@
             prepend-icon="assignment_ind"
             return-object>
           </v-select>
-        <v-autocomplete
-          v-model="selectPrice"
-          :loading="loading"
-          :items="items"
-          :search-input.sync="search"
-          :item-text="priceName"
-          return-object
-          hide-no-data
-          hide-details
-          label="Код или наименование"
-          prepend-icon="search"
-        ></v-autocomplete>
+          <v-autocomplete
+            v-model="selectPrice"
+            :loading="loading"
+            :items="items"
+            :search-input.sync="search"
+            :item-text="priceName"
+            return-object
+            hide-no-data
+            hide-details
+            label="Код или наименование"
+            prepend-icon="search"
+          ></v-autocomplete>
         </v-card-text>
       </v-card>
 
@@ -71,7 +85,7 @@
 
     export default {
         name: "CurrentOrder",
-        props: ["clientId" ],
+        props: ["clientId"],
         components: {
             footerr: Footer
         },
@@ -122,16 +136,16 @@
 
         },
         methods: {
-            dialog(){
+            dialog() {
                 this.searchPrice = true;
                 CurrentOrder.getScheduleClientByClient(this);
-                },
+            },
 
             querySelections(val) {
                 this.loading = true
-              //  Schedule.getClientListFiltered
+                //  Schedule.getClientListFiltered
                 setTimeout(() => {
-                    CurrentOrder.getPriceListFiltered (val, this)
+                    CurrentOrder.getPriceListFiltered(val, this)
                 }, 500)
 
                 setTimeout(() => {

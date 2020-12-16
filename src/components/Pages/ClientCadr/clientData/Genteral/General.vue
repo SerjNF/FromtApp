@@ -82,7 +82,8 @@
       <v-divider></v-divider>
       <v-expansion-panels>
         <v-expansion-panel>
-          <v-expansion-panel-header>Адреса</v-expansion-panel-header>
+          <v-expansion-panel-header>Адреса
+          </v-expansion-panel-header>
           <v-expansion-panel-content>
             <v-row>
               <v-col cols="12" sm="12" md="12">
