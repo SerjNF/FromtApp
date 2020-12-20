@@ -1,4 +1,4 @@
-<template>
+<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
   <v-card
     class="body-2">
     <v-card-title
@@ -6,14 +6,16 @@
       <span class="">Баланс: {{clId}}</span>
     </v-card-title>
     <v-expansion-panels>
-      <v-expansion-panel>
-        <v-expansion-panel-header>Адреса
+      <v-expansion-panel
+        v-for="i in orderData"
+        :key="i">
+        <v-expansion-panel-header>Адреса {{i.id}}
         </v-expansion-panel-header>
         <v-expansion-panel-content>
           <v-data-table
             :headers="headers"
-            :items="orderData"
-            group-by="orderDate"
+            :items="i.orders"
+
             item-key="id"
             sort-by="id"
             :items-per-page.sync="itemsPerPage"
@@ -80,98 +82,118 @@
 </template>
 
 <script>
-    import Footer from '@/components/Pages/Admin/Footer/Footer.vue'
-    import CurrentOrder from './index.js'
+  import Footer from '@/components/Pages/Admin/Footer/Footer.vue'
+  import CurrentOrder from './index.js'
 
-    export default {
-        name: "CurrentOrder",
-        props: ["clientId"],
-        components: {
-            footerr: Footer
+  export default {
+    name: "CurrentOrder",
+    props: ["clientId"],
+    components: {
+      footerr: Footer
+    },
+    data: () => {
+      return {
+        searchPrice: false,
+        selectPrice: '',
+        items: [],
+        scheduleClient: [],
+        scheduleSelect: '',
+        page: 1,
+        itemsPerPage: 10,
+        headers: [
+          {text: '№', align: 'start', value: 'id',},
+          {text: 'Категория услуги', value: 'pricesCategory', align: 'right'},
+          {text: 'Наименование услуги', value: 'pricesName', align: 'right'},
+          {text: 'Стоимость услуги', value: 'pricesValue', align: 'right'},
+          {text: 'Количество', value: 'count', align: 'right'},
+          {text: 'Сумма', value: 'totalValue', align: 'right'},
+          {text: 'Дата', value: 'orderDate', align: 'right'},
+          {text: 'Статус', value: 'orderState', align: 'right'},
+        ],
+        orderData: [{
+          id: 1,
+          orders: [{
+            id: 1,
+            pricesCategory: "категория",
+            pricesName: "услуга",
+            pricesValue: "150",
+            count: "2",
+            totalValue: "300",
+            orderDate: "date",
+            orderState: "state"
+          }]
         },
-        data: () => {
-            return {
-                searchPrice: false,
-                selectPrice: '',
-                items: [],
-                scheduleClient: [],
-                scheduleSelect: '',
-                page: 1,
-                itemsPerPage: 10,
-                headers: [
-                    {text: '№', align: 'start', value: 'id',},
-                    {text: 'Категория услуги', value: 'pricesCategory', align: 'right'},
-                    {text: 'Наименование услуги', value: 'pricesName', align: 'right'},
-                    {text: 'Стоимость услуги', value: 'pricesValue', align: 'right'},
-                    {text: 'Количество', value: 'count', align: 'right'},
-                    {text: 'Сумма', value: 'totalValue', align: 'right'},
-                    {text: 'Дата', value: 'orderDate', align: 'right'},
-                    {text: 'Статус', value: 'orderState', align: 'right'},
-                ],
-                orderData: [{
-                    id: 1,
-                    pricesCategory: "категория",
-                    pricesName: "услуга",
-                    pricesValue: "150",
-                    count: "2",
-                    totalValue: "300",
-                    orderDate: "date",
-                    orderState: "state"
-                }],
-                clId: "",
-                loading: false,
-                search: null,
-                priceName: function (val) {
-                    return val.serviceName + ' '
-                },
+          {
+            id: 2,
+            orders: [{
+              id: 2,
+              pricesCategory: "категория2",
+              pricesName: "услуга2",
+              pricesValue: "2",
+              count: "1",
+              totalValue: "200",
+              orderDate: "date1",
+              orderState: "state3"
+            }]
+          }
 
-                selectText: function (val) {
-                    return "Время приема: " + val.start + ' Врач: ' + val.employee
-                }
-            }
-        },
+        ],
 
-        mounted() {
-            this.clId = this.clientId;
 
-        },
-        methods: {
-            dialog() {
-                this.searchPrice = true;
-                CurrentOrder.getScheduleClientByClient(this);
-            },
-
-            querySelections(val) {
-                this.loading = true
-                //  Schedule.getClientListFiltered
-                setTimeout(() => {
-                    CurrentOrder.getPriceListFiltered(val, this)
-                }, 500)
-
-                setTimeout(() => {
-                    this.items = this.priceList.filter(e => {
-                        return (e.serviceName || '').toLowerCase().indexOf((val || '').toLowerCase()) > -1 ||
-                            (e.code || '').indexOf((val || '').toLowerCase()) > -1 ||
-                            (e.id || '').indexOf((val || '').toLowerCase()) > -1
-                    })
-                    this.loading = false
-                }, 500)
-            },
-
-            changePageNumber(p) {
-                this.page = p
-            },
-            changeItemPerPag(i) {
-                this.itemsPerPage = i
-            },
+        clId: "",
+        loading: false,
+        search: null,
+        priceName: function (val) {
+          return val.serviceName + ' '
         },
 
-        watch: {
-            search(val) {
-                val && val !== this.select && this.querySelections(val)
-            },
+        selectText: function (val) {
+          return "Время приема: " + val.start + ' Врач: ' + val.employee
         }
+      }
+    },
+
+    mounted() {
+      this.clId = this.clientId;
+
+    },
+    methods: {
+      dialog() {
+        this.searchPrice = true;
+        CurrentOrder.getScheduleClientByClient(this);
+      },
+
+      querySelections(val) {
+        this.loading = true
+        //  Schedule.getClientListFiltered
+        setTimeout(() => {
+          CurrentOrder.getPriceListFiltered(val, this)
+        }, 500)
+
+        setTimeout(() => {
+          this.items = this.priceList.filter(e => {
+            return (e.serviceName || '').toLowerCase().indexOf((val || '').toLowerCase()) > -1 ||
+              (e.code || '').indexOf((val || '').toLowerCase()) > -1 ||
+              (e.id || '').indexOf((val || '').toLowerCase()) > -1
+          })
+          this.loading = false
+        }, 500)
+      },
+
+      changePageNumber(p) {
+        this.page = p
+      },
+      changeItemPerPag(i) {
+        this.itemsPerPage = i
+      },
+    },
+
+    watch: {
+      search(val) {
+        val && val !== this.select && this.querySelections(val)
+      },
     }
+  }
 </script>
 
 <style scoped>

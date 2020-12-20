@@ -1,4 +1,4 @@
-<template>
+<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
   <v-container fluid>
     <v-row>
       <v-col cols="12" sm="12" lg="3" md="3">
