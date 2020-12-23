@@ -5,44 +5,78 @@
       class="d-flex flex-row-reverse">
       <span class="">Баланс: {{clId}}</span>
     </v-card-title>
-    <v-expansion-panels>
-      <v-expansion-panel
-        v-for="i in orderData"
-        :key="i">
-        <v-expansion-panel-header>Адреса {{i.id}}
-        </v-expansion-panel-header>
-        <v-expansion-panel-content>
-          <v-data-table
-            :headers="headers"
-            :items="i.orders"
 
-            item-key="id"
-            sort-by="id"
-            :items-per-page.sync="itemsPerPage"
-            :page="page"
-            hide-default-footer
-            class="elevation-0"
-          >
-            <template v-slot:top>
-              <v-btn color="blue darken-1" text right @click="dialog()">
-                <v-icon>add</v-icon>
-              </v-btn>
-            </template>
-            <template v-slot:group-by>
+    <v-timeline
+      dense
+      clipped
+    >
+      <v-timeline-item
+        fill-dot
+        class="white--text mb-12"
+        color="orange"
+        large
+      >
+        <template v-slot:icon>
+          <span>JL</span>
+        </template>
+        <v-text-field
+          v-model="input"
+          hide-details
+          flat
+          label="Leave a comment..."
+          solo
+          @keydown.enter=""
+        >
+          <template v-slot:append>
+            <v-btn
+              class="mx-0"
+              depressed
+              @click=""
+            >
+              Post
+            </v-btn>
+          </template>
+        </v-text-field>
+      </v-timeline-item>
+    </v-timeline>
 
-            </template>
-            <template v-slot:footer>
-              <footerr :itemLength="orderData.length"
-                       :startItemPerPage="itemsPerPage"
-                       @changePage="changePageNumber"
-                       @changeItemPerPage="changeItemPerPag"></footerr>
-            </template>
-          </v-data-table>
+      <!--<v-expansion-panels>-->
+      <!--<v-expansion-panel-->
+        <!--v-for="i in orderData"-->
+        <!--:key="i">-->
+        <!--<v-expansion-panel-header>Адреса {{i.id}}-->
+        <!--</v-expansion-panel-header>-->
+        <!--<v-expansion-panel-content>-->
+          <!--<v-data-table-->
+            <!--:headers="headers"-->
+            <!--:items="i.orders"-->
 
-        </v-expansion-panel-content>
-      </v-expansion-panel>
-    </v-expansion-panels>
+            <!--item-key="id"-->
+            <!--sort-by="id"-->
+            <!--:items-per-page.sync="itemsPerPage"-->
+            <!--:page="page"-->
+            <!--hide-default-footer-->
+            <!--class="elevation-0"-->
+          <!--&gt;-->
+            <!--<template v-slot:top>-->
+              <!--<v-btn color="blue darken-1" text right @click="dialog()">-->
+                <!--<v-icon>add</v-icon>-->
+              <!--</v-btn>-->
+            <!--</template>-->
+            <!--<template v-slot:group-by>-->
 
+            <!--</template>-->
+            <!--<template v-slot:footer>-->
+              <!--<footerr :itemLength="orderData.length"-->
+                       <!--:startItemPerPage="itemsPerPage"-->
+                       <!--@changePage="changePageNumber"-->
+                       <!--@changeItemPerPage="changeItemPerPag"></footerr>-->
+            <!--</template>-->
+          <!--</v-data-table>-->
+
+        <!--</v-expansion-panel-content>-->
+      <!--</v-expansion-panel>-->
+    <!--</v-expansion-panels>-->
 
     <v-dialog v-model="searchPrice" max-width="500px"
               hide-overlay
@@ -93,6 +127,7 @@
     },
     data: () => {
       return {
+        input: "dsdvs",
         searchPrice: false,
         selectPrice: '',
         items: [],

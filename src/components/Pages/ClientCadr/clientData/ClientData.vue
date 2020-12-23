@@ -30,7 +30,7 @@
 
   import General from "./Genteral/General";
   import History from "./History/HistoryList"
-  import Orders from "./Orders/CurrentOrder/CurrentOrder"
+  import Orders from "./Orders/Orders"
 
   export default {
     name: "ClientData",
