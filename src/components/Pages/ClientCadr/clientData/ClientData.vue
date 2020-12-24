@@ -1,5 +1,5 @@
 <template>
-  <v-content
+  <v-main
     class="ml-3 mr-3">
     <v-tabs
       v-model="tab"
@@ -22,7 +22,7 @@
       </v-tab-item>
     </v-tabs-items>
     </v-tabs>
-  </v-content>
+  </v-main>
 
 </template>
 

@@ -8,7 +8,7 @@
       </v-card-title>
 
 
-            <invoices :clientId="clId" ></invoices>
+            <invoices :cltId="clId" ></invoices>
 
     </v-card>
 
@@ -35,7 +35,7 @@
     },
 
 
-    mounted() {
+    beforeMount() {
       this.clId = this.clientId;
 
     },

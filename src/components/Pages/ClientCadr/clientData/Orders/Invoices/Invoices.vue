@@ -2,42 +2,69 @@
   <v-card
     class="body-2">
     <v-card-title
-      class="d-flex flex-row-reverse">
-      <span class="">Баланс: {{clId}}</span>
+      class="d-flex">
+      <span class="">Список счетов</span>
     </v-card-title>
 
     <v-timeline
       dense
-      clipped
+
     >
       <v-timeline-item
-        fill-dot
+
         class="white--text mb-12"
         color="orange"
-        large
+        small
       >
-        <template v-slot:icon>
-          <span>JL</span>
-        </template>
-        <v-text-field
-          v-model="input"
-          hide-details
-          flat
-          label="Leave a comment..."
-          solo
-          @keydown.enter=""
-        >
-          <template v-slot:append>
-            <v-btn
-              class="mx-0"
-              depressed
-              @click=""
-            >
-              Post
-            </v-btn>
-          </template>
-        </v-text-field>
+        <!--<template v-slot:icon>-->
+          <!--<span>JL</span>-->
+        <!--</template>-->
+
+          <v-select
+            v-model="scheduleSelect"
+            :items="scheduleClient"
+            :item-text="selectText"
+
+            prepend-icon="assignment_ind"
+            persistent-hint
+            return-object>
+            <template v-slot:append>
+              <v-btn
+                class="mx-0"
+                depressed
+                @click="addInvoice"
+              >
+                Добавить счет
+              </v-btn>
+            </template>
+
+          </v-select>
+
+
       </v-timeline-item>
+      <v-slide-x-transition
+        group
+      >
+      <v-timeline-item
+        v-for="(item, i) in invoicesList"
+        :key="i"
+        :color="item.color"
+        :icon="item.icon"
+        fill-dot
+      >
+        <v-row>
+          <v-col>
+            {{item.employee}}
+          </v-col>
+          <v-col>
+            {{item.invoiceState}}
+          </v-col>
+          <v-col>
+            {{new Date(item.invoiceDate).toLocaleDateString()}}
+          </v-col>
+        </v-row>
+      </v-timeline-item>
+      </v-slide-x-transition>
     </v-timeline>
 
       <!--<v-expansion-panels>-->
@@ -117,17 +144,17 @@
 
 <script>
   import Footer from '@/components/Pages/Admin/Footer/Footer.vue'
-  import CurrentOrder from './index.js'
+  import Invoices from './index.js'
 
   export default {
-    name: "CurrentOrder",
-    props: ["clientId"],
+    name: "Invoices",
+    props: ["cltId"],
     components: {
       footerr: Footer
     },
     data: () => {
       return {
-        input: "dsdvs",
+        invoicesList: [],
         searchPrice: false,
         selectPrice: '',
         items: [],
@@ -188,14 +215,23 @@
       }
     },
 
-    mounted() {
-      this.clId = this.clientId;
-
+    mounted(){
+      console.log("invoice get ID = " + this.cltId);
+      this.clId = this.cltId;
+      Invoices.getScheduleClientByClient(this);
+      Invoices.getInvoiceListByClientId(this);
     },
+
+
     methods: {
+
+      addInvoice() {
+        Invoices.addInvoices(this)
+      },
+
       dialog() {
         this.searchPrice = true;
-        CurrentOrder.getScheduleClientByClient(this);
+        Invoices.getScheduleClientByClient(this);
       },
 
       querySelections(val) {
