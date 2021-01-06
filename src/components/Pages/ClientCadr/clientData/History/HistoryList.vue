@@ -78,7 +78,7 @@
                 {text: 'Окончание приема', value: 'end'},
                 {text: 'Заметка', value: 'message'},
                 {text: 'Статус приема', value: 'state'},
-                {text: 'Врач', value: 'employee'},
+                {text: 'Сотрудник', value: 'employee'},
                 {text: 'Внес/изменил', value: 'user'},
             ],
             historyList: [],

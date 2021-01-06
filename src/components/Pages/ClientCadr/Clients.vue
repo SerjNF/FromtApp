@@ -15,11 +15,11 @@
     import ClientData from "./clientData/ClientData"
 
 
-    export default {
-        name: 'root',
-        components: {ClientList, ClientData},
+export default {
+  name: 'root',
+  components: {ClientList, ClientData},
 
-        beforeRouteEnter(to, from, next) {
+  beforeRouteEnter(to, from, next) {
 
             if (store.state.user.User.role === "PERSONAL") {
                 next(false)

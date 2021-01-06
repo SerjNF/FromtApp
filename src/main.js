@@ -16,7 +16,6 @@ Vue.config.productionTip = false
 Vue.component('Navigation', Navigation)
 
 
-/* eslint-disable */
 new Vue({
   el: '#app',
   store,

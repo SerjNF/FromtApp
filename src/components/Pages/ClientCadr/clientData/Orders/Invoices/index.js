@@ -35,19 +35,19 @@ export default {
       url: url,
     }).then((data) => {
       context.invoicesList.push(data.data)
+      this.getScheduleClientByClient(context)
 
-    }).catch(() => {
-      console.log("bad request")
+    }).catch((data) => {
+      console.log("bad request " + data.response.data)
+      this.warning (context, data.response.data)
+
     })
-
-
   },
 
 
   getInvoiceListByClientId(context) {
     let url = "orders/noPersonal/getInvoiceListByClientId?token=" + this.getToken() + "&clientId=" + context.clId
 
-    console.log(context.clId)
     axInst({
       method: 'GET',
       headers: {
@@ -60,9 +60,9 @@ export default {
       context.invoicesList = data.data
 
     }).catch(() => {
+
       console.log("bad request")
     })
-
   },
 
 
@@ -83,6 +83,18 @@ export default {
     }).catch(() => {
       console.log("bad request")
     })
+  },
 
-  }
+  access(context, res) {
+    context.badData = true
+    context.snacMessage = res.data
+    context.snacColor = "green"
+    // context.initialize()
+  },
+
+  warning(context, error) {
+    context.badData = true
+    context.snacMessage = error
+    context.snacColor = "#ff5252"
+  },
 }

@@ -6,103 +6,93 @@
       <span class="">Список счетов</span>
     </v-card-title>
 
-    <v-timeline
-      dense
-
-    >
+    <v-timeline dense>
       <v-timeline-item
-
         class="white--text mb-12"
         color="orange"
         small
       >
-        <!--<template v-slot:icon>-->
-          <!--<span>JL</span>-->
-        <!--</template>-->
+        <v-select
+          v-model="scheduleSelect"
+          :items="scheduleClient"
+          :item-text="selectText"
 
-          <v-select
-            v-model="scheduleSelect"
-            :items="scheduleClient"
-            :item-text="selectText"
-
-            prepend-icon="assignment_ind"
-            persistent-hint
-            return-object>
-            <template v-slot:append>
-              <v-btn
-                class="mx-0"
-                depressed
-                @click="addInvoice"
-              >
-                Добавить счет
-              </v-btn>
-            </template>
-
-          </v-select>
-
+          prepend-icon="assignment_ind"
+          persistent-hint
+          return-object>
+          <template v-slot:append>
+            <v-btn
+              class="mx-0"
+              depressed
+              @click="addInvoice"
+            >
+              Добавить счет
+            </v-btn>
+          </template>
+        </v-select>
 
       </v-timeline-item>
       <v-slide-x-transition
         group
       >
-      <v-timeline-item
-        v-for="(item, i) in invoicesList"
-        :key="i"
-        :color="item.color"
-        :icon="item.icon"
-        fill-dot
-      >
-        <v-row>
-          <v-col>
-            {{item.employee}}
-          </v-col>
-          <v-col>
-            {{item.invoiceState}}
-          </v-col>
-          <v-col>
-            {{new Date(item.invoiceDate).toLocaleDateString()}}
-          </v-col>
-        </v-row>
-      </v-timeline-item>
+        <v-timeline-item
+          v-for="(item, i) in invoicesList"
+          :key="i"
+          :color="item.color"
+          :icon="item.icon"
+          small
+        >
+          <v-row>
+            <v-col>
+              {{item.employee}}
+            </v-col>
+            <v-col>
+              {{item.invoiceState}}
+            </v-col>
+            <v-col>
+              {{new Date(item.invoiceDate).toLocaleDateString()}}
+            </v-col>
+          </v-row>
+        </v-timeline-item>
       </v-slide-x-transition>
     </v-timeline>
 
-      <!--<v-expansion-panels>-->
-      <!--<v-expansion-panel-->
-        <!--v-for="i in orderData"-->
-        <!--:key="i">-->
-        <!--<v-expansion-panel-header>Адреса {{i.id}}-->
-        <!--</v-expansion-panel-header>-->
-        <!--<v-expansion-panel-content>-->
-          <!--<v-data-table-->
-            <!--:headers="headers"-->
-            <!--:items="i.orders"-->
+    <!--<v-expansion-panels>-->
+    <!--<v-expansion-panel-->
+    <!--v-for="i in orderData"-->
+    <!--:key="i">-->
+    <!--<v-expansion-panel-header>Адреса {{i.id}}-->
+    <!--</v-expansion-panel-header>-->
+    <!--<v-expansion-panel-content>-->
+    <!--<v-data-table-->
+    <!--:headers="headers"-->
+    <!--:items="i.orders"-->
 
-            <!--item-key="id"-->
-            <!--sort-by="id"-->
-            <!--:items-per-page.sync="itemsPerPage"-->
-            <!--:page="page"-->
-            <!--hide-default-footer-->
-            <!--class="elevation-0"-->
-          <!--&gt;-->
-            <!--<template v-slot:top>-->
-              <!--<v-btn color="blue darken-1" text right @click="dialog()">-->
-                <!--<v-icon>add</v-icon>-->
-              <!--</v-btn>-->
-            <!--</template>-->
-            <!--<template v-slot:group-by>-->
+    <!--item-key="id"-->
+    <!--sort-by="id"-->
+    <!--:items-per-page.sync="itemsPerPage"-->
+    <!--:page="page"-->
+    <!--hide-default-footer-->
+    <!--class="elevation-0"-->
+    <!--&gt;-->
+    <!--<template v-slot:top>-->
+    <!--<v-btn color="blue darken-1" text right @click="dialog()">-->
+    <!--<v-icon>add</v-icon>-->
+    <!--</v-btn>-->
+    <!--</template>-->
+    <!--<template v-slot:group-by>-->
 
-            <!--</template>-->
-            <!--<template v-slot:footer>-->
-              <!--<footerr :itemLength="orderData.length"-->
-                       <!--:startItemPerPage="itemsPerPage"-->
-                       <!--@changePage="changePageNumber"-->
-                       <!--@changeItemPerPage="changeItemPerPag"></footerr>-->
-            <!--</template>-->
-          <!--</v-data-table>-->
+    <!--</template>-->
+    <!--<template v-slot:footer>-->
+    <!--<footerr :itemLength="orderData.length"-->
+    <!--:startItemPerPage="itemsPerPage"-->
+    <!--@changePage="changePageNumber"-->
+    <!--@changeItemPerPage="changeItemPerPag"></footerr>-->
+    <!--</template>-->
+    <!--</v-data-table>-->
 
-        <!--</v-expansion-panel-content>-->
-      <!--</v-expansion-panel>-->
+    <!--</v-expansion-panel-content>-->
+    <!--</v-expansion-panel>-->
     <!--</v-expansion-panels>-->
 
     <v-dialog v-model="searchPrice" max-width="500px"
@@ -138,7 +128,24 @@
       </v-card>
 
     </v-dialog>
+
+    <v-snackbar
+      bottom="bottom"
+      text
+      v-model="badData"
+      :color=snacColor>
+      {{ snacMessage }}
+      <v-btn
+        color="black"
+        text
+        @click="badData = false"
+      >
+        Закрыть
+      </v-btn>
+    </v-snackbar>
   </v-card>
+
+
 
 </template>
 
@@ -154,6 +161,9 @@
     },
     data: () => {
       return {
+        snacColor: "grey",
+        snacMessage: "",
+        badData: false,
         invoicesList: [],
         searchPrice: false,
         selectPrice: '',
@@ -215,7 +225,7 @@
       }
     },
 
-    mounted(){
+    mounted() {
       console.log("invoice get ID = " + this.cltId);
       this.clId = this.cltId;
       Invoices.getScheduleClientByClient(this);
