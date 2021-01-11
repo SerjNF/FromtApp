@@ -8,28 +8,34 @@
 
     <v-timeline dense>
       <v-timeline-item
-        class="white--text mb-12"
-        color="orange"
+        class="white--text mr-12"
+        color="black"
         small
       >
         <v-select
+          class="mr-auto"
           v-model="scheduleSelect"
           :items="scheduleClient"
           :item-text="selectText"
 
           prepend-icon="assignment_ind"
-          persistent-hint
+
           return-object>
-          <template v-slot:append>
-            <v-btn
-              class="mx-0"
-              depressed
-              @click="addInvoice"
-            >
-              Добавить счет
-            </v-btn>
-          </template>
+
         </v-select>
+
+
+        <!--<template v-slot:append>-->
+        <v-btn
+          :disabled="scheduleSelect.length === 0"
+          class="mx-0"
+          depressed
+          @click="addInvoice"
+        >
+          Добавить счет
+        </v-btn>
+
+        <!--</template>-->
 
       </v-timeline-item>
       <v-slide-x-transition
@@ -44,14 +50,30 @@
         >
           <v-row>
             <v-col>
-              {{item.employee}}
+              <h3>Счет номер:
+                {{item.invoiceNumber}}
+              </h3>
             </v-col>
             <v-col>
-              {{item.invoiceState}}
+              <h3>Сотрудник:
+                {{item.employee}}
+              </h3>
             </v-col>
             <v-col>
-              {{new Date(item.invoiceDate).toLocaleDateString()}}
+              <h3>Составил счет:
+                {{item.actor}}
+              </h3>
             </v-col>
+            <v-col>
+              <v-chip
+                :color="statusChip(item.invoiceState).color"
+              ><h3>{{statusChip(item.invoiceState).state}}</h3></v-chip>
+
+
+            </v-col>
+            <!--<v-col>-->
+            <!--{{new Date(item.invoiceDate).toLocaleDateString()}}-->
+            <!--</v-col>-->
           </v-row>
         </v-timeline-item>
       </v-slide-x-transition>
@@ -146,7 +168,6 @@
   </v-card>
 
 
-
 </template>
 
 <script>
@@ -234,6 +255,16 @@
 
 
     methods: {
+      statusChip(state) {
+        if (state === 'NEW_ORDER') {
+          return {state: 'Не оплачен', color: 'orange'}
+        } else if (state === 'CLOSE_ORDER') {
+          return {state: 'Оплачен', color: 'green'}
+        } else {
+          return {state: 'Ошибка', color: 'black'}
+        }
+      },
+
 
       addInvoice() {
         Invoices.addInvoices(this)

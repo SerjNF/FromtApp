@@ -1,8 +1,8 @@
-<template>
+<template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
   <div>
     <v-card>
       <v-card-title>
-<!--        <span class="headline">{{editedItem.title}}</span>-->
+        <!--        <span class="headline">{{editedItem.title}}</span>-->
       </v-card-title>
 
       <v-card-text>
@@ -45,15 +45,15 @@
             </v-col>
 
 
-<!--            <v-col cols="12" sm="6" md="4">-->
-<!--              <v-text-field-->
-<!--                disabled-->
-<!--                prepend-icon="how_to_reg"-->
-<!--                v-model="editedItem.user" label="Внес/Изменил"></v-text-field>-->
-<!--            </v-col>-->
+            <!--            <v-col cols="12" sm="6" md="4">-->
+            <!--              <v-text-field-->
+            <!--                disabled-->
+            <!--                prepend-icon="how_to_reg"-->
+            <!--                v-model="editedItem.user" label="Внес/Изменил"></v-text-field>-->
+            <!--            </v-col>-->
 
           </v-row>
-          <v-row >
+          <v-row>
             <v-col cols="12" sm="6" md="4">
               <v-menu
                 ref="menuStartEvent"
@@ -84,7 +84,7 @@
               </v-menu>
               <v-spacer></v-spacer>
             </v-col>
-            <v-col cols="12" sm="6" md="4" >
+            <v-col cols="12" sm="6" md="4">
               <v-menu
                 ref="menuEndEvent"
                 v-model="endMenu"
@@ -149,7 +149,8 @@
 
       <v-card-actions>
         <div class="flex-grow-1"></div>
-        <v-btn color="blue darken-1" text @click="route">{{buttonName}}</v-btn>
+        <v-btn color="blue darken-1" :disabled="this.editedItem.clientCardId === 0" text @click="">{{buttonOrderName}}</v-btn>
+        <v-btn color="blue darken-1" text @click="openClientCard">{{buttonCardName}}</v-btn>
         <v-btn color="blue darken-1" text @click="save" :disabled="!changed">Сохранить</v-btn>
         <v-btn color="blue darken-1" text @click="close">Закрыть</v-btn>
       </v-card-actions>
@@ -158,165 +159,172 @@
 </template>
 
 <script>
-    import RecordDetails from './index.js'
-    import objecktCompare from "@/plugins/objeckCompare";
-    import phoneValid from "@/plugins/phoneValidate";
-    import store from '@/store/index'
+  import RecordDetails from './index.js'
+  import objecktCompare from "@/plugins/objeckCompare";
+  import phoneValid from "@/plugins/phoneValidate";
+  import store from '@/store/index'
 
-    export default {
-        props: ['clientInfo', 'apiCalendar'],
-        name: "ClientTime",
-        data: () => {
-            return {
-                pv: false,
-                badData: false,
-                snacMessage: '',
-                snacColor: 'green',
-                time: null,
-                startMenu: false,
-                startTime: null,
-                endMenu: false,
-                endTime: null,
-                states: [
-                    {key: 'RECEPTION_CONFIRMED', text: 'Подтвержден'},
-                    {key: 'RECEPTION_START', text: 'На приёме'},
-                    {key: 'RECEPTION_OVER', text: 'Приём окончен'},
-                    {key: 'RECEPTION_CANCELED', text: 'Отменен'},
-                    {key: 'RECEPTION_DELETE', text: 'Удален'},
-                    {key: 'RECEPTION_NEW', text: 'Новая запись'},
-                ],
-                editedItem: {
-                    eventId: '',
-                    resourcesId: '',
-                    clientId: '',
-                    firstName: '',
-                    lastName: '',
-                    middleName: '',
-                    clientPhone: '',
-                    title: '',
-                    start: '',
-                    end: '',
-                    msg: '',
-                    state: '',
-                    user: '',
-                    clientCardId: ''
-                },
+  export default {
+    props: ['clientInfo', 'apiCalendar'],
+    name: "ClientTime",
+    data: () => {
+      return {
+        pv: false,
+        badData: false,
+        snacMessage: '',
+        snacColor: 'green',
+        time: null,
+        startMenu: false,
+        startTime: null,
+        endMenu: false,
+        endTime: null,
+        states: [
+          {key: 'RECEPTION_CONFIRMED', text: 'Подтвержден'},
+          {key: 'RECEPTION_START', text: 'На приёме'},
+          {key: 'RECEPTION_OVER', text: 'Приём окончен'},
+          {key: 'RECEPTION_CANCELED', text: 'Отменен'},
+          {key: 'RECEPTION_DELETE', text: 'Удален'},
+          {key: 'RECEPTION_NEW', text: 'Новая запись'},
+        ],
+        editedItem: {
+          eventId: '',
+          resourcesId: '',
+          clientId: '',
+          firstName: '',
+          lastName: '',
+          middleName: '',
+          clientPhone: '',
+          title: '',
+          start: '',
+          end: '',
+          msg: '',
+          state: '',
+          user: '',
+          clientCardId: '',
+          invoiceId: ''
 
-                defaultItem: {
-                    eventId: '',
-                    resourcesId: '',
-                    clientId: '',
-                    firstName: '',
-                    lastName: '',
-                    middleName: '',
-                    clientPhone: '',
-                    title: '',
-                    start: '',
-                    end: '',
-                    msg: '',
-                    state: '',
-                    user: '',
-                    clientCardId: 0
-                },
-                changed: false,
-                count: 0
-            }
         },
 
-        methods: {
-            close() {
-                this.$emit('setClientDialog', false);
-            },
-
-            save() {
-                RecordDetails.changeClientRecordDetails(this.apiCalendar, this)
-                this.defaultItem = Object.assign({}, this.editedItem)
-                this.changed = false
-            },
-            route() {
-                let fullName = this.editedItem.lastName + " " +
-                    this.editedItem.firstName.charAt(0) + ". " +
-                    (this.editedItem.middleName !== "" ? (this.editedItem.middleName.charAt(0) + ".") : "")
-                store.dispatch('openCard/ADD_CARDTOLIST', {id: this.editedItem.clientId, name: fullName})
-                let routeData = this.$router.resolve({name: 'Card', params: {id: this.editedItem.clientId}});
-
-                window.open(routeData.href, '_blank');
-                this.close()
-            }
+        defaultItem: {
+          eventId: '',
+          resourcesId: '',
+          clientId: '',
+          firstName: '',
+          lastName: '',
+          middleName: '',
+          clientPhone: '',
+          title: '',
+          start: '',
+          end: '',
+          msg: '',
+          state: '',
+          user: '',
+          clientCardId: 0,
+          invoiceId: 0
         },
+        changed: false,
+        count: 0
+      }
+    },
 
-        mounted() {
-            RecordDetails.getClientRecordDetails(this, this.clientInfo.event._def.publicId)
-        },
+    methods: {
+      close() {
+        this.$emit('setClientDialog', false);
+      },
 
-        watch: {
-            'editedItem.clientPhone': function () {
-                this.pv = true
-                this.editedItem.clientPhone = this.editedItem.clientPhone.replace(/^8/, "+7")
-                this.editedItem.clientPhone = this.editedItem.clientPhone.replace(/(\d{3})(\d{3})(\d{2})(\d{2})/, '$1' + "-" + '$2' + "-" + '$3' + "-" + '$4')
-                let length = this.editedItem.clientPhone.length
-                if (length === 2 || length === 6 || length === 10 || length === 13) {
-                    this.editedItem.clientPhone = this.editedItem.clientPhone + "-"
-                }
-                if (phoneValid.phoneValidate(this.editedItem.clientPhone)) {
-                    this.pv = false
-                }
-            },
+      save() {
+        RecordDetails.changeClientRecordDetails(this.apiCalendar, this)
+        this.defaultItem = Object.assign({}, this.editedItem)
+        this.changed = false
+      },
+      openClientCard() {
+        let fullName = this.editedItem.lastName + " " +
+          this.editedItem.firstName.charAt(0) + ". " +
+          (this.editedItem.middleName !== "" ? (this.editedItem.middleName.charAt(0) + ".") : "")
+        store.dispatch('openCard/ADD_CARDTOLIST', {id: this.editedItem.clientId, name: fullName})
+        let routeData = this.$router.resolve({name: 'Card', params: {id: this.editedItem.clientId}});
 
-            clientInfo: function () {
-                RecordDetails.getClientRecordDetails(this, this.clientInfo.event._def.publicId)
-            },
+        window.open(routeData.href, '_blank');
+        this.close()
+      }
+    },
 
-            endTime: function () {
-                let splitTime = this.endTime.split(":")
-                let date = new Date(this.editedItem.end)
-                date.setHours(splitTime[0])
-                date.setMinutes(splitTime[1])
-                if (date <= this.editedItem.start) {
-                    RecordDetails.batTime(this, "Неверное время окончания приёма")
-                } else {
-                    this.editedItem.end = new Date(date).getTime()
-                }
-            },
+    mounted() {
+      RecordDetails.getClientRecordDetails(this, this.clientInfo.event._def.publicId)
+    },
 
-            startTime: function () {
-                let splitTime = this.startTime.split(":")
-                let date = new Date(this.editedItem.start)
-                date.setHours(splitTime[0])
-                date.setMinutes(splitTime[1])
-                if (date >= this.editedItem.end) {
-                    RecordDetails.batTime(this, "Неверное время начала приёма")
-                } else {
-                    this.editedItem.start = new Date(date).getTime()
-                }
-            },
-
-            "editedItem": {
-                handler: function (val, oldVal) {
-                    if (this.count < 1) {
-                        this.count += 1
-                    } else {
-                        this.changed = !objecktCompare.isEquivalent(this.editedItem, this.defaultItem)
-                    }
-                },
-                deep: true
-            },
-
-            badData: function () {
-                this.$emit('setSnackBar', {
-                    "badData": true,
-                    "snacMessage": this.snacMessage,
-                    "snacColor": this.snacColor
-                })
-            }
-        },
-
-        computed: {
-            buttonName() {
-                return this.editedItem.clientCardId > 0 ? "Открыть карту слиента" : "Создать карту клиента"
-            }
+    watch: {
+      'editedItem.clientPhone': function () {
+        this.pv = true
+        this.editedItem.clientPhone = this.editedItem.clientPhone.replace(/^8/, "+7")
+        this.editedItem.clientPhone = this.editedItem.clientPhone.replace(/(\d{3})(\d{3})(\d{2})(\d{2})/, '$1' + "-" + '$2' + "-" + '$3' + "-" + '$4')
+        let length = this.editedItem.clientPhone.length
+        if (length === 2 || length === 6 || length === 10 || length === 13) {
+          this.editedItem.clientPhone = this.editedItem.clientPhone + "-"
         }
+        if (phoneValid.phoneValidate(this.editedItem.clientPhone)) {
+          this.pv = false
+        }
+      },
+
+      clientInfo: function () {
+        RecordDetails.getClientRecordDetails(this, this.clientInfo.event._def.publicId)
+      },
+
+      endTime: function () {
+        let splitTime = this.endTime.split(":")
+        let date = new Date(this.editedItem.end)
+        date.setHours(splitTime[0])
+        date.setMinutes(splitTime[1])
+        if (date <= this.editedItem.start) {
+          RecordDetails.batTime(this, "Неверное время окончания приёма")
+        } else {
+          this.editedItem.end = new Date(date).getTime()
+        }
+      },
+
+      startTime: function () {
+        let splitTime = this.startTime.split(":")
+        let date = new Date(this.editedItem.start)
+        date.setHours(splitTime[0])
+        date.setMinutes(splitTime[1])
+        if (date >= this.editedItem.end) {
+          RecordDetails.batTime(this, "Неверное время начала приёма")
+        } else {
+          this.editedItem.start = new Date(date).getTime()
+        }
+      },
+
+      "editedItem": {
+        handler: function (val, oldVal) {
+          if (this.count < 1) {
+            this.count += 1
+          } else {
+            this.changed = !objecktCompare.isEquivalent(this.editedItem, this.defaultItem)
+          }
+        },
+        deep: true
+      },
+
+      badData: function () {
+        this.$emit('setSnackBar', {
+          "badData": true,
+          "snacMessage": this.snacMessage,
+          "snacColor": this.snacColor
+        })
+      }
+    },
+
+    computed: {
+      buttonCardName() {
+        return this.editedItem.clientCardId > 0 ? "Открыть карту слиента" : "Создать карту клиента"
+      },
+
+      buttonOrderName() {
+        return this.editedItem.invoiceId > 0 ? "Открыть счет" : "Создать счет"
+      }
     }
+  }
 </script>
 
 <style scoped>

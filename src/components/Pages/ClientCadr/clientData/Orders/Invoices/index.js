@@ -36,6 +36,7 @@ export default {
     }).then((data) => {
       context.invoicesList.push(data.data)
       this.getScheduleClientByClient(context)
+      context.scheduleSelect = []
 
     }).catch((data) => {
       console.log("bad request " + data.response.data)
@@ -56,11 +57,8 @@ export default {
       },
       url: url,
     }).then((data) => {
-      console.log(data.data)
       context.invoicesList = data.data
-
     }).catch(() => {
-
       console.log("bad request")
     })
   },
@@ -68,7 +66,6 @@ export default {
 
   getScheduleClientByClient(context) {
     let url = "orders/noPersonal/getScheduleClientByClient?token=" + this.getToken() + "&clientId=" + context.clId
-
     console.log(context.clId)
     axInst({
       method: 'GET',
@@ -89,7 +86,6 @@ export default {
     context.badData = true
     context.snacMessage = res.data
     context.snacColor = "green"
-    // context.initialize()
   },
 
   warning(context, error) {
