@@ -108,6 +108,8 @@
                     return 'Новая запись'
                 } else if (state === 'RECEPTION_OVER') {
                     return 'Прием окончен'
+                } else if (state === 'RECEPTION_START') {
+                    return 'На приёме'
                 }
             },
 

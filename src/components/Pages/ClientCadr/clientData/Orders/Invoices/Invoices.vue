@@ -193,45 +193,6 @@
         scheduleSelect: '',
         page: 1,
         itemsPerPage: 10,
-        headers: [
-          {text: '№', align: 'start', value: 'id',},
-          {text: 'Категория услуги', value: 'pricesCategory', align: 'right'},
-          {text: 'Наименование услуги', value: 'pricesName', align: 'right'},
-          {text: 'Стоимость услуги', value: 'pricesValue', align: 'right'},
-          {text: 'Количество', value: 'count', align: 'right'},
-          {text: 'Сумма', value: 'totalValue', align: 'right'},
-          {text: 'Дата', value: 'orderDate', align: 'right'},
-          {text: 'Статус', value: 'orderState', align: 'right'},
-        ],
-        orderData: [{
-          id: 1,
-          orders: [{
-            id: 1,
-            pricesCategory: "категория",
-            pricesName: "услуга",
-            pricesValue: "150",
-            count: "2",
-            totalValue: "300",
-            orderDate: "date",
-            orderState: "state"
-          }]
-        },
-          {
-            id: 2,
-            orders: [{
-              id: 2,
-              pricesCategory: "категория2",
-              pricesName: "услуга2",
-              pricesValue: "2",
-              count: "1",
-              totalValue: "200",
-              orderDate: "date1",
-              orderState: "state3"
-            }]
-          }
-
-        ],
-
 
         clId: "",
         loading: false,

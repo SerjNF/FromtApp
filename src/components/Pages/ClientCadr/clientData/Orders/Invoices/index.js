@@ -25,7 +25,6 @@ export default {
   addInvoices(context) {
     let url = "orders/noPersonal/addInvoice?token=" + this.getToken() + "&scheduleId=" + context.scheduleSelect.id
 
-    console.log(context.scheduleSelect.id)
     axInst({
       method: 'POST',
       headers: {
