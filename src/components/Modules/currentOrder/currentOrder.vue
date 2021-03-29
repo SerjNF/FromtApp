@@ -1,53 +1,116 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
-  <v-card>
-    <v-card-title>
-      Счет номер: {{invoice.invoiceNumber}}
-    </v-card-title>
-    <v-card-text>
-      <v-banner>
-        Общая стоимость: {{invoice.totalPrice}}
-      </v-banner>
-      <v-banner>
-        Статус: {{invoice.invoiceState}}
-      </v-banner>
-      <v-banner>
-        Оплата
-      </v-banner>
-      <v-divider>
+  <div>
+    <v-card v-if="isInvoice">
+      <v-card-title>
+        Счет номер: {{invoice.invoiceNumber}}
+      </v-card-title>
+      <v-card-text>
+        <v-banner>
+          Общая стоимость: {{invoice.totalPrice}}
+        </v-banner>
+        <v-banner>
+          Статус: {{invoice.invoiceState}}
+        </v-banner>
+        <v-banner>
+          Оплата
+        </v-banner>
+        <v-divider>
 
-      </v-divider>
+        </v-divider>
 
-      <!--:items-per-page.sync="itemsPerPage"-->
-      <!--:page="page"-->
+        <!--:items-per-page.sync="itemsPerPage"-->
+        <!--:page="page"-->
 
-      <v-data-table
-        :headers="headers"
-        :items="invoice.orderDtoList"
+        <v-data-table
+          :headers="headers"
+          :items="invoice.orderDtoList"
 
-        item-key="id"
-        sort-by="id"
+          item-key="id"
+          sort-by="id"
 
 
-        hide-default-footer
-        class="elevation-0"
-      >
-        <template v-slot:top>
-          <!--<v-btn color="blue darken-1" text right @click="dialog()">-->
-          <v-btn color="blue darken-1" text right>
-            <v-icon>add</v-icon>
+          hide-default-footer
+          class="elevation-0"
+        >
+          <template v-slot:top>
+            <!--<v-btn color="blue darken-1" text right @click="dialog()">-->
+            <v-btn color="blue darken-1" text right @click="orderDialog=true">
+              <v-icon>add</v-icon>
+            </v-btn>
+          </template>
+
+          <!--<template v-slot:footer>-->
+          <!--<footerr :itemLength="orderData.length"-->
+          <!--:startItemPerPage="itemsPerPage"-->
+          <!--@changePage="changePageNumber"-->
+          <!--@changeItemPerPage="changeItemPerPag"></footerr>-->
+          <!--</template>-->
+        </v-data-table>
+
+      </v-card-text>
+    </v-card>
+
+
+    <v-card v-if="!isInvoice">
+      <v-card-text>
+        <v-btn color="blue darken-1" class="primary" @click="addInvoice">
+          Новый счёт
+        </v-btn>
+      </v-card-text>
+    </v-card>
+
+    <v-dialog v-model="orderDialog" max-width="1000px"
+              hide-overlay
+              transition="dialog-bottom-transition">
+      <v-card>
+        <v-card-title>
+          <span class="headline">Новая Запись</span>
+        </v-card-title>
+
+        <v-card-text>
+          <v-container>
+            <v-row>
+              <v-col cols="12">
+                <v-toolbar
+
+                >
+                  <v-toolbar-title>Поиск:</v-toolbar-title>
+                  <v-autocomplete
+                    v-model="selectPrice"
+                    :loading="loading"
+                    :items="priceList"
+                    :search-input.sync="search"
+                    :item-text="priceText"
+                    return-object
+
+                    hide-no-data
+                    hide-details
+                    label="Код или название услуги"
+
+                    prepend-icon="search"
+                  ></v-autocomplete>
+                </v-toolbar>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="12" sm="6" md="4">
+                <!--<v-text-field-->
+                <!--:disabled="this.editedItem.clientId > 0"-->
+                <!--prepend-icon="how_to_reg"-->
+                <!--v-model="editedItem.lastName" label="Фамилия"></v-text-field>-->
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-card-text>
+
+        <v-card-actions>
+          <v-btn color="blue darken-1" right @click="orderDialog=false">
+            Close
           </v-btn>
-        </template>
-
-        <!--<template v-slot:footer>-->
-        <!--<footerr :itemLength="orderData.length"-->
-        <!--:startItemPerPage="itemsPerPage"-->
-        <!--@changePage="changePageNumber"-->
-        <!--@changeItemPerPage="changeItemPerPag"></footerr>-->
-        <!--</template>-->
-      </v-data-table>
-
-    </v-card-text>
-  </v-card>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </div>
 </template>
 
 
@@ -71,24 +134,63 @@
           // {text: 'Статус', value: 'orderState', align: 'right'},
         ],
         invoice: {},
-        schId: ''
+        isInvoice: false,
+        scheduleId: '',
+        orderDialog: false,
+        loading: false,
+        selectPrice: '',
+        search: null,
+        searchData: '',
+        priceList: [],
+        loadingData: [],
+        priceText: function (price) {
+          return price.code + ' ' + price.serviceName + ' ' + price.article
+        }
       }
     },
+    // ' ' + price.serviceName +
+
+    created() {
+    },
+
+    methods: {
+      addInvoice() {
+        currentOrder.addInvoice(this)
+      },
+      //TODO ограничить количество запросов при наборе
+
+      querySelections(val) {
+
+        this.loading = true
+        this.searchData = val;
+        setTimeout(() => {
+          currentOrder.getPriceListByValue(val, this)
+          this.priceList = this.loadingData.filter(e => {
+            return (e.code || '').toLowerCase().indexOf((val || '').toLowerCase()) > -1 ||
+              (e.serviceName || '').toLowerCase().indexOf((val || '').toLowerCase()) > -1
+          })
+          this.loading = false
+        }, 1500)
 
 
-
-    created (){
+      },
     },
 
 
     mounted() {
-      currentOrder.getOrders(this.clientInfo.event._def.publicId, this)
+      this.scheduleId = this.clientInfo.event._def.publicId
+      currentOrder.getInvoice(this.scheduleId, this)
     },
 
 
     watch: {
       clientInfo: function () {
-        currentOrder.getOrders(this.clientInfo.event._def.publicId, this)
+        this.scheduleId = this.clientInfo.event._def.publicId
+        currentOrder.getInvoice(this.scheduleId, this)
+      },
+
+      search(val) {
+        val && val !== this.selectPrice && this.querySelections(val)
       },
     }
   }

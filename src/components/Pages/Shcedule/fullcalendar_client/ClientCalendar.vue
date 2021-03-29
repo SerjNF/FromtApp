@@ -313,7 +313,7 @@
           {name: 'Счет', component: 'CurrentOrder'},
 
         ],
-        datadata: '',
+
         time: null,
         startMenu: false,
         startTime: null,
@@ -486,7 +486,7 @@
               (e.clientPhone || '').toLowerCase().indexOf((val || '').toLowerCase()) > -1
           })
           this.loading = false
-        }, 500)
+        }, 1500)
       },
 
       phone() {
