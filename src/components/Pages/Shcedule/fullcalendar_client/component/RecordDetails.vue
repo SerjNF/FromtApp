@@ -190,7 +190,7 @@
         states: [
           {key: 'RECEPTION_CONFIRMED', text: 'Подтвержден'},
           {key: 'RECEPTION_START', text: 'На приёме'},
-          {key: 'RECEPTION_OVER', text: 'Приём окончен'},
+          {key: 'RECEPTION_OVER', text: 'Приём окbbbbbончен'},
           {key: 'RECEPTION_CANCELED', text: 'Отменен'},
           {key: 'RECEPTION_DELETE', text: 'Удален'},
           {key: 'RECEPTION_NEW', text: 'Новая запись'},

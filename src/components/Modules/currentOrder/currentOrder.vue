@@ -78,17 +78,31 @@
                   <v-autocomplete
                     v-model="selectPrice"
                     :loading="loading"
-                    :items="priceList"
+                    :items="prices"
                     :search-input.sync="search"
                     :item-text="priceText"
                     return-object
 
-                    hide-no-data
                     hide-details
                     label="Код или название услуги"
 
                     prepend-icon="search"
                   ></v-autocomplete>
+
+                  <!--<v-autocomplete-->
+                    <!--v-model="selectClient"-->
+                    <!--:loading="loading"-->
+                    <!--:items="items"-->
+                    <!--:search-input.sync="search"-->
+                    <!--:item-text="fullName"-->
+                    <!--return-object-->
+
+                    <!--hide-no-data-->
+                    <!--hide-details-->
+                    <!--label="Введите фамилию клиента..."-->
+
+                    <!--prepend-icon="search"-->
+                  <!--&gt;</v-autocomplete>-->
                 </v-toolbar>
               </v-col>
             </v-row>
@@ -138,50 +152,45 @@
         scheduleId: '',
         orderDialog: false,
         loading: false,
-        selectPrice: '',
+        selectPrice: null,
         search: null,
         searchData: '',
-        priceList: [],
+        prices: [],
         loadingData: [],
         priceText: function (price) {
-          return price.code + ' ' + price.serviceName + ' ' + price.article
+          return 'Код: ' + price.code + '. /Наименование: ' + price.serviceName
         }
       }
     },
-    // ' ' + price.serviceName +
 
-    created() {
-    },
 
     methods: {
       addInvoice() {
         currentOrder.addInvoice(this)
       },
-      //TODO ограничить количество запросов при наборе
 
       querySelections(val) {
-
         this.loading = true
-        this.searchData = val;
+        this.searchData = val
+
         setTimeout(() => {
           currentOrder.getPriceListByValue(val, this)
-          this.priceList = this.loadingData.filter(e => {
+        }, 500)
+
+        setTimeout(() => {
+          this.prices = this.loadingData.filter(e => {
             return (e.code || '').toLowerCase().indexOf((val || '').toLowerCase()) > -1 ||
-              (e.serviceName || '').toLowerCase().indexOf((val || '').toLowerCase()) > -1
+            (e.serviceName || '').toLowerCase().indexOf((val || '').toLowerCase()) > -1
           })
           this.loading = false
-        }, 1500)
-
-
+        }, 1000)
       },
     },
-
 
     mounted() {
       this.scheduleId = this.clientInfo.event._def.publicId
       currentOrder.getInvoice(this.scheduleId, this)
     },
-
 
     watch: {
       clientInfo: function () {
@@ -190,7 +199,7 @@
       },
 
       search(val) {
-        val && val !== this.selectPrice && this.querySelections(val)
+        val  && this.querySelections(val)
       },
     }
   }
