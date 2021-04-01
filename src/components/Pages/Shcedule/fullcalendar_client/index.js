@@ -44,6 +44,7 @@ export default {
     context.editedItem.end = arg.end.getTime();
     context.endTime = formatTime(arg.end);
     context.dialog = true
+    console.log("click")
   },
 
   addEvent(context, calendarApi) {

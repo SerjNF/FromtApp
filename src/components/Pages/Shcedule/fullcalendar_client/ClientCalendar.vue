@@ -564,7 +564,7 @@
       },
 
       search(val) {
-        val && val !== this.select && this.querySelections(val)
+        val && this.selectClient === null && this.querySelections(val)
       },
     },
 

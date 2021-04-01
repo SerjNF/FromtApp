@@ -156,7 +156,7 @@
       </v-card-actions>
     </v-card>
     <v-dialog v-model="orderDialog" max-width="1000px" transition="dialog-bottom-transition"
-              hide-overlay
+              :hide-overlay="true"
               :persistent="false"
     >
       <current-order :scheduleId="editedItem.eventId"></current-order>

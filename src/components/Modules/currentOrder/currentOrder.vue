@@ -199,7 +199,7 @@
       },
 
       search(val) {
-        val  && this.querySelections(val)
+        val && this.selectPrice === null  && this.querySelections(val)
       },
     }
   }
