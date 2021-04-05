@@ -11,19 +11,19 @@
           <v-row>
             <v-col cols="12" sm="6" md="4">
               <v-text-field
-                :disabled="editedItem.clientCardId > 0"
+                :readonly="editedItem.clientCardId > 0"
                 prepend-icon="how_to_reg"
                 v-model="editedItem.lastName" label="Фамилия"></v-text-field>
             </v-col>
             <v-col cols="12" sm="6" md="4">
               <v-text-field
-                :disabled="editedItem.clientCardId > 0"
+                :readonly="editedItem.clientCardId > 0"
                 prepend-icon="how_to_reg"
                 v-model="editedItem.firstName" label="Имя"></v-text-field>
             </v-col>
             <v-col cols="12" sm="6" md="4">
               <v-text-field
-                :disabled="editedItem.clientCardId > 0"
+                :readonly="editedItem.clientCardId > 0"
                 prepend-icon="how_to_reg"
                 aria-required="true"
                 v-model="editedItem.middleName" label="Отчество"></v-text-field>
@@ -35,7 +35,7 @@
                 <template v-slot:activator="{ on }">
                   <v-text-field
                     :error="pv"
-                    :disabled="editedItem.clientCardId > 0"
+                    :readonly="editedItem.clientCardId > 0"
                     type="tel"
                     prepend-icon="phone"
                     v-on="on"
@@ -155,12 +155,12 @@
         <!--<v-btn color="blue darken-1" text @click="close">Закрыть</v-btn>-->
       </v-card-actions>
     </v-card>
-    <v-dialog v-model="orderDialog" max-width="1000px" transition="dialog-bottom-transition"
-              :hide-overlay="true"
-              :persistent="false"
-    >
-      <current-order :scheduleId="editedItem.eventId"></current-order>
-    </v-dialog>
+    <!--<v-dialog v-model="orderDialog" max-width="600px" transition="dialog-bottom-transition"-->
+              <!--hide-overlay-->
+              <!--persistent-->
+    <!--&gt;-->
+      <!--<current-order :scheduleId="editedItem.eventId"></current-order>-->
+    <!--</v-dialog>-->
   </div>
 </template>
 
@@ -177,7 +177,6 @@
     name: "ClientTime",
     data: () => {
       return {
-        orderDialog: false,
         pv: false,
         badData: false,
         snacMessage: '',
@@ -236,9 +235,6 @@
     },
 
     methods: {
-      // close() {
-      //   this.$emit('setClientDialog', false);
-      // },
 
       save() {
         RecordDetails.changeClientRecordDetails(this.apiCalendar, this)

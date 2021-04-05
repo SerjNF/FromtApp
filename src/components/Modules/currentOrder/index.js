@@ -19,7 +19,7 @@ export default {
       context.isInvoice = true
       context.invoice = data.data
     }).catch((data) => {
-      console.log("bad request " + data.response.data)
+      console.log(data.response.data)
       context.isInvoice = false
 
     })
@@ -37,7 +37,6 @@ export default {
       },
       url: url,
     }).then((data) => {
-      context.isInvoice = true
       this.getInvoice(context.scheduleId, context)
       console.log(data)
 
@@ -47,12 +46,32 @@ export default {
     })
   },
 
-  getPriceListByValue(val, context){
+  addPrice(context) {
+    console.log("add Price")
+    let url = "orders/noPersonal/addPrice?token=" + this.getToken() +
+      "&id=" + context.editPrice.id +
+      "&count=" + context.editPrice.counts +
+      "&sale=" + context.editPrice.sale
+    axInst({
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+        "Access-Control-Allow-Origin": "*",
+      },
+      url: url,
+    }).then((data) => {
+      console.log(data.data)
+      context.invoice = data.data
+    }).catch(() => {
+      console.log("bad request")
+    })
+  },
 
-    if(val === context.searchData && val.length > 1){
+  getPriceListByValue(val, context) {
+
+    if (val === context.searchData && val.length > 1) {
 
       let url = "orders/noPersonal/getPriceListByValue?token=" + this.getToken() + "&value=" + val
-      console.log("search " + val)
       axInst({
         method: 'GET',
         headers: {
@@ -61,7 +80,6 @@ export default {
         },
         url: url,
       }).then((data) => {
-        console.log( data.data)
         context.loadingData = data.data
       }).catch(() => {
         console.log("bad request")

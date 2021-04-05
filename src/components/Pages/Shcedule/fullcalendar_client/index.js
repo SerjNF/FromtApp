@@ -40,11 +40,9 @@ export default {
     context.editedItem.resourcesId = arg.resource.id;
     context.editedItem.start = arg.start.getTime();
     context.startTime = formatTime(arg.start);
-
     context.editedItem.end = arg.end.getTime();
     context.endTime = formatTime(arg.end);
     context.dialog = true
-    console.log("click")
   },
 
   addEvent(context, calendarApi) {

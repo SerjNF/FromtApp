@@ -82,7 +82,6 @@
                 <v-toolbar
 
                 >
-                  <!--                  <v-toolbar-title>Поиск:</v-toolbar-title>-->
                   <v-autocomplete
                     v-model="selectClient"
                     :loading="loading"
