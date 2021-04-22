@@ -51,7 +51,8 @@ export default {
     let url = "orders/noPersonal/addPrice?token=" + this.getToken() +
       "&id=" + context.editPrice.id +
       "&count=" + context.editPrice.counts +
-      "&sale=" + context.editPrice.sale
+      "&sale=" + context.editPrice.sale +
+      "&invoiceId=" + context.invoice.id
     axInst({
       method: 'POST',
       headers: {

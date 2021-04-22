@@ -102,19 +102,19 @@
             <v-row>
               <v-col cols="12" sm="6" md="4">
                 <v-text-field
-                  :disabled="this.editedItem.clientId > 0"
+                  :readonly="this.editedItem.clientId > 0"
                   prepend-icon="how_to_reg"
                   v-model="editedItem.lastName" label="Фамилия"></v-text-field>
               </v-col>
               <v-col cols="12" sm="6" md="4">
                 <v-text-field
-                  :disabled="this.editedItem.clientId > 0"
+                  :readonly="this.editedItem.clientId > 0"
                   prepend-icon="how_to_reg"
                   v-model="editedItem.firstName" label="Имя"></v-text-field>
               </v-col>
               <v-col cols="12" sm="6" md="4">
                 <v-text-field
-                  :disabled="this.editedItem.clientId > 0"
+                  :readonly="this.editedItem.clientId > 0"
                   prepend-icon="how_to_reg"
                   aria-required="true"
                   v-model="editedItem.middleName" label="Отчество"></v-text-field>
