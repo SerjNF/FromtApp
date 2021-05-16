@@ -189,7 +189,7 @@
         states: [
           {key: 'RECEPTION_CONFIRMED', text: 'Подтвержден'},
           {key: 'RECEPTION_START', text: 'На приёме'},
-          {key: 'RECEPTION_OVER', text: 'Приём окbbbbbончен'},
+          {key: 'RECEPTION_OVER', text: 'Приём окончен'},
           {key: 'RECEPTION_CANCELED', text: 'Отменен'},
           {key: 'RECEPTION_DELETE', text: 'Удален'},
           {key: 'RECEPTION_NEW', text: 'Новая запись'},
@@ -257,8 +257,8 @@
 
 
     mounted() {
-      console.log(this.clientInfo.event._def.publicId)
-      RecordDetails.getClientRecordDetails(this, this.clientInfo.event._def.publicId)
+      console.log(this.clientInfo)
+      RecordDetails.getClientRecordDetails(this, this.clientInfo)
     },
 
     watch: {
@@ -276,7 +276,7 @@
       },
 
       clientInfo: function () {
-        RecordDetails.getClientRecordDetails(this, this.clientInfo.event._def.publicId);
+        RecordDetails.getClientRecordDetails(this, this.clientInfo);
       },
 
       endTime: function () {

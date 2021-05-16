@@ -56,7 +56,9 @@ export default {
       },
       url: url,
     }).then((data) => {
+
       context.invoicesList = data.data
+      console.log(data.data)
     }).catch(() => {
       console.log("bad request")
     })
@@ -65,7 +67,6 @@ export default {
 
   getScheduleClientByClient(context) {
     let url = "orders/noPersonal/getScheduleClientByClient?token=" + this.getToken() + "&clientId=" + context.clId
-    console.log(context.clId)
     axInst({
       method: 'GET',
       headers: {

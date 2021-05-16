@@ -144,11 +144,11 @@
         headers: [
           {text: '№', align: 'start', value: 'id',},
           {text: 'Артикль', value: 'article',},
-          {text: 'Категория услуги', value: 'pricesCategory', align: 'right'},
-          {text: 'Наименование услуги', value: 'pricesName', align: 'right'},
-          {text: 'Стоимость услуги', value: 'pricesValue', align: 'right'},
+          {text: 'Категория услуги', value: 'categoryName', align: 'right'},
+          {text: 'Наименование услуги', value: 'priceName', align: 'right'},
+          {text: 'Стоимость услуги', value: 'price', align: 'right'},
           {text: 'Количество', value: 'count', align: 'right'},
-          {text: 'Сумма', value: 'totalValue', align: 'right'},
+          {text: 'Сумма', value: 'totalPrice', align: 'right'},
           // {text: 'Дата', value: 'orderDate', align: 'right'},
           // {text: 'Статус', value: 'orderState', align: 'right'},
         ],
@@ -207,7 +207,7 @@
     },
 
     mounted() {
-      this.scheduleId = this.clientInfo.event._def.publicId
+      this.scheduleId = this.clientInfo
       currentOrder.getInvoice(this.scheduleId, this)
     },
 
@@ -219,7 +219,7 @@
 
     watch: {
       clientInfo: function () {
-        this.scheduleId = this.clientInfo.event._def.publicId
+        this.scheduleId = this.clientInfo
         currentOrder.getInvoice(this.scheduleId, this)
       },
 

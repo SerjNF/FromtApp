@@ -7,7 +7,7 @@ export default {
 
   getInvoice(scheduleId, context) {
     let url = "orders/noPersonal/getInvoiceByScheduleId?token=" + this.getToken() + "&scheduleId=" + scheduleId
-
+    console.log("id " + context.scheduleId)
     axInst({
       method: 'GET',
       headers: {
@@ -17,6 +17,9 @@ export default {
       url: url,
     }).then((data) => {
       context.isInvoice = true
+      // data.data.orderDtoList.forEach(function (item, i) {
+      //   item.pos = i + 1
+      // })
       context.invoice = data.data
     }).catch((data) => {
       console.log(data.response.data)
@@ -38,7 +41,7 @@ export default {
       url: url,
     }).then((data) => {
       this.getInvoice(context.scheduleId, context)
-      console.log(data)
+
 
     }).catch((data) => {
       console.log("bad request " + data.response.data)

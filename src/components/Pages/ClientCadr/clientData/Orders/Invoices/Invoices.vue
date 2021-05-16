@@ -48,10 +48,16 @@
           :icon="item.icon"
           small
         >
-          <v-row>
+          <v-row
+          @click="invoiceDialod(invoicesList[i].scheduleId)">
             <v-col>
               <h3>Счет номер:
                 {{item.invoiceNumber}}
+              </h3>
+            </v-col>
+            <v-col>
+              <h3>Дата приема:
+                {{new Date(item.date).toLocaleDateString()}}
               </h3>
             </v-col>
             <v-col>
@@ -71,83 +77,16 @@
 
 
             </v-col>
-            <!--<v-col>-->
-            <!--{{new Date(item.invoiceDate).toLocaleDateString()}}-->
-            <!--</v-col>-->
           </v-row>
         </v-timeline-item>
       </v-slide-x-transition>
     </v-timeline>
 
-    <!--<v-expansion-panels>-->
-    <!--<v-expansion-panel-->
-    <!--v-for="i in orderData"-->
-    <!--:key="i">-->
-    <!--<v-expansion-panel-header>Адреса {{i.id}}-->
-    <!--</v-expansion-panel-header>-->
-    <!--<v-expansion-panel-content>-->
-    <!--<v-data-table-->
-    <!--:headers="headers"-->
-    <!--:items="i.orders"-->
-
-    <!--item-key="id"-->
-    <!--sort-by="id"-->
-    <!--:items-per-page.sync="itemsPerPage"-->
-    <!--:page="page"-->
-    <!--hide-default-footer-->
-    <!--class="elevation-0"-->
-    <!--&gt;-->
-    <!--<template v-slot:top>-->
-    <!--<v-btn color="blue darken-1" text right @click="dialog()">-->
-    <!--<v-icon>add</v-icon>-->
-    <!--</v-btn>-->
-    <!--</template>-->
-    <!--<template v-slot:group-by>-->
-
-    <!--</template>-->
-    <!--<template v-slot:footer>-->
-    <!--<footerr :itemLength="orderData.length"-->
-    <!--:startItemPerPage="itemsPerPage"-->
-    <!--@changePage="changePageNumber"-->
-    <!--@changeItemPerPage="changeItemPerPag"></footerr>-->
-    <!--</template>-->
-    <!--</v-data-table>-->
-
-    <!--</v-expansion-panel-content>-->
-    <!--</v-expansion-panel>-->
-    <!--</v-expansion-panels>-->
-
-    <v-dialog v-model="searchPrice" max-width="500px"
+    <v-dialog v-model="orderDialog" max-width="1500px"
               hide-overlay
               transition="dialog-bottom-transition"
     >
-      <v-card>
-        <v-card-title>
-          <span>Добавить услугу</span>
-        </v-card-title>
-        <v-card-text>
-          <v-select
-            v-model="scheduleSelect"
-            :items="scheduleClient"
-            :item-text="selectText"
-            label="Выбрать приём"
-            prepend-icon="assignment_ind"
-            return-object>
-          </v-select>
-          <v-autocomplete
-            v-model="selectPrice"
-            :loading="loading"
-            :items="items"
-            :search-input.sync="search"
-            :item-text="priceName"
-            return-object
-            hide-no-data
-            hide-details
-            label="Код или наименование"
-            prepend-icon="search"
-          ></v-autocomplete>
-        </v-card-text>
-      </v-card>
+      <current-order :clientInfo="scheduleId"></current-order>
 
     </v-dialog>
 
@@ -173,12 +112,14 @@
 <script>
   import Footer from '@/components/Pages/Admin/Footer/Footer.vue'
   import Invoices from './index.js'
+  import CurrentOrder from "@/components/Modules/currentOrder/currentOrder";
 
   export default {
     name: "Invoices",
     props: ["cltId"],
     components: {
-      footerr: Footer
+      footerr: Footer,
+      currentOrder: CurrentOrder
     },
     data: () => {
       return {
@@ -186,13 +127,14 @@
         snacMessage: "",
         badData: false,
         invoicesList: [],
-        searchPrice: false,
+        orderDialog: false,
         selectPrice: '',
         items: [],
         scheduleClient: [],
         scheduleSelect: '',
         page: 1,
         itemsPerPage: 10,
+        scheduleId: "",
 
         clId: "",
         loading: false,
@@ -208,7 +150,6 @@
     },
 
     mounted() {
-      console.log("invoice get ID = " + this.cltId);
       this.clId = this.cltId;
       Invoices.getScheduleClientByClient(this);
       Invoices.getInvoiceListByClientId(this);
@@ -226,15 +167,15 @@
         }
       },
 
+      invoiceDialod(id){
+        this.scheduleId = id
+        this.orderDialog = true
+      },
 
       addInvoice() {
         Invoices.addInvoices(this)
       },
 
-      dialog() {
-        this.searchPrice = true;
-        Invoices.getScheduleClientByClient(this);
-      },
 
       querySelections(val) {
         this.loading = true

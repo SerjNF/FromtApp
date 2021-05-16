@@ -435,7 +435,7 @@
       },
 
       eventClick(info) {
-        this.clientScheduleId = info
+        this.clientScheduleId = info.event._def.publicId
         this.apiCalendar = this.$refs.fullCalendar.getApi()
         this.clientDialog = true
       },
