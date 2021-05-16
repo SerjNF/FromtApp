@@ -201,7 +201,6 @@
       },
 
       addPrice() {
-        console.log("add")
         currentOrder.addPrice(this)
       }
     },

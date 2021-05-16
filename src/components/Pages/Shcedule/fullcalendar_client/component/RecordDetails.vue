@@ -257,7 +257,6 @@
 
 
     mounted() {
-      console.log(this.clientInfo)
       RecordDetails.getClientRecordDetails(this, this.clientInfo)
     },
 
